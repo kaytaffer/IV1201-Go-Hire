@@ -1,6 +1,6 @@
-import React, {StrictMode} from "react";
+import React, {StrictMode, useState} from "react";
 const ReactDOM= require('react-dom');
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
 import {HomePage} from "./presenter/homePage";
 import {Login} from "./presenter/login";
 
@@ -10,20 +10,30 @@ import {Login} from "./presenter/login";
  * @constructor
  */
 function App() {
+    const navigate = useNavigate()
+    const [user, setUser] = useState()
+
+    React.useEffect(() => { // Runs when component is created
+        if(window.location.pathname !== '/login' && !user)
+            navigate('/login')
+    }, [])
+
     return (
-        <StrictMode>
+        <div>
             <h1>Go Hire</h1>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<HomePage />}/>
-                    <Route path="/login" element={<Login />}/>
-                </Routes>
-            </BrowserRouter>
-        </StrictMode>
+            <Routes>
+                <Route path='/' element={user ? <HomePage /> : <div/>}/>
+                <Route path='/login' element={<Login />}/>
+            </Routes>
+        </div>
     )
 }
 
 ReactDOM.render(
-    <App />,
+    <StrictMode>
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    </StrictMode>,
     document.getElementById('react')
 )
