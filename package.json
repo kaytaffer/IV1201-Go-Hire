@@ -1,6 +1,7 @@
 {
   "name": "go-hire",
   "dependencies": {
+    "npm": "^10.4.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "rest": "^1.3.1"
