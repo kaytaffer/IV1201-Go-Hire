@@ -1,5 +1,12 @@
 import React from "react";
 
+/**
+ * Responsible for rendering the login page
+ * @param props props
+ * @param {function} props.onLogin - called when user submits login form
+ * @returns {JSX.Element} the rendered login view
+ * @constructor
+ */
 export function LoginView(props) {
 
     function loginACB(event) {

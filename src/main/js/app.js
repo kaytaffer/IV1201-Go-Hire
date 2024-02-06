@@ -5,8 +5,8 @@ import {HomePage} from "./presenter/homePage";
 import {Login} from "./presenter/login";
 
 /**
- * TODO
- * @returns {JSX.Element}
+ * Root component for the application
+ * @returns {JSX.Element} the rendered application
  * @constructor
  */
 function App() {
