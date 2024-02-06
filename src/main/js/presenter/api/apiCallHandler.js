@@ -1,6 +1,9 @@
 function sendPostRequest(endpoint, body){
     return fetch(endpoint, {
         method: 'POST',
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        },
         body: JSON.stringify(body)
     }).then(response => response.json());
 }
