@@ -12,12 +12,14 @@ public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="role_id")
-    Integer id;
+    private Integer id;
+    
     @Column(length = 255)
-    String name;
+    private String name;
 
     @OneToMany(mappedBy = "role")
     private Set<PersonEntity> persons;
+    
     public Integer getId(){
         return this.id;
     }
