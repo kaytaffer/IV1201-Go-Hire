@@ -22,13 +22,13 @@ public class PersonService {
 
     /**
      * Fetches a <code>LoggedInPersonDTO</code> matching the credentials entered by the user.
-     * @param username The username entered by the user.
-     * @param password The password entered by the user.
+     * @param LoginRequestDTO DTO containing the username and password entered by the user.
      * @return <code>LoggedInPersonDTO</code> representing the logged-in user matching the entered credentials.
      * @throws LoginFailedException when a matching user does not exist in the database.
      */
-    public LoggedInPersonDTO login(String username, String password) throws LoginFailedException {
-        PersonEntity personEntity = personRepository.findByUsernameAndPassword(username, password);
+    //TODO write Unit Test
+    public LoggedInPersonDTO login(LoginRequestDTO loginRequest) throws LoginFailedException {
+        PersonEntity personEntity = personRepository.findByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
         if(personEntity == null){
             throw new LoginFailedException("Person with given credentials does not exist");
         }
