@@ -1,5 +1,7 @@
+const baseUrl = '/api'
+
 function sendPostRequest(endpoint, body){
-    return fetch(endpoint, {
+    return fetch(baseUrl + endpoint, {
         method: 'POST',
         headers: {
             "Content-type": "application/json; charset=UTF-8"
@@ -15,5 +17,5 @@ function sendPostRequest(endpoint, body){
  * @returns {Promise<any>} a promise either resolving to a user object or an error object
  */
 export function authenticateLogin(username, password){
-    return sendPostRequest('/api/login', {username, password})
+    return sendPostRequest('/login', {username, password})
 }

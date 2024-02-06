@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
  * Controller responsible for API calls related to a <code>PersonEntity</code>
  */
 @RestController
+@RequestMapping("/api")
 public class PersonController {
 
     private final PersonService personService;
@@ -29,7 +30,7 @@ public class PersonController {
      * @param loginRequest DTO containing login request data
      * @return <code>LoggedInPersonDTO</code> representing the logged-in user
      */
-    @PostMapping("/api/login")
+    @PostMapping("/login")
     public LoggedInPersonDTO login(@RequestBody LoginRequestDTO loginRequest) {
         // TODO validate
         // TODO transaction
