@@ -1,6 +1,11 @@
 import React from "react";
+import {LoginView} from "../view/loginView";
 
 export function Login(props){
 
-    return <h1> Login </h1>
+    function login(username, password) {
+        // TODO
+    }
+
+    return <LoginView onLogin={login}/>
 }
