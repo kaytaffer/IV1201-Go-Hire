@@ -27,8 +27,9 @@ public class PersonEntity {
     @Column(length = 255)
     String password;
 
-    @ManyToOne(fetch=FetchType.EAGER) //TODO optional = false ?, Should a person be able to have a null value in 'role_id'
-    RoleEntity roleId;
+   @ManyToOne(fetch=FetchType.EAGER) //TODO optional = false ?, Should a person be able to have a null value in 'role_id'
+   @JoinColumn(name = "role_id", referencedColumnName = "role_id")
+   RoleEntity role;
 
     @Column(length = 255)
     String username;
@@ -81,12 +82,12 @@ public class PersonEntity {
         this.password = password;
     }
 
-    public RoleEntity getRoleId() {
-        return roleId;
+    public RoleEntity getRole() {
+        return role;
     }
 
-    public void setRoleId(RoleEntity roleId) {
-        this.roleId = roleId;
+    public void setRole(RoleEntity role) {
+        this.role = role;
     }
 
     public String getUsername() {
