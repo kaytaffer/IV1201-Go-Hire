@@ -13,6 +13,11 @@ function App() {
     const navigate = useNavigate()
     const [user, setUser] = useState()
 
+    function onLoggedIn(user){
+        setUser(user)
+        navigate('/')
+    }
+
     React.useEffect(() => { // Runs when component is created
         if(window.location.pathname !== '/login' && !user)
             navigate('/login')
@@ -22,8 +27,8 @@ function App() {
         <div>
             <h1>Go Hire</h1>
             <Routes>
-                <Route path='/' element={user ? <HomePage /> : <div/>}/>
-                <Route path='/login' element={<Login />}/>
+                <Route path='/' element={user ? <HomePage user={user} /> : <div/>}/>
+                <Route path='/login' element={<Login onLoggedIn={onLoggedIn}/>}/>
             </Routes>
         </div>
     )
