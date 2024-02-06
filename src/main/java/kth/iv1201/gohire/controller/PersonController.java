@@ -31,6 +31,8 @@ public class PersonController {
      */
     @PostMapping("/api/login")
     public LoggedInPersonDTO login(@RequestBody LoginRequestDTO loginRequest) {
+        // TODO validate
+        // TODO transaction
         return personService.login(loginRequest);
     }
 
