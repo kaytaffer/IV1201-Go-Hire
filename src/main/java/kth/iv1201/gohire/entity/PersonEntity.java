@@ -12,27 +12,29 @@ public class PersonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "person_id")
-    Integer id;
+    private Integer id;
 
     @Column(length = 255)
-    String name;
+    private String name;
+    
     @Column(length = 255)
-    String surname;
+    private String surname;
+    
     @Column(length = 255, name = "pnr")
-    String personNumber;
+    private String personNumber;
 
     @Column(length = 255)
-    String email;
+    private String email;
 
     @Column(length = 255)
-    String password;
+    private String password;
 
    @ManyToOne(fetch=FetchType.EAGER) //TODO optional = false ?, Should a person be able to have a null value in 'role_id'
    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
-   RoleEntity role;
+   private RoleEntity role;
 
     @Column(length = 255)
-    String username;
+    private String username;
 
     public Integer getId() {
         return id;
