@@ -1,6 +1,7 @@
 package kth.iv1201.gohire.service;
 
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
+import kth.iv1201.gohire.DTO.LoginRequestDTO;
 import kth.iv1201.gohire.entity.PersonEntity;
 import kth.iv1201.gohire.service.exception.LoginFailedException;
 import kth.iv1201.gohire.repository.PersonRepository;
@@ -22,7 +23,7 @@ public class PersonService {
 
     /**
      * Fetches a <code>LoggedInPersonDTO</code> matching the credentials entered by the user.
-     * @param LoginRequestDTO DTO containing the username and password entered by the user.
+     * @param loginRequest DTO containing the username and password entered by the user.
      * @return <code>LoggedInPersonDTO</code> representing the logged-in user matching the entered credentials.
      * @throws LoginFailedException when a matching user does not exist in the database.
      */

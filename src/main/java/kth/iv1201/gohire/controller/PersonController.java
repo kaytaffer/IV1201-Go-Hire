@@ -3,6 +3,7 @@ package kth.iv1201.gohire.controller;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.DTO.LoginRequestDTO;
 import kth.iv1201.gohire.service.PersonService;
+import kth.iv1201.gohire.service.exception.LoginFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,7 @@ public class PersonController {
      * @return <code>LoggedInPersonDTO</code> representing the logged-in user
      */
     @PostMapping("/login")
-    public LoggedInPersonDTO login(@RequestBody LoginRequestDTO loginRequest) {
+    public LoggedInPersonDTO login(@RequestBody LoginRequestDTO loginRequest) throws LoginFailedException {
         // TODO validate
         // TODO transaction
         return personService.login(loginRequest);
