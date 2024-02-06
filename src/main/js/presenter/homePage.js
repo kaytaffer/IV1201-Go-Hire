@@ -1,4 +1,6 @@
 import React from "react";
+import {HomePageApplicantView} from "../view/homePageApplicantView";
+import {HomePageRecruiterView} from "../view/homePageRecruiterView";
 
 /**
  * Responsible for the logic of the home page
@@ -9,10 +11,11 @@ import React from "react";
  */
 export function HomePage(props){
 
-    //TODO add a homePageView, check role and render accordingly.
-    return <div>
-        <h1> Home Page</h1>
-        <p> Welcome {props.user.username}, with role {props.user.role}</p>
-        </div>;
+    if(props.user && props.user.role === 'applicant')
+        return <HomePageApplicantView user={props.user}/>;
+    else if(props.user && props.user.role === 'recruiter')
+        return <HomePageRecruiterView user={props.user}/>
+    else
+        return <div>error</div> // TODO extend error message
 
 }

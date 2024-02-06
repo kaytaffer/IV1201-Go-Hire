@@ -11,7 +11,7 @@ import {Login} from "./presenter/login";
  */
 function App() {
     const navigate = useNavigate()
-    const [user, setUser] = useState()
+    const [user, setUser] = useState(null)
 
     function onLoggedIn(user){
         setUser(user)
