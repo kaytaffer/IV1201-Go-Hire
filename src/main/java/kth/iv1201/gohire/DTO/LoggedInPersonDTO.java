@@ -4,9 +4,9 @@ package kth.iv1201.gohire.DTO;
  * DTO containing information about a logged in persons <code>username</code> and <code>role</code>.
  */
 public class LoggedInPersonDTO {
-    Integer id;
-    String username;
-    String role;
+    private Integer id;
+    private String username;
+    private String role;
 
     /**
      * Creates an instance of a <code>LoggedInPersonDTO</code>.
