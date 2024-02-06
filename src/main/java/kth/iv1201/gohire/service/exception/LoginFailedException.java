@@ -1,4 +1,4 @@
-package kth.iv1201.gohire.exception;
+package kth.iv1201.gohire.service.exception;
 
 /**
  * Exception thrown when the logging in of a user to the application fails.
