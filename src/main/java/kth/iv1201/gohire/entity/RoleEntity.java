@@ -1,6 +1,8 @@
 package kth.iv1201.gohire.entity;
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 /**
  * JPA Entity representing a Person's role
  */
@@ -14,6 +16,8 @@ public class RoleEntity {
     @Column(length = 255)
     String name;
 
+    @OneToMany(mappedBy = "role")
+    private Set<PersonEntity> persons;
     public Integer getId(){
         return this.id;
     }
