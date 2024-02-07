@@ -13,13 +13,10 @@ public class RoleEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="role_id")
     private Integer id;
-    
     @Column(length = 255)
     private String name;
-
     @OneToMany(mappedBy = "role")
     private Set<PersonEntity> persons;
-    
     public Integer getId(){
         return this.id;
     }
