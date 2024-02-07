@@ -25,7 +25,6 @@ public class PersonController {
         this.personService = personService;
     }
 
-    // TODO test
     /**
      * Handles the login API-request
      * @param loginRequest DTO containing login request data

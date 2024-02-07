@@ -27,7 +27,6 @@ public class PersonService {
      * @return <code>LoggedInPersonDTO</code> representing the logged-in user matching the entered credentials.
      * @throws LoginFailedException when a matching user does not exist in the database.
      */
-    //TODO write Unit Test
     public LoggedInPersonDTO login(LoginRequestDTO loginRequest) throws LoginFailedException {
         PersonEntity personEntity = personRepository.findByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
         if(personEntity == null){
