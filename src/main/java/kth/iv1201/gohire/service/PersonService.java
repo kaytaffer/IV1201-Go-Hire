@@ -36,5 +36,4 @@ public class PersonService {
         return new LoggedInPersonDTO(personEntity.getId(), personEntity.getUsername(), personEntity.getRole().getName());
     }
 
-
 }
