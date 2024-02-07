@@ -35,18 +35,14 @@ class PersonControllerTest {
     }
 
     @Test
-    void testIfUserReturnedWhenLoginCorrect() {
+    void testIfUserReturnedWhenLoginCorrect() throws LoginFailedException {
         mockLoginRequestDTO = new LoginRequestDTO("exampleUsername", "examplePassword");
         mockLoggedInPersonDTO = new LoggedInPersonDTO(0, "exampleUsername", "recruiter");
-        try {
-            when(personService.login(mockLoginRequestDTO)).thenReturn(mockLoggedInPersonDTO);
-            LoggedInPersonDTO returnedLoggedInPersonDTO = personController.login(mockLoginRequestDTO);
-            assertEquals(mockLoggedInPersonDTO, returnedLoggedInPersonDTO,
-                    "Returned LoggedInPersonDTO from PersonController does not equal returned" +
-                            "LoggedInPersonDTO from PersonService.");
-        } catch (LoginFailedException e) {
-            fail("PersonService returned unexpected exception.");
-        }
+        when(personService.login(mockLoginRequestDTO)).thenReturn(mockLoggedInPersonDTO);
+        LoggedInPersonDTO returnedLoggedInPersonDTO = personController.login(mockLoginRequestDTO);
+        assertEquals(mockLoggedInPersonDTO, returnedLoggedInPersonDTO,
+                "Returned LoggedInPersonDTO from PersonController does not equal returned" +
+                        "LoggedInPersonDTO from PersonService.");
     }
 
     @Test
