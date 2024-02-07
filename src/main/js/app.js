@@ -1,22 +1,44 @@
-import React, {StrictMode} from "react";
+import React, {StrictMode, useState} from "react";
 const ReactDOM= require('react-dom');
+import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
+import {HomePage} from "./presenter/homePage";
+import {Login} from "./presenter/login";
 
 /**
- * TODO
- * @returns {JSX.Element}
+ * Root component for the application
+ * @returns {JSX.Element} the rendered application
  * @constructor
  */
 function App() {
+    const navigate = useNavigate()
+    const [user, setUser] = useState(null)
+
+    function onLoggedIn(user){
+        setUser(user)
+        navigate('/')
+    }
+
+    React.useEffect(() => { // Runs when component is created
+        if(window.location.pathname !== '/login' && !user)
+            navigate('/login')
+    }, [])
 
     return (
-        <StrictMode>
+        <div>
             <h1>Go Hire</h1>
-        </StrictMode>
+            <Routes>
+                <Route path='/' element={user ? <HomePage user={user} /> : <div/>}/>
+                <Route path='/login' element={<Login onLoggedIn={onLoggedIn}/>}/>
+            </Routes>
+        </div>
     )
-
 }
 
 ReactDOM.render(
-    <App />,
+    <StrictMode>
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    </StrictMode>,
     document.getElementById('react')
 )
