@@ -12,6 +12,7 @@ import static org.mockito.Mockito.*;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
@@ -40,6 +41,7 @@ public class PersonServiceTest {
         personRepository.delete(fakePersonEntity);
         fakePersonEntity = null;
         roleEntity = null;
+        Mockito.reset(personRepository);
     }
 
     @Test
