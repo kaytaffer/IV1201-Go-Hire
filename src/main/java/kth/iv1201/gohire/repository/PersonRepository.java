@@ -13,4 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.MANDATORY)
 public interface PersonRepository extends JpaRepository<PersonEntity, Integer> {
     PersonEntity findByUsernameAndPassword(String username, String password);
+
+    boolean existsByUsername(String username);
 }

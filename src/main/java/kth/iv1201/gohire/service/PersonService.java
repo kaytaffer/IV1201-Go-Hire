@@ -1,10 +1,14 @@
 package kth.iv1201.gohire.service;
 
+import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.DTO.LoginRequestDTO;
 import kth.iv1201.gohire.entity.PersonEntity;
+import kth.iv1201.gohire.entity.RoleEntity;
+import kth.iv1201.gohire.repository.RoleRepository;
 import kth.iv1201.gohire.service.exception.LoginFailedException;
 import kth.iv1201.gohire.repository.PersonRepository;
+import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -16,12 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 public class PersonService {
+    private final int APPLICANTROLEID = 2;
 
     private final PersonRepository personRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public PersonService(PersonRepository personRepository) {
+    public PersonService(PersonRepository personRepository, RoleRepository roleRepository) {
         this.personRepository = personRepository;
+        this.roleRepository = roleRepository;
     }
 
     /**
@@ -35,6 +42,30 @@ public class PersonService {
         if(personEntity == null){
             throw new LoginFailedException("Person with given credentials does not exist");
         }
+        return new LoggedInPersonDTO(personEntity.getId(), personEntity.getUsername(), personEntity.getRole().getName());
+    }
+
+    /**
+     * Creates an account for a new user.
+     * @param createUserRequestDTO The DTO containing information about the user to be created.
+     * @throws UserCreationFailedException if creation of user fails
+     * @return A LoggedInPersonDTO representing the newly created user account.
+     */
+    public LoggedInPersonDTO createApplicantAccount(CreateApplicantRequestDTO createUserRequestDTO) throws UserCreationFailedException{
+        if(personRepository.existsByUsername(createUserRequestDTO.getUsername())){
+            throw new UserCreationFailedException("Username" + createUserRequestDTO.getUsername() + "already exists");
+        }
+        PersonEntity personEntity = new PersonEntity();
+        RoleEntity roleEntity = roleRepository.findRoleById(APPLICANTROLEID);
+
+        personEntity.setRole(roleEntity);
+        personEntity.setName(createUserRequestDTO.getFirstName());
+        personEntity.setSurname(createUserRequestDTO.getLastName());
+        personEntity.setEmail(createUserRequestDTO.getEmail());
+        personEntity.setPersonNumber(createUserRequestDTO.getPersonNumber());
+        personEntity.setUsername(createUserRequestDTO.getUsername());
+        personEntity.setPassword(createUserRequestDTO.getPassword());
+        personEntity = personRepository.save(personEntity);
         return new LoggedInPersonDTO(personEntity.getId(), personEntity.getUsername(), personEntity.getRole().getName());
     }
 
