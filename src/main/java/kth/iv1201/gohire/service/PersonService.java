@@ -8,6 +8,7 @@ import kth.iv1201.gohire.entity.RoleEntity;
 import kth.iv1201.gohire.repository.RoleRepository;
 import kth.iv1201.gohire.service.exception.LoginFailedException;
 import kth.iv1201.gohire.repository.PersonRepository;
+import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,9 +47,13 @@ public class PersonService {
      * @param createUserRequestDTO The DTO containing information about the user to be created.
      * @return A LoggedInPersonDTO representing the newly created user account.
      */
-    public LoggedInPersonDTO createAccount(CreateUserRequestDTO createUserRequestDTO){
+    public LoggedInPersonDTO createAccount(CreateUserRequestDTO createUserRequestDTO) throws UserCreationFailedException{
+        if(personRepository.existsByUsername(createUserRequestDTO.getUsername())){
+            throw new UserCreationFailedException("Username" + createUserRequestDTO.getUsername() + "already exists");
+        }
         PersonEntity personEntity = new PersonEntity();
         RoleEntity roleEntity = roleRepository.findRoleById(APPLICANTROLEID);
+
         personEntity.setRole(roleEntity);
         personEntity.setName(createUserRequestDTO.getFirstName());
         personEntity.setSurname(createUserRequestDTO.getLastName());
