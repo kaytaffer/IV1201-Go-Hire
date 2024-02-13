@@ -1,10 +1,12 @@
 package kth.iv1201.gohire.controller;
 
 import jakarta.validation.Valid;
+import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.DTO.LoginRequestDTO;
 import kth.iv1201.gohire.service.PersonService;
 import kth.iv1201.gohire.service.exception.LoginFailedException;
+import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +39,12 @@ public class PersonController {
     public LoggedInPersonDTO login(@RequestBody @Valid LoginRequestDTO loginRequest)
             throws LoginFailedException, MethodArgumentNotValidException {
         return personService.login(loginRequest);
+    }
+
+    @PostMapping("/createApplicant")
+    public LoggedInPersonDTO createNewApplicant(@RequestBody @Valid CreateApplicantRequestDTO createApplicantRequest)
+            throws UserCreationFailedException, MethodArgumentNotValidException {
+        return personService.createApplicantAccount(createApplicantRequest);
     }
 
 }
