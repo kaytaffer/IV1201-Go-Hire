@@ -11,9 +11,9 @@ import {HomePageRecruiterView} from "../view/homePageRecruiterView";
  */
 export function HomePage(props){
 
-    if(props.user && props.user.role === 'applicant')
+    if(props.user.role === 'applicant')
         return <HomePageApplicantView user={props.user}/>;
-    else if(props.user && props.user.role === 'recruiter')
+    else if(props.user.role === 'recruiter')
         return <HomePageRecruiterView user={props.user}/>
     else
         return <div>error</div> // TODO extend error message
