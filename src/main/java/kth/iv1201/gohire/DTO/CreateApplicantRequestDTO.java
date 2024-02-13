@@ -6,12 +6,12 @@ package kth.iv1201.gohire.DTO;
  */
 public class CreateApplicantRequestDTO {
 
-    String firstName;
-    String lastName;
-    String email;
-    String personNumber;
-    String username;
-    String password;
+    private final String firstName;
+    private final String lastName;
+    private final String email;
+    private final String personNumber;
+    private final String username;
+    private final String password;
 
     /**
      * Creates a <code>CreateApplicantRequestDTO</code> object with the provided information.
