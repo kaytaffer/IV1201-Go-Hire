@@ -30,8 +30,6 @@ export function CreateNewApplicantView(props) {
             <input id="create-applicant-form-email" type="email"/><br/>
             <label>Person Number</label>
             <input id="create-applicant-form-person-number" type="text"/><br/>
-            <label>User</label>
-            <input id="create-applicant-form-last-name" type="text"/><br/>
             <label>Username</label>
             <input id="create-applicant-form-username" type="text"/><br/>
             <label>Password</label>
