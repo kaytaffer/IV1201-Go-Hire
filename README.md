@@ -53,6 +53,8 @@ The server handling HTTP calls.
 `RoleEntity` - JPA Entity representing a person's role.
 
 ## DTO/ 
+`CreateUserRequestDTO` - DTO containing information about a user creation request.
+
 `LoggedInPersonDTO` - DTO containing information about a logged-in persons username and role.
 
 `LoginRequestDTO` - DTO containing information about a login request.
