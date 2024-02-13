@@ -45,6 +45,7 @@ public class PersonService {
     /**
      * Creates an account for a new user.
      * @param createUserRequestDTO The DTO containing information about the user to be created.
+     * @throws UserCreationFailedException if creation of user fails
      * @return A LoggedInPersonDTO representing the newly created user account.
      */
     public LoggedInPersonDTO createApplicantAccount(CreateApplicantRequestDTO createUserRequestDTO) throws UserCreationFailedException{
