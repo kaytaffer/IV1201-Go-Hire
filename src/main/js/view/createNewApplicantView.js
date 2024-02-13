@@ -1,5 +1,10 @@
 import React from "react";
 
+/**
+ * Responsible for rendering the create new applicant form
+ * @param props called when user submits new applicant form
+ * @returns {JSX.Element} the rendered new applicant view
+ */
 export function CreateNewApplicantView(props) {
 
     function submit(event) {

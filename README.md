@@ -19,6 +19,7 @@ View-Presenter React powered web application.
 `apiCallHandler` - Authenticates login credentials with the API.
 
 ## view/
+`createNewApplicantView` - Responsible for rendering the create new applicant form
 
 `homePageApplicantView` - Responsible for rendering the home page for applicants.
 
