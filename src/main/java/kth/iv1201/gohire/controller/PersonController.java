@@ -1,10 +1,12 @@
 package kth.iv1201.gohire.controller;
 
+import jakarta.validation.Valid;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.DTO.LoginRequestDTO;
 import kth.iv1201.gohire.service.PersonService;
 import kth.iv1201.gohire.service.exception.LoginFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -31,9 +33,11 @@ public class PersonController {
      * @return <code>LoggedInPersonDTO</code> representing the logged-in user
      */
     @PostMapping("/login")
-    public LoggedInPersonDTO login(@RequestBody LoginRequestDTO loginRequest) throws LoginFailedException {
+    public LoggedInPersonDTO login(@RequestBody @Valid LoginRequestDTO loginRequest)
+            throws LoginFailedException, MethodArgumentNotValidException {
         // TODO validate
-        // TODO transaction
+        System.out.println("username: [" + loginRequest.getUsername() + "]");
+        System.out.println("password: [" + loginRequest.getPassword() + "]");
         return personService.login(loginRequest);
     }
 
