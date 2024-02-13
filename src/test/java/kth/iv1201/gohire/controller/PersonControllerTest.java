@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -35,7 +36,7 @@ class PersonControllerTest {
     }
 
     @Test
-    void testIfUserReturnedWhenLoginCorrect() throws LoginFailedException {
+    void testIfUserReturnedWhenLoginCorrect() throws LoginFailedException, MethodArgumentNotValidException {
         mockLoginRequestDTO = new LoginRequestDTO("exampleUsername", "examplePassword");
         mockLoggedInPersonDTO = new LoggedInPersonDTO(0, "exampleUsername", "recruiter");
         when(personService.login(mockLoginRequestDTO)).thenReturn(mockLoggedInPersonDTO);
@@ -46,18 +47,25 @@ class PersonControllerTest {
     }
 
     @Test
-    void testIfLoginFailedExceptionThrownWhenCredentialsPresentButIncorrect() {
+    void testIfLoginFailedExceptionIsThrownWhenCredentialsPresentButIncorrect() throws LoginFailedException {
         mockLoginRequestDTO = new LoginRequestDTO("exampleUsername", "examplePassword");
-        try {
-            when(personService.login(mockLoginRequestDTO)).thenThrow(new LoginFailedException("Login Failed"));
-        } catch (Exception e) {
-            assertEquals(e.getClass(), LoginFailedException.class,
-                    "Unexpected exception type was thrown, expected LoginFailedException.");
-        }
+        when(personService.login(mockLoginRequestDTO)).thenThrow(new LoginFailedException("Login Failed"));
+        assertThrowsExactly(LoginFailedException.class, () -> personController.login(mockLoginRequestDTO),
+                "No LoginFailedException was thrown when credentials were incorrect.");
     }
 
-    // TODO test validation
+    @Test
+    void testIfMethodArgumentNotValidExceptionIsThrownWhenCredentialsAreNull(){
+        // TODO
+    }
 
-    // TODO test transaction
+    @Test
+    void testIfCorrectExceptionThrownWhenCredentialsAreBlank(){
+        // TODO
+    }
 
+    @Test
+    void testIfExceptionThrownWhenCredentialsAreGreaterThenMax(){
+        // TODO
+    }
 }

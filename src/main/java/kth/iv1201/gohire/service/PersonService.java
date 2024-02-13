@@ -7,11 +7,14 @@ import kth.iv1201.gohire.service.exception.LoginFailedException;
 import kth.iv1201.gohire.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Class that handles business logic related to persons.
  */
 @Service
+@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 public class PersonService {
 
     private final PersonRepository personRepository;

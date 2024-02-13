@@ -1,10 +1,12 @@
 package kth.iv1201.gohire.controller;
 
+import jakarta.validation.Valid;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.DTO.LoginRequestDTO;
 import kth.iv1201.gohire.service.PersonService;
 import kth.iv1201.gohire.service.exception.LoginFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -28,12 +30,12 @@ public class PersonController {
     /**
      * Handles the login API-request
      * @param loginRequest DTO containing login request data
+     * @throws MethodArgumentNotValidException if any data does not match expected values.
      * @return <code>LoggedInPersonDTO</code> representing the logged-in user
      */
     @PostMapping("/login")
-    public LoggedInPersonDTO login(@RequestBody LoginRequestDTO loginRequest) throws LoginFailedException {
-        // TODO validate
-        // TODO transaction
+    public LoggedInPersonDTO login(@RequestBody @Valid LoginRequestDTO loginRequest)
+            throws LoginFailedException, MethodArgumentNotValidException {
         return personService.login(loginRequest);
     }
 
