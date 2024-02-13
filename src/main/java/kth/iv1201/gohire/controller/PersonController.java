@@ -30,6 +30,7 @@ public class PersonController {
     /**
      * Handles the login API-request
      * @param loginRequest DTO containing login request data
+     * @throws MethodArgumentNotValidException if any data does not match expected values.
      * @return <code>LoggedInPersonDTO</code> representing the logged-in user
      */
     @PostMapping("/login")
