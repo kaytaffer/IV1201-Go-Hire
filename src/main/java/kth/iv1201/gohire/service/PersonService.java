@@ -1,8 +1,11 @@
 package kth.iv1201.gohire.service;
 
+import kth.iv1201.gohire.DTO.CreateUserRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.DTO.LoginRequestDTO;
 import kth.iv1201.gohire.entity.PersonEntity;
+import kth.iv1201.gohire.entity.RoleEntity;
+import kth.iv1201.gohire.repository.RoleRepository;
 import kth.iv1201.gohire.service.exception.LoginFailedException;
 import kth.iv1201.gohire.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +16,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PersonService {
+    private final int APPLICANTROLEID = 2;
 
     private final PersonRepository personRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public PersonService(PersonRepository personRepository) {
+    public PersonService(PersonRepository personRepository, RoleRepository roleRepository) {
         this.personRepository = personRepository;
+        this.roleRepository = roleRepository;
     }
 
     /**
@@ -32,6 +38,25 @@ public class PersonService {
         if(personEntity == null){
             throw new LoginFailedException("Person with given credentials does not exist");
         }
+        return new LoggedInPersonDTO(personEntity.getId(), personEntity.getUsername(), personEntity.getRole().getName());
+    }
+
+    /**
+     * Creates an account for a new user.
+     * @param createUserRequestDTO The DTO containing information about the user to be created.
+     * @return A LoggedInPersonDTO representing the newly created user account.
+     */
+    public LoggedInPersonDTO createAccount(CreateUserRequestDTO createUserRequestDTO){
+        PersonEntity personEntity = new PersonEntity();
+        RoleEntity roleEntity = roleRepository.findRoleById(APPLICANTROLEID);
+        personEntity.setRole(roleEntity);
+        personEntity.setName(createUserRequestDTO.getFirstName());
+        personEntity.setSurname(createUserRequestDTO.getLastName());
+        personEntity.setEmail(createUserRequestDTO.getEmail());
+        personEntity.setPersonNumber(createUserRequestDTO.getPersonNumber());
+        personEntity.setUsername(createUserRequestDTO.getUsername());
+        personEntity.setPassword(createUserRequestDTO.getPassword());
+        personEntity = personRepository.save(personEntity);
         return new LoggedInPersonDTO(personEntity.getId(), personEntity.getUsername(), personEntity.getRole().getName());
     }
 
