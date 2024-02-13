@@ -1,6 +1,6 @@
 package kth.iv1201.gohire.service;
 
-import kth.iv1201.gohire.DTO.CreateUserRequestDTO;
+import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.DTO.LoginRequestDTO;
 import kth.iv1201.gohire.entity.PersonEntity;
@@ -47,7 +47,7 @@ public class PersonService {
      * @param createUserRequestDTO The DTO containing information about the user to be created.
      * @return A LoggedInPersonDTO representing the newly created user account.
      */
-    public LoggedInPersonDTO createAccount(CreateUserRequestDTO createUserRequestDTO) throws UserCreationFailedException{
+    public LoggedInPersonDTO createApplicantAccount(CreateApplicantRequestDTO createUserRequestDTO) throws UserCreationFailedException{
         if(personRepository.existsByUsername(createUserRequestDTO.getUsername())){
             throw new UserCreationFailedException("Username" + createUserRequestDTO.getUsername() + "already exists");
         }

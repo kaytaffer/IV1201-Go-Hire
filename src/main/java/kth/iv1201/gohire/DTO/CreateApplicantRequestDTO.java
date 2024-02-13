@@ -2,9 +2,9 @@ package kth.iv1201.gohire.DTO;
 
 
 /**
- * DTO containing information about a user creation request.
+ * DTO containing information about an applicant creation request.
  */
-public class CreateUserRequestDTO {
+public class CreateApplicantRequestDTO {
 
     String firstName;
     String lastName;
@@ -14,8 +14,7 @@ public class CreateUserRequestDTO {
     String password;
 
     /**
-     * Creates a <code>CreateUserRequestDTO</code> object with the provided information.
-     *
+     * Creates a <code>CreateApplicantRequestDTO</code> object with the provided information.
      * @param firstName the first name of the user
      * @param lastName the last name of the user
      * @param email the email of the user
@@ -23,7 +22,7 @@ public class CreateUserRequestDTO {
      * @param username the username of the user
      * @param password the password of the user
      */
-    public CreateUserRequestDTO(String firstName, String lastName, String email, String personNumber, String username, String password) {
+    public CreateApplicantRequestDTO(String firstName, String lastName, String email, String personNumber, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
