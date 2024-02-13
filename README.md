@@ -44,6 +44,8 @@ The server handling HTTP calls.
 ### exceptions/
 `LoginFailedException` - Exception thrown then the logging in of a user to the application fails.
 
+`UserCreationFailedException` - Exception thrown when the creation of a new user to the application fails.
+
 ## repository/
 `PersonRepository` - Repository responsible for accessing data related to a `PersonEntity`.
 
