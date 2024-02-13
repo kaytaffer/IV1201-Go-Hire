@@ -47,16 +47,25 @@ class PersonControllerTest {
     }
 
     @Test
-    void testIfLoginFailedExceptionThrownWhenCredentialsPresentButIncorrect() {
+    void testIfLoginFailedExceptionIsThrownWhenCredentialsPresentButIncorrect() throws LoginFailedException {
         mockLoginRequestDTO = new LoginRequestDTO("exampleUsername", "examplePassword");
-        try {
-            when(personService.login(mockLoginRequestDTO)).thenThrow(new LoginFailedException("Login Failed"));
-        } catch (Exception e) {
-            assertEquals(e.getClass(), LoginFailedException.class,
-                    "Unexpected exception type was thrown, expected LoginFailedException.");
-        }
+        when(personService.login(mockLoginRequestDTO)).thenThrow(new LoginFailedException("Login Failed"));
+        assertThrowsExactly(LoginFailedException.class, () -> personController.login(mockLoginRequestDTO),
+                "No LoginFailedException was thrown when credentials were incorrect.");
     }
 
-    // TODO test validation
+    @Test
+    void testIfMethodArgumentNotValidExceptionIsThrownWhenCredentialsAreNull(){
+        // TODO
+    }
 
+    @Test
+    void testIfCorrectExceptionThrownWhenCredentialsAreBlank(){
+        // TODO
+    }
+
+    @Test
+    void testIfExceptionThrownWhenCredentialsAreGreaterThenMax(){
+        // TODO
+    }
 }

@@ -35,9 +35,6 @@ public class PersonController {
     @PostMapping("/login")
     public LoggedInPersonDTO login(@RequestBody @Valid LoginRequestDTO loginRequest)
             throws LoginFailedException, MethodArgumentNotValidException {
-        // TODO validate
-        System.out.println("username: [" + loginRequest.getUsername() + "]");
-        System.out.println("password: [" + loginRequest.getPassword() + "]");
         return personService.login(loginRequest);
     }
 
