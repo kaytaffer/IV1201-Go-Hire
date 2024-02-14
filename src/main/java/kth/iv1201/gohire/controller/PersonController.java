@@ -32,6 +32,7 @@ public class PersonController {
     /**
      * Handles the login API-request
      * @param loginRequest DTO containing login request data
+     * @throws LoginFailedException If the username and password do not match an existing user.
      * @throws MethodArgumentNotValidException if any data does not match expected values.
      * @return <code>LoggedInPersonDTO</code> representing the logged-in user
      */
@@ -41,10 +42,16 @@ public class PersonController {
         return personService.login(loginRequest);
     }
 
+    /**
+     * Handles the create applicant API-request.
+     * @param createApplicantRequest DTO containing applicant request data.
+     * @return <code>LoggedInPersonDTO</code> representing the newly created and logged-in user
+     * @throws UserCreationFailedException If the requested username already exists.
+     * @throws MethodArgumentNotValidException if any data does not match expected values.
+     */
     @PostMapping("/createApplicant")
     public LoggedInPersonDTO createNewApplicant(@RequestBody @Valid CreateApplicantRequestDTO createApplicantRequest)
             throws UserCreationFailedException, MethodArgumentNotValidException {
         return personService.createApplicantAccount(createApplicantRequest);
     }
-
 }
