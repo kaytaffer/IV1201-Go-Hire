@@ -1,9 +1,11 @@
 package kth.iv1201.gohire.controller;
 
+import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.DTO.LoginRequestDTO;
 import kth.iv1201.gohire.service.PersonService;
 import kth.iv1201.gohire.service.exception.LoginFailedException;
+import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,7 @@ class PersonControllerTest {
     PersonController personController;
     LoginRequestDTO mockLoginRequestDTO;
     LoggedInPersonDTO mockLoggedInPersonDTO;
+    CreateApplicantRequestDTO mockCreateApplicantRequestDTO;
 
     @BeforeEach
     void setUp() {
@@ -67,5 +70,20 @@ class PersonControllerTest {
     @Test
     void testIfExceptionThrownWhenCredentialsAreGreaterThenMax(){
         // TODO
+    }
+    @Test
+    void testIfUserCreationFailedExceptionIsThrownWhenUsernameAlreadyExistsInDB() throws UserCreationFailedException {
+        mockCreateApplicantRequestDTO = new CreateApplicantRequestDTO("exampleFirstName", "exampleLastName", "example@example.com", "1234567890", "exampleUsername", "examplePassword");
+        when(personService.createApplicantAccount(mockCreateApplicantRequestDTO)).thenThrow(new UserCreationFailedException("Username already exists in database"));
+        assertThrowsExactly(UserCreationFailedException.class, () -> personController.createNewApplicant(mockCreateApplicantRequestDTO),
+                "No UserCreationFailedException was thrown when username already exists in the database.");
+    }
+
+    @Test
+    void testIfUserReturnedWhenCreateNewApplicantSucceeded() throws UserCreationFailedException {
+        mockCreateApplicantRequestDTO = new CreateApplicantRequestDTO("exampleFirstName", "exampleLastName", "example@example.com", "1234567890", "exampleUsername", "examplePassword");
+        mockLoggedInPersonDTO = new LoggedInPersonDTO(0, "exampleUsername", "applicant");
+        when(personService.createApplicantAccount(mockCreateApplicantRequestDTO)).thenReturn(mockLoggedInPersonDTO);
+        //TODO
     }
 }
