@@ -1,14 +1,17 @@
 package kth.iv1201.gohire.controller;
 
+import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.DTO.LoginRequestDTO;
 import kth.iv1201.gohire.service.PersonService;
 import kth.iv1201.gohire.service.exception.LoginFailedException;
+import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -24,21 +27,25 @@ class PersonControllerTest {
     PersonController personController;
     LoginRequestDTO mockLoginRequestDTO;
     LoggedInPersonDTO mockLoggedInPersonDTO;
+    CreateApplicantRequestDTO mockCreateApplicantRequestDTO;
 
     @BeforeEach
     void setUp() {
-        personController = new PersonController(personService);
+        Mockito.reset(personService);
+        mockLoginRequestDTO = new LoginRequestDTO("exampleUsername", "examplePassword");
+        mockLoggedInPersonDTO = new LoggedInPersonDTO(0, "exampleUsername", "recruiter");
+        mockCreateApplicantRequestDTO = new CreateApplicantRequestDTO("exampleFirstName", "exampleLastName", "example@example.com", "123456-7890", "exampleUsername", "examplePassword");
     }
 
     @AfterEach
     void tearDown() {
-        personController = null;
+        mockLoginRequestDTO = null;
+        mockLoggedInPersonDTO = null;
+        mockCreateApplicantRequestDTO = null;
     }
 
     @Test
     void testIfUserReturnedWhenLoginCorrect() throws LoginFailedException, MethodArgumentNotValidException {
-        mockLoginRequestDTO = new LoginRequestDTO("exampleUsername", "examplePassword");
-        mockLoggedInPersonDTO = new LoggedInPersonDTO(0, "exampleUsername", "recruiter");
         when(personService.login(mockLoginRequestDTO)).thenReturn(mockLoggedInPersonDTO);
         LoggedInPersonDTO returnedLoggedInPersonDTO = personController.login(mockLoginRequestDTO);
         assertEquals(mockLoggedInPersonDTO, returnedLoggedInPersonDTO,
@@ -48,7 +55,6 @@ class PersonControllerTest {
 
     @Test
     void testIfLoginFailedExceptionIsThrownWhenCredentialsPresentButIncorrect() throws LoginFailedException {
-        mockLoginRequestDTO = new LoginRequestDTO("exampleUsername", "examplePassword");
         when(personService.login(mockLoginRequestDTO)).thenThrow(new LoginFailedException("Login Failed"));
         assertThrowsExactly(LoginFailedException.class, () -> personController.login(mockLoginRequestDTO),
                 "No LoginFailedException was thrown when credentials were incorrect.");
@@ -67,5 +73,83 @@ class PersonControllerTest {
     @Test
     void testIfExceptionThrownWhenCredentialsAreGreaterThenMax(){
         // TODO
+    }
+    @Test
+    void testIfApplicantCreationFailedExceptionIsThrownWhenUsernameAlreadyExistsInDB() throws UserCreationFailedException {
+        when(personService.createApplicantAccount(mockCreateApplicantRequestDTO)).thenThrow(new UserCreationFailedException("Username already exists in database"));
+        assertThrowsExactly(UserCreationFailedException.class, () -> personController.createNewApplicant(mockCreateApplicantRequestDTO),
+                "No UserCreationFailedException was thrown when username already exists in the database.");
+    }
+
+    @Test
+    void testIfUserReturnedWhenCreateNewApplicantSucceeded() throws UserCreationFailedException, MethodArgumentNotValidException {
+        when(personService.createApplicantAccount(mockCreateApplicantRequestDTO)).thenReturn(mockLoggedInPersonDTO);
+        LoggedInPersonDTO user = personController.createNewApplicant(mockCreateApplicantRequestDTO);
+        assertEquals(mockCreateApplicantRequestDTO.getUsername(), user.getUsername(),"Returned LoggedInPersonDTO" +
+                "from PersonController does not equal returned LoggedInPersonDTO from PersonService.");
+    }
+
+    @Test
+    void testCreateApplicanIfExceptionIsThrownIfFirstNameIsEmpty() {
+        //TODO
+    }
+
+    @Test
+    void testCreateApplicanIfExceptionIsThrownIfFirstNameIsTooLong() {
+        //TODO
+    }
+
+    @Test
+    void testCreateApplicanIfExceptionIsThrownIfLastNameIsEmpty() {
+        //TODO
+    }
+
+    @Test
+    void testCreateApplicanIfExceptionIsThrownIfLastNameIsTooLong() {
+        //TODO
+    }
+    @Test
+    void testCreateApplicanIfExceptionIsThrownIfEmailIsNotFormattedAsEmail() {
+        //TODO
+    }
+
+    @Test
+    void testCreateApplicanIfExceptionIsThrownIfEmailIsEmpty() {
+        //TODO
+    }
+
+    @Test
+    void testCreateApplicantIfExceptionIsThrownIfEmailIsTooLong () {
+        //TODO
+    }
+
+    @Test
+    void testCreateApplicanIfExceptionIsThrownIfPersonNumberIsEmpty() {
+        //TODO
+    }
+
+    @Test
+    void testCreateApplicanIfExceptionIsThrownIfPersonNumberIsPoorlyFormatted() {
+        //TODO
+    }
+
+    @Test
+    void testCreateApplicanIfExceptionIsThrownIfUsernameIsEmpty() {
+        //TODO
+    }
+
+    @Test
+    void testCreateApplicanIfExceptionIsThrownIfUsernameIsTooLong() {
+        //TODO
+    }
+
+    @Test
+    void testCreateApplicanIfExceptionIsThrownIfPasswordIsEmpty() {
+        //TODO
+    }
+
+    @Test
+    void testCreateApplicanIfExceptionIsThrownIfPasswordIsTooLong() {
+
     }
 }

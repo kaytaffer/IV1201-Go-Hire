@@ -31,6 +31,8 @@ public class PersonServiceTest {
 
     @BeforeEach
     public void setUp() {
+        Mockito.reset(personRepository);
+        Mockito.reset(roleRepository);
         this.personService = new PersonService(personRepository, roleRepository);
         this.fakePersonEntity = new PersonEntity();
         fakePersonEntity.setUsername("aValidUsername");
@@ -48,8 +50,6 @@ public class PersonServiceTest {
         personRepository.delete(fakePersonEntity);
         fakePersonEntity = null;
         roleEntity = null;
-        Mockito.reset(personRepository);
-        Mockito.reset(roleRepository);
     }
 
     @Test
