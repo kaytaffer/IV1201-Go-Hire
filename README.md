@@ -42,6 +42,8 @@ The server handling HTTP calls.
 ### util
 `Logger` - Utility class containing static methods to write to error and event logs.
 
+`LoggerException` - Exception thrown when the `Logger` fails to write to the log.
+
 ## service/
 `PersonService` - Service Class that handles business logic related to persons.
 
