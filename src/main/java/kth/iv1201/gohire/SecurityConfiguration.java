@@ -23,8 +23,7 @@ public class SecurityConfiguration {
     /**
      * Defines URLs accessible to all users, logged in or not.
      */
-    final String[] whitelist = { "/built/**", "/main.css", "/login", "/", "/error", "/api/login",
-            "/api/who", "/api/createApplicant" };
+    final String[] whitelist = { "^(?!/api/).+", "/api/login", "/api/who", "/api/createApplicant" };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
