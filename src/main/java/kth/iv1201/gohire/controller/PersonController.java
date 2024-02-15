@@ -38,7 +38,7 @@ public class PersonController {
      */
     @PostMapping("/login")
     public LoggedInPersonDTO login(@RequestBody @Valid LoginRequestDTO loginRequest)
-            throws LoginFailedException, MethodArgumentNotValidException {
+            throws LoginFailedException {
         return personService.login(loginRequest);
     }
 
@@ -51,7 +51,7 @@ public class PersonController {
      */
     @PostMapping("/createApplicant")
     public LoggedInPersonDTO createNewApplicant(@RequestBody @Valid CreateApplicantRequestDTO createApplicantRequest)
-            throws UserCreationFailedException, MethodArgumentNotValidException {
+            throws UserCreationFailedException {
         return personService.createApplicantAccount(createApplicantRequest);
     }
 }
