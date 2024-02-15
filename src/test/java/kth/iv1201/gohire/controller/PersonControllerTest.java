@@ -3,6 +3,7 @@ package kth.iv1201.gohire.controller;
 import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.DTO.LoginRequestDTO;
+import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.PersonService;
 import kth.iv1201.gohire.service.exception.LoginFailedException;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
@@ -13,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -45,7 +45,7 @@ class PersonControllerTest {
     }
 
     @Test
-    void testIfUserReturnedWhenLoginCorrect() throws LoginFailedException, MethodArgumentNotValidException {
+    void testIfUserReturnedWhenLoginCorrect() throws LoginFailedException, LoggerException {
         when(personService.login(mockLoginRequestDTO)).thenReturn(mockLoggedInPersonDTO);
         LoggedInPersonDTO returnedLoggedInPersonDTO = personController.login(mockLoginRequestDTO);
         assertEquals(mockLoggedInPersonDTO, returnedLoggedInPersonDTO,
@@ -82,7 +82,7 @@ class PersonControllerTest {
     }
 
     @Test
-    void testIfUserReturnedWhenCreateNewApplicantSucceeded() throws UserCreationFailedException, MethodArgumentNotValidException {
+    void testIfUserReturnedWhenCreateNewApplicantSucceeded() throws UserCreationFailedException, LoggerException {
         when(personService.createApplicantAccount(mockCreateApplicantRequestDTO)).thenReturn(mockLoggedInPersonDTO);
         LoggedInPersonDTO user = personController.createNewApplicant(mockCreateApplicantRequestDTO);
         assertEquals(mockCreateApplicantRequestDTO.getUsername(), user.getUsername(),"Returned LoggedInPersonDTO" +

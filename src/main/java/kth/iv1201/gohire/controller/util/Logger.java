@@ -2,7 +2,6 @@ package kth.iv1201.gohire.controller.util;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -22,8 +21,11 @@ public class Logger {
      */
     public static void logError(Exception exceptionToLog) throws LoggerException {
         FileWriter exceptionLogger = makeWriter(ERROR_LOG_NAME);
-        String message = Arrays.toString(exceptionToLog.getStackTrace());
-        makeLogEntry(exceptionLogger, message);
+        StringBuilder message = new StringBuilder("\n\n");
+        StackTraceElement[] stackTrace = exceptionToLog.getStackTrace();
+        for (StackTraceElement element : stackTrace)
+            message.append(element.toString()).append("\n");
+        makeLogEntry(exceptionLogger, message.toString());
     }
 
     /**
