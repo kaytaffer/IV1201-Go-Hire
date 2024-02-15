@@ -1,5 +1,6 @@
 package kth.iv1201.gohire.controller;
 
+import jakarta.servlet.http.HttpSession;
 import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.DTO.LoginRequestDTO;
@@ -23,6 +24,8 @@ class PersonControllerTest {
 
     @Mock
     PersonService personService;
+    @Mock
+    HttpSession session;
     @InjectMocks
     PersonController personController;
     LoginRequestDTO mockLoginRequestDTO;
@@ -47,7 +50,7 @@ class PersonControllerTest {
     @Test
     void testIfUserReturnedWhenLoginCorrect() throws LoginFailedException, MethodArgumentNotValidException {
         when(personService.login(mockLoginRequestDTO)).thenReturn(mockLoggedInPersonDTO);
-        LoggedInPersonDTO returnedLoggedInPersonDTO = personController.login(mockLoginRequestDTO);
+        LoggedInPersonDTO returnedLoggedInPersonDTO = personController.login(mockLoginRequestDTO, session);
         assertEquals(mockLoggedInPersonDTO, returnedLoggedInPersonDTO,
                 "Returned LoggedInPersonDTO from PersonController does not equal returned" +
                         "LoggedInPersonDTO from PersonService.");
@@ -56,7 +59,7 @@ class PersonControllerTest {
     @Test
     void testIfLoginFailedExceptionIsThrownWhenCredentialsPresentButIncorrect() throws LoginFailedException {
         when(personService.login(mockLoginRequestDTO)).thenThrow(new LoginFailedException("Login Failed"));
-        assertThrowsExactly(LoginFailedException.class, () -> personController.login(mockLoginRequestDTO),
+        assertThrowsExactly(LoginFailedException.class, () -> personController.login(mockLoginRequestDTO, session),
                 "No LoginFailedException was thrown when credentials were incorrect.");
     }
 
