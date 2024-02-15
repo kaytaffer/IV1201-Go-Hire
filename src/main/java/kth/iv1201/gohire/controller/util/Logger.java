@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * Class concerning static methods to write to error and event logs.
+ * Utility class containing static methods to write to error and event logs.
  */
 public class Logger {
 

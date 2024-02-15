@@ -39,6 +39,9 @@ The server handling HTTP calls.
 
 `StartController` - Responsible for returning the whole React App.
 
+### util
+`Logger` - Utility class containing static methods to write to error and event logs.
+
 ## service/
 `PersonService` - Service Class that handles business logic related to persons.
 
