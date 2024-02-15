@@ -3,7 +3,6 @@ package kth.iv1201.gohire.service;
 import kth.iv1201.gohire.entity.PersonEntity;
 import kth.iv1201.gohire.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

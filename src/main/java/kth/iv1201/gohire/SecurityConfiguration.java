@@ -27,16 +27,13 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/api/login").permitAll()
                         .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
                         .requestMatchers("/built/**").permitAll()
-                        .requestMatchers("/built/bundle.js").permitAll()
                         .requestMatchers("/main.css").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/api/secret").hasRole("recruiter")
-                        .requestMatchers("/api/who").permitAll()
+                        .requestMatchers("/api/login").permitAll()
                         .anyRequest().authenticated()
                 ).csrf(csrf -> csrf
                         .ignoringRequestMatchers("/**") )

@@ -55,35 +55,19 @@ public class PersonController {
         LoggedInPersonDTO user = personService.login(loginRequest);
 
         Authentication authenticationRequest =
-                UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getUsername(), loginRequest.getPassword());
+                UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getUsername(),
+                                                                    loginRequest.getPassword());
         Authentication authenticationResponse =
                 this.authenticationManager.authenticate(authenticationRequest);
-        System.out.println(authenticationResponse.getName());
-        System.out.println(authenticationResponse.isAuthenticated());
 
         if(authenticationResponse.isAuthenticated()) {
             SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
-            // setting role to the session
             session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                     SecurityContextHolder.getContext());
             return user;
         }
         else
-            return null;
-
-        /*Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        User user2 = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String name = user2.getUsername();
-        System.out.println(name);
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(auth.getName());
-
-        System.out.printf("%s logged in with role %s\n", user.getUsername(), user.getRole());
-        return user;*/
+            throw new LoginFailedException("Person with given credentials does not exist");
     }
 
     /**
@@ -106,8 +90,14 @@ public class PersonController {
     }
 
     @PreAuthorize("hasRole('recruiter')")
-    @GetMapping("/secret")
-    public String getSecret() {
+    @GetMapping("/recruiter")
+    public String getRecruiterSecret() {
+        return "Secret thing";
+    }
+
+    @PreAuthorize("hasRole('applicant')")
+    @GetMapping("/applicant")
+    public String getApplicantSecret() {
         return "Secret thing";
     }
 
