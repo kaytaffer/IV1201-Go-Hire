@@ -11,14 +11,10 @@ import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -47,7 +43,6 @@ public class PersonController {
      * @throws LoginFailedException If the username and password do not match an existing user.
      * @return <code>LoggedInPersonDTO</code> representing the logged-in user
      */
-    @PreAuthorize("permitAll()")
     @PostMapping("/login")
     public LoggedInPersonDTO login(@RequestBody @Valid LoginRequestDTO loginRequest, HttpSession session)
             throws LoginFailedException {
@@ -82,7 +77,6 @@ public class PersonController {
         return personService.createApplicantAccount(createApplicantRequest);
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping("/who")
     public String notSecret() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
