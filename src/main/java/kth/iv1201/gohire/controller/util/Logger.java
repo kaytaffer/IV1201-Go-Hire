@@ -21,7 +21,7 @@ public class Logger {
      */
     public static void logError(Exception exceptionToLog) throws LoggerException {
         FileWriter exceptionLogger = makeWriter(ERROR_LOG_NAME);
-        StringBuilder message = new StringBuilder("\n\n");
+        StringBuilder message = new StringBuilder("\n\n" + exceptionToLog.getMessage() + "\n");
         StackTraceElement[] stackTrace = exceptionToLog.getStackTrace();
         for (StackTraceElement element : stackTrace)
             message.append(element.toString()).append("\n");
