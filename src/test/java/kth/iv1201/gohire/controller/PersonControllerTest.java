@@ -31,7 +31,7 @@ class PersonControllerTest {
 
     @BeforeEach
     void setUp() {
-        personController = new PersonController(personService);
+        Mockito.reset(personService);
         mockLoginRequestDTO = new LoginRequestDTO("exampleUsername", "examplePassword");
         mockLoggedInPersonDTO = new LoggedInPersonDTO(0, "exampleUsername", "recruiter");
         mockCreateApplicantRequestDTO = new CreateApplicantRequestDTO("exampleFirstName", "exampleLastName", "example@example.com", "123456-7890", "exampleUsername", "examplePassword");
@@ -39,7 +39,6 @@ class PersonControllerTest {
 
     @AfterEach
     void tearDown() {
-        Mockito.reset(personService);
         mockLoginRequestDTO = null;
         mockLoggedInPersonDTO = null;
         mockCreateApplicantRequestDTO = null;
