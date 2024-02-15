@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {LoginView} from "../view/loginView";
 import {authenticateLogin, createNewApplicant} from "./api/apiCallHandler";
 import {CreateNewApplicantView} from "../view/createNewApplicantView";
@@ -12,6 +12,8 @@ import {CreateNewApplicantView} from "../view/createNewApplicantView";
  */
 export function Login(props){
 
+    const [newUserIsCreated, setNewUserIsCreated] = useState(false)
+
     function catchPromiseError(error) {
         //TODO Handle promise error
     }
@@ -24,13 +26,13 @@ export function Login(props){
 
     function newApplicant(firstName, lastName, email, personNumber, username, password) {
         createNewApplicant(firstName, lastName, email, personNumber, username, password)
-            .then(user => props.onLoggedIn(user)).catch(catchPromiseError)
+            .then(user => {if(user) setNewUserIsCreated(true)}).catch(catchPromiseError)
 
     }
 
-
-    return <div>
+    return (<div>
         <LoginView onLogin={login}/>
-        <CreateNewApplicantView onCreate={newApplicant}/>
+        {newUserIsCreated ? <div>Account successfully created</div> : <CreateNewApplicantView onCreate={newApplicant}/>}
     </div>
+    )
 }
