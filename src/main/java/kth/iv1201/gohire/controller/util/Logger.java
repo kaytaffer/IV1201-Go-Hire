@@ -2,6 +2,7 @@ package kth.iv1201.gohire.controller.util;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -34,18 +35,19 @@ public class Logger {
 
     //Creates a named FileWriter
     private static FileWriter makeWriter(String logName) {
-        try (FileWriter fileWriter = new FileWriter(logName, true)) {
-            return fileWriter;
+        try {
+            String date = LocalDate.now().toString();
+            return new FileWriter(date + "_" + logName, true);
         } catch (IOException e) {
             //TODO don't infiniloop
             throw new RuntimeException(e);
         }
     }
 
-    //Writes the supplied message to the supplied FileWriter
+    //Writes the supplied message to the supplied FileWriter and closes it
     private static void makeLogEntry(FileWriter fileWriter, String message) {
         String time = LocalDateTime.now().toString();
-        message = time + ": " + message;
+        message = time + ": " + message + "\n";
         try {
             fileWriter.append(message);
             fileWriter.close();
