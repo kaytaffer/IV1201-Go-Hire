@@ -35,11 +35,17 @@ The server handling HTTP calls.
 `GoHireApplication` - contains main method bootstrapping the server.
 
 ## controller/
+
+`ErrorHandler` - Class handling exceptions.
+
 `PersonController` - Controller responsible for API calls related to a `PersonEntity`.
 
 `StartController` - Responsible for returning the whole React App.
 
 ### util
+
+`ErrorType` - ENUM representing error types.
+
 `Logger` - Utility class containing static methods to write to error and event logs.
 
 `LoggerException` - Exception thrown when the `Logger` fails to write to the log.
@@ -62,6 +68,8 @@ The server handling HTTP calls.
 
 ## DTO/ 
 `CreateUserRequestDTO` - DTO containing information about a user creation request.
+
+`ErrorDTO` - Class representing an error response.
 
 `LoggedInPersonDTO` - DTO containing information about a logged-in persons username and role.
 
