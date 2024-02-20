@@ -8,8 +8,9 @@ import kth.iv1201.gohire.DTO.LoginRequestDTO;
 import kth.iv1201.gohire.controller.util.Logger;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.PersonService;
-import kth.iv1201.gohire.service.exception.LoginFailedException;
+import kth.iv1201.gohire.controller.exception.LoginFailedException;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
+import kth.iv1201.gohire.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,29 +45,16 @@ public class PersonController {
      * @param loginRequest DTO containing login request data
      * @throws LoginFailedException If the username and password do not match an existing user.
      * @throws LoggerException if there is a problem with logging an event.
+     * @throws UserNotFoundException If the user is authenticated but can not be fetched from the database.
      * @return <code>LoggedInPersonDTO</code> representing the logged-in user
      */
     @PostMapping("/login")
     public LoggedInPersonDTO login(@RequestBody @Valid LoginRequestDTO loginRequest, HttpSession session)
-            throws LoginFailedException, LoggerException {
-
-        LoggedInPersonDTO user = personService.login(loginRequest);
-
-        Authentication authenticationRequest =
-                UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getUsername(),
-                                                                    loginRequest.getPassword());
-        Authentication authenticationResponse =
-                this.authenticationManager.authenticate(authenticationRequest);
-
-        if(authenticationResponse.isAuthenticated()) {
-            SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
-            session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-                    SecurityContextHolder.getContext());
-            Logger.logEvent("User logged in: " + user.getUsername());
-            return user;
-        }
-        else
-            throw new LoginFailedException("Person with given credentials does not exist");
+            throws LoggerException, UserNotFoundException, LoginFailedException {
+        Authentication authenticationResponse = authenticateLoginRequest(loginRequest);
+        saveAuthenticedUserInSession(authenticationResponse, session);
+        Logger.logEvent("User logged in: " + loginRequest.getUsername());
+        return personService.fetchLoggedInPersonByUsername(loginRequest.getUsername());
     }
 
     /**
@@ -100,6 +88,23 @@ public class PersonController {
     @GetMapping("/applicant")
     public String getApplicantSecret() {
         return "Secret thing";
+    }
+
+    private Authentication authenticateLoginRequest(LoginRequestDTO loginRequest) throws LoginFailedException {
+        Authentication authenticationRequest =
+                UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getUsername(),
+                        loginRequest.getPassword());
+        Authentication authenticationResponse =
+                this.authenticationManager.authenticate(authenticationRequest);
+        if(!authenticationRequest.isAuthenticated())
+            throw new LoginFailedException("Person with given credentials does not exist.");
+        return authenticationResponse;
+    }
+
+    private void saveAuthenticedUserInSession(Authentication authenticationResponse, HttpSession session) {
+        SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                SecurityContextHolder.getContext());
     }
 
 }

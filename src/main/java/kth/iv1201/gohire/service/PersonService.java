@@ -2,13 +2,12 @@ package kth.iv1201.gohire.service;
 
 import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
-import kth.iv1201.gohire.DTO.LoginRequestDTO;
 import kth.iv1201.gohire.entity.PersonEntity;
 import kth.iv1201.gohire.entity.RoleEntity;
 import kth.iv1201.gohire.repository.RoleRepository;
-import kth.iv1201.gohire.service.exception.LoginFailedException;
 import kth.iv1201.gohire.repository.PersonRepository;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
+import kth.iv1201.gohire.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -32,17 +31,18 @@ public class PersonService {
     }
 
     /**
-     * Fetches a <code>LoggedInPersonDTO</code> matching the credentials entered by the user.
-     * @param loginRequest DTO containing the username and password entered by the user.
-     * @return <code>LoggedInPersonDTO</code> representing the logged-in user matching the entered credentials.
-     * @throws LoginFailedException when a matching user does not exist in the database.
+     * Fetches a user as a <code>LoggedInPersonDTO</code> by username
+     * @param username the username
+     * @return The <code>LoggedInPersonDTO</code>
+     * @throws UserNotFoundException Thrown if no user with that name is found
      */
-    public LoggedInPersonDTO login(LoginRequestDTO loginRequest) throws LoginFailedException {
-        PersonEntity personEntity = personRepository.findByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+    public LoggedInPersonDTO fetchLoggedInPersonByUsername(String username) throws UserNotFoundException {
+        PersonEntity personEntity = personRepository.findByUsername(username);
         if(personEntity == null){
-            throw new LoginFailedException("Person with given credentials does not exist");
+            throw new UserNotFoundException("User with given username does not exist.");
         }
         return new LoggedInPersonDTO(personEntity.getId(), personEntity.getUsername(), personEntity.getRole().getName());
+
     }
 
     /**
