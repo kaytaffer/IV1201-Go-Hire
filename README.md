@@ -18,6 +18,8 @@ View-Presenter React powered web application.
 
 `apiCallHandler` - Authenticates login credentials with the API.
 
+`errorMessages` - Pre-defined error objects with their error type matched with the message to be displayed to user.
+
 ## view/
 `createNewApplicantView` - Responsible for rendering the create new applicant form
 
