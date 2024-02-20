@@ -22,7 +22,8 @@ public class ErrorHandler implements ErrorController {
     /**
      * Method responsible for logging exceptions, and return appropriate error object to client.
      * @param exception Exception thrown within server environment.
-     * @return ErrorDTO containing <code>ErrorType</code> and appropriate message to client.
+     * @return ErrorDTO containing <code>ErrorType</code> and appropriate message to client, or null if causing
+     *         <code>Exception</code> isn't meant to be translated to client.
      */
     @ExceptionHandler({UserCreationFailedException.class, LoggerException.class,
             MethodArgumentNotValidException.class, LoginFailedException.class})
@@ -31,12 +32,12 @@ public class ErrorHandler implements ErrorController {
 
         if (exception instanceof UserCreationFailedException) {
             return handleUserCreationFailedException((UserCreationFailedException) exception);
-        } else if (exception instanceof LoggerException) {
-            return handleLoggerException((LoggerException) exception);
         } else if (exception instanceof MethodArgumentNotValidException) {
             return handleMethodArgumentNotValidException((MethodArgumentNotValidException) exception);
         } else if (exception instanceof LoginFailedException) {
             return handleLoginFailedException((LoginFailedException) exception);
+        } else if (exception instanceof LoggerException) {
+            return handleLoggerException((LoggerException) exception);
         } else
         return handleOtherExceptions(exception);
     }
