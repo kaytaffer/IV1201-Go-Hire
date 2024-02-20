@@ -78,6 +78,8 @@ public class PersonController {
         return auth.getName();
     }
 
+    /* The following methods are for testing purposes since there is no other protected content */
+
     @PreAuthorize("hasRole('recruiter')")
     @GetMapping("/recruiter")
     public String getRecruiterSecret() {

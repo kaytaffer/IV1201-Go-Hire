@@ -15,15 +15,21 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
 class PersonControllerTest {
 
     @Mock
@@ -40,6 +46,9 @@ class PersonControllerTest {
     UsernamePasswordAuthenticationToken mockAuthenticatedSuccessfulResponse;
     UsernamePasswordAuthenticationToken mockAuthenticatedFailedResponse;
     UsernamePasswordAuthenticationToken mockAuthenticationRequest;
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
@@ -80,19 +89,20 @@ class PersonControllerTest {
     }
 
     @Test
-    void testIfMethodArgumentNotValidExceptionIsThrownWhenCredentialsAreNull(){
+    void testIfMethodArgumentNotValidExceptionIsThrownWhenLoginCredentialsAreNull(){
         // TODO
     }
 
     @Test
-    void testIfCorrectExceptionThrownWhenCredentialsAreBlank(){
+    void testIfCorrectExceptionThrownWhenLoginCredentialsAreBlank(){
         // TODO
     }
 
     @Test
-    void testIfExceptionThrownWhenCredentialsAreGreaterThenMax(){
+    void testIfExceptionThrownWhenLoginCredentialsAreGreaterThenMax(){
         // TODO
     }
+
     @Test
     void testIfApplicantCreationFailedExceptionIsThrownWhenUsernameAlreadyExistsInDB() throws UserCreationFailedException {
         when(personService.createApplicantAccount(mockCreateApplicantRequestDTO)).thenThrow(new UserCreationFailedException("Username already exists in database"));
@@ -169,6 +179,25 @@ class PersonControllerTest {
 
     @Test
     void testCreateApplicanIfExceptionIsThrownIfPasswordIsTooLong() {
+
+    }
+
+    /* The following two tests are temporary since there is no other protected content */
+
+    @Test
+    @WithMockUser(roles = {"applicant"})
+    void testThatApplicantCanNotAccessRecruiterSecret() {
+        assertDoesNotThrow(() -> {
+            mockMvc.perform(get("/api/recruiter")).andExpect(status().isForbidden());
+        }, "Applicant was allowed to access recruiter secret.");
+    }
+
+    @Test
+    @WithMockUser(roles = {"recruiter"})
+    void testThatRecruiterCanAccessRecruiterSecret() {
+        assertDoesNotThrow(() -> {
+            mockMvc.perform(get("/api/recruiter")).andExpect(status().isOk());
+        }, "Recruiter was not allowed to access recruiter secret.");
 
     }
 }
