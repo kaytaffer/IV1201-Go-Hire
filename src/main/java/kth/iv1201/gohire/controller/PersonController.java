@@ -96,6 +96,8 @@ public class PersonController {
                         loginRequest.getPassword());
         Authentication authenticationResponse =
                 this.authenticationManager.authenticate(authenticationRequest);
+        System.out.println(authenticationResponse.getCredentials());
+        System.out.println(authenticationRequest.isAuthenticated());
         if(!authenticationRequest.isAuthenticated())
             throw new LoginFailedException("Person with given credentials does not exist.");
         return authenticationResponse;
