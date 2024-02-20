@@ -10,8 +10,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,32 +35,51 @@ public class ErrorHandlerTest {
 
     @Test
     void testIfHandleUserCreationFailedExceptionReturnsValidErrorType() throws LoggerException {
-        ErrorDTO error = errorHandler.handleException(new UserCreationFailedException("error message"));
-        assertEquals(ErrorType.USERNAME_ALREADY_EXISTS, error.getErrorType(), "Method didn't return correct ErrorType");
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new UserCreationFailedException("error message"));
+        assertEquals(ErrorType.USERNAME_ALREADY_EXISTS, Objects.requireNonNull(error.getBody()).getErrorType(), "Method didn't return correct ErrorType");
+    }
+
+    @Test
+    void testIfHandleUserCreationFailedExceptionReturnsRightStatusCode() throws LoggerException {
+        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new UserCreationFailedException("error message"));
+        assertEquals(HttpStatus.CONFLICT, error.getStatusCode(), "Method didn't return correct Status Code");
     }
 
     @Test
     void testIfHandleMethodArgumentNotValidExceptionReturnsValidErrorType() throws LoggerException {
         MethodParameter methodParameter = new MethodParameter(this.getClass().getMethods()[0], -1);
-        ErrorDTO error = errorHandler.handleException(new MethodArgumentNotValidException(methodParameter, new BeanPropertyBindingResult("target", "target")));
-        assertEquals(ErrorType.USER_INPUT_ERROR, error.getErrorType(), "Method didn't return correct ErrorType");
+        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new MethodArgumentNotValidException(methodParameter, new BeanPropertyBindingResult("target", "target")));
+        assertEquals(ErrorType.USER_INPUT_ERROR, Objects.requireNonNull(error.getBody()).getErrorType(), "Method didn't return correct ErrorType");
+    }
+
+    @Test
+    void testIfHandleMethodArgumentNotValidExceptionReturnsRightStatusCode() throws LoggerException {
+        MethodParameter methodParameter = new MethodParameter(this.getClass().getMethods()[0], -1);
+        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new MethodArgumentNotValidException(methodParameter, new BeanPropertyBindingResult("target", "target")));
+        assertEquals(HttpStatus.BAD_REQUEST, error.getStatusCode(), "Method didn't return correct Status Code");
     }
 
     @Test
     void testIfHandlehandleLoginFailedExceptionReturnsValidErrorType() throws LoggerException {
-        ErrorDTO error = errorHandler.handleException(new LoginFailedException("error message"));
-        assertEquals(ErrorType.LOGIN_FAIL, error.getErrorType(), "Method didn't return correct ErrorType");
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new LoginFailedException("error message"));
+        assertEquals(ErrorType.LOGIN_FAIL, Objects.requireNonNull(error.getBody()).getErrorType(), "Method didn't return correct ErrorType");
+    }
+
+    @Test
+    void testIfHandleLoginFailedExceptionReturnsRightStatusCode() throws LoggerException {
+        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new LoginFailedException("error message"));
+        assertEquals(HttpStatus.UNAUTHORIZED, error.getStatusCode(), "Method didn't return correct Status Code");
     }
 
     @Test
     void testIfHandleExceptionReturnsNullIfLoggerExceptionIsSupplied() throws LoggerException {
-        ErrorDTO error = errorHandler.handleException(new LoggerException("error message"));
+        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new LoggerException("error message"));
         assertNull(error, "Method didn't return a valid instance");
     }
 
     @Test
     void testIfHandleExceptionReturnsNullIfGenericExceptionIsSupplied() throws LoggerException {
-        ErrorDTO error = errorHandler.handleException(new Exception("error message"));
+        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new Exception("error message"));
         assertNull(error, "Method didn't return a valid instance");
     }
 
