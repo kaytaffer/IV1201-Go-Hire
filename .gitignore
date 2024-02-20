@@ -36,3 +36,6 @@ build/
 
 ### React ###
 node_modules
+
+### Logs ###
+*log.txt
