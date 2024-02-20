@@ -6,6 +6,8 @@ import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.exception.LoginFailedException;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,9 +29,7 @@ public class ErrorHandler implements ErrorController {
      */
     @ExceptionHandler({UserCreationFailedException.class, LoggerException.class,
             MethodArgumentNotValidException.class, LoginFailedException.class})
-
-    public ErrorDTO handleException (Exception exception) throws LoggerException {
-
+    public ResponseEntity<ErrorDTO> handleException (Exception exception) throws LoggerException {
         if (exception instanceof UserCreationFailedException) {
             return handleUserCreationFailedException((UserCreationFailedException) exception);
         } else if (exception instanceof MethodArgumentNotValidException) {
@@ -42,25 +42,26 @@ public class ErrorHandler implements ErrorController {
         return handleOtherExceptions(exception);
     }
 
-    private ErrorDTO handleUserCreationFailedException(UserCreationFailedException exception){
-        return new ErrorDTO(ErrorType.USERNAME_ALREADY_EXISTS,exception.getMessage());
+    private ResponseEntity<ErrorDTO> handleUserCreationFailedException(UserCreationFailedException exception){
+        return new ResponseEntity<> (new ErrorDTO(ErrorType.USERNAME_ALREADY_EXISTS,exception.getMessage()),
+                HttpStatus.CONFLICT);
     }
 
-    private ErrorDTO handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
-        return new ErrorDTO(ErrorType.USER_INPUT_ERROR, exception.getMessage());
+    private ResponseEntity<ErrorDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
+        return new ResponseEntity<> (new ErrorDTO(ErrorType.USER_INPUT_ERROR, exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
-    private ErrorDTO handleLoginFailedException(LoginFailedException exception){
-        return new ErrorDTO(ErrorType.LOGIN_FAIL,exception.getMessage());
+    private ResponseEntity<ErrorDTO> handleLoginFailedException(LoginFailedException exception){
+        return new ResponseEntity<> (new ErrorDTO(ErrorType.LOGIN_FAIL,exception.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
-    private ErrorDTO handleLoggerException(LoggerException exception) {
+    private ResponseEntity<ErrorDTO> handleLoggerException(LoggerException exception) {
         System.out.println(exception.toString());
         return null;
     }
 
     //Generic handling and logging for all unspecified exceptions
-    private ErrorDTO handleOtherExceptions(Exception exception) throws LoggerException {
+    private ResponseEntity<ErrorDTO> handleOtherExceptions(Exception exception) throws LoggerException {
         Logger.logError(exception);
         return null;
     }
