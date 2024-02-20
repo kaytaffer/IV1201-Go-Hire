@@ -16,16 +16,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -42,8 +37,8 @@ class PersonControllerTest {
     LoginRequestDTO mockLoginRequestDTO;
     LoggedInPersonDTO mockLoggedInPersonDTO;
     CreateApplicantRequestDTO mockCreateApplicantRequestDTO;
-    TestingAuthenticationToken mockAuthenticatedSuccessfulResponse;
-    TestingAuthenticationToken mockAuthenticatedFailedResponse;
+    UsernamePasswordAuthenticationToken mockAuthenticatedSuccessfulResponse;
+    UsernamePasswordAuthenticationToken mockAuthenticatedFailedResponse;
     UsernamePasswordAuthenticationToken mockAuthenticationRequest;
 
     @BeforeEach
@@ -52,11 +47,9 @@ class PersonControllerTest {
         mockLoginRequestDTO = new LoginRequestDTO("exampleUsername", "examplePassword");
         mockLoggedInPersonDTO = new LoggedInPersonDTO(0, "exampleUsername", "recruiter");
         mockCreateApplicantRequestDTO = new CreateApplicantRequestDTO("exampleFirstName", "exampleLastName", "example@example.com", "123456-7890", "exampleUsername", "examplePassword");
-        mockAuthenticatedSuccessfulResponse = new TestingAuthenticationToken("exampleUsername2", "examplePassword2");
-        mockAuthenticatedSuccessfulResponse.setAuthenticated(true);
-        mockAuthenticatedFailedResponse = new TestingAuthenticationToken("exampleUsername", "examplePassword");
-        mockAuthenticatedFailedResponse.setAuthenticated(false);
-        mockAuthenticationRequest = new UsernamePasswordAuthenticationToken("exampleUsername", "examplePassword");
+        mockAuthenticatedSuccessfulResponse = UsernamePasswordAuthenticationToken.authenticated("exampleUsername2", "examplePassword2", null);
+        mockAuthenticatedFailedResponse = UsernamePasswordAuthenticationToken.unauthenticated("exampleUsername", "examplePassword");
+        mockAuthenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated("exampleUsername", "examplePassword");
     }
 
     @AfterEach
@@ -68,7 +61,6 @@ class PersonControllerTest {
 
     @Test
     void testIfUserReturnedWhenLoginCorrect() throws LoginFailedException, LoggerException, UserNotFoundException {
-
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(mockAuthenticatedSuccessfulResponse);
         when(personService.fetchLoggedInPersonByUsername(mockLoginRequestDTO.getUsername())).thenReturn(mockLoggedInPersonDTO);
         LoggedInPersonDTO returnedLoggedInPersonDTO = personController.login(mockLoginRequestDTO, session);

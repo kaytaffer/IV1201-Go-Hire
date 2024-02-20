@@ -21,9 +21,9 @@ import static jakarta.servlet.DispatcherType.FORWARD;
 public class SecurityConfiguration {
 
     /**
-     * Defines URLs accessible to all users, logged in or not.
+     * Defines api URLs accessible to all users, logged in or not.
      */
-    final String[] whitelist = { "^(?!/api/).+", "/api/login", "/api/who", "/api/createApplicant" };
+    final String[] whitelist = { "/api/login", "/api/who", "/api/createApplicant"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,7 +31,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests((authorize) -> authorize
                         .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
                         .requestMatchers(whitelist).permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll()
                 ).csrf(csrf -> csrf // TODO unsafe
                         .ignoringRequestMatchers("/**") )
                 .securityContext((securityContext) -> securityContext
