@@ -1,6 +1,7 @@
 package kth.iv1201.gohire.controller;
 
 import kth.iv1201.gohire.DTO.ErrorDTO;
+import kth.iv1201.gohire.controller.util.Logger;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.exception.LoginFailedException;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
@@ -26,7 +27,7 @@ public class ErrorHandler implements ErrorController {
     @ExceptionHandler({UserCreationFailedException.class, LoggerException.class,
             MethodArgumentNotValidException.class, LoginFailedException.class})
 
-    public ErrorDTO handleException (Exception exception){
+    public ErrorDTO handleException (Exception exception) throws LoggerException {
 
         if (exception instanceof UserCreationFailedException) {
             return handleUserCreationFailedException((UserCreationFailedException) exception);
@@ -37,23 +38,30 @@ public class ErrorHandler implements ErrorController {
         } else if (exception instanceof LoginFailedException) {
             return handleLoginFailedException((LoginFailedException) exception);
         } else
-        return new ErrorDTO(null, null);
+        return handleOtherExceptions(exception);
     }
 
     private ErrorDTO handleUserCreationFailedException(UserCreationFailedException exception){
-        return new ErrorDTO(ErrorType.USERNAME_ALREADY_EXISTS,null);
+        return new ErrorDTO(ErrorType.USERNAME_ALREADY_EXISTS,exception.getMessage());
     }
-    private ErrorDTO handleLoggerException(LoggerException exception) {
-        //TODO
-        return new ErrorDTO(null,null);
-    }
+
     private ErrorDTO handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
-        //TODO
-        return new ErrorDTO(null,null);
+        return new ErrorDTO(ErrorType.USER_INPUT_ERROR, exception.getMessage());
     }
+
     private ErrorDTO handleLoginFailedException(LoginFailedException exception){
-        //TODO
-        return new ErrorDTO(null,null);
+        return new ErrorDTO(ErrorType.LOGIN_FAIL,exception.getMessage());
+    }
+
+    private ErrorDTO handleLoggerException(LoggerException exception) {
+        System.out.println(exception.toString());
+        return null;
+    }
+
+    //Generic handling and logging for all unspecified exceptions
+    private ErrorDTO handleOtherExceptions(Exception exception) throws LoggerException {
+        Logger.logError(exception);
+        return null;
     }
 
 }
