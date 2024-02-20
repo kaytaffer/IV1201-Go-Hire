@@ -23,17 +23,17 @@ export function CreateNewApplicantView(props) {
         <h1>Create new Applicant</h1>
         <form onSubmit={submit}>
             <label>First Name</label>
-            <input id="create-applicant-form-first-name" type="text"/><br/>
+            <input id="create-applicant-form-first-name" type="text" placeholder="max 255 characters"/><br/>
             <label>Last Name</label>
-            <input id="create-applicant-form-last-name" type="text"/><br/>
+            <input id="create-applicant-form-last-name" type="text" placeholder="max 255 characters"/><br/>
             <label>Email</label>
-            <input id="create-applicant-form-email" type="email"/><br/>
+            <input id="create-applicant-form-email" type="email" placeholder="example@email.com"/><br/>
             <label>Person Number</label>
-            <input id="create-applicant-form-person-number" type="text"/><br/>
+            <input id="create-applicant-form-person-number" type="text" placeholder="YYYYMMDD-XXXX"/><br/>
             <label>Username</label>
-            <input id="create-applicant-form-username" type="text"/><br/>
+            <input id="create-applicant-form-username" type="text" placeholder="max 255 characters"/><br/>
             <label>Password</label>
-            <input id="create-applicant-form-password" type="password"/><br/>
+            <input id="create-applicant-form-password" type="password" placeholder="max 255 characters"/><br/>
             <input type="submit"/>
         </form>
     </div>
