@@ -61,8 +61,10 @@ class PersonControllerTest {
 
     @Test
     void testIfUserReturnedWhenLoginCorrect() throws LoginFailedException, LoggerException, UserNotFoundException {
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(mockAuthenticatedSuccessfulResponse);
-        when(personService.fetchLoggedInPersonByUsername(mockLoginRequestDTO.getUsername())).thenReturn(mockLoggedInPersonDTO);
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(mockAuthenticatedSuccessfulResponse);
+        when(personService.fetchLoggedInPersonByUsername(mockLoginRequestDTO.getUsername()))
+                .thenReturn(mockLoggedInPersonDTO);
         LoggedInPersonDTO returnedLoggedInPersonDTO = personController.login(mockLoginRequestDTO, session);
         assertEquals(mockLoggedInPersonDTO, returnedLoggedInPersonDTO,
                 "Returned LoggedInPersonDTO from PersonController does not equal returned" +
@@ -70,8 +72,9 @@ class PersonControllerTest {
     }
 
     @Test
-    void testIfLoginFailedExceptionIsThrownWhenCredentialsPresentButIncorrect() throws LoginFailedException, UserNotFoundException {
-        when(personService.fetchLoggedInPersonByUsername(mockLoginRequestDTO.getUsername())).thenThrow(new LoginFailedException("Login Failed"));
+    void testIfLoginFailedExceptionIsThrownWhenCredentialsPresentButIncorrect() {
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(mockAuthenticatedFailedResponse);
         assertThrowsExactly(LoginFailedException.class, () -> personController.login(mockLoginRequestDTO, session),
                 "No LoginFailedException was thrown when credentials were incorrect.");
     }
