@@ -52,7 +52,7 @@ public class PersonController {
     public LoggedInPersonDTO login(@RequestBody @Valid LoginRequestDTO loginRequest, HttpSession session)
             throws LoggerException, UserNotFoundException, LoginFailedException {
         Authentication authenticationResponse = authenticateLoginRequest(loginRequest);
-        saveAuthenticedUserInSession(authenticationResponse, session);
+        saveAuthenticatedUserInSession(authenticationResponse, session);
         Logger.logEvent("User logged in: " + loginRequest.getUsername());
         return personService.fetchLoggedInPersonByUsername(loginRequest.getUsername());
     }
