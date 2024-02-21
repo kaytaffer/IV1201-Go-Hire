@@ -35,6 +35,11 @@ public class PersonEntity {
 
     @Column(length = 255)
     private String username;
+
+    @ManyToOne(fetch=FetchType.EAGER) //TODO optional = false ?, Should a person be able to have a null value in 'role_id'
+    @JoinColumn(name = "application_status_id", referencedColumnName = "application_status_id")
+    private ApplicationStatusEntity applicationStatus;
+
     public Integer getId() {
         return id;
     }
