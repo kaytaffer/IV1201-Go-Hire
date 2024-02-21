@@ -1,33 +1,48 @@
 package kth.iv1201.gohire.controller;
 
+import jakarta.servlet.http.HttpSession;
 import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.DTO.LoginRequestDTO;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.PersonService;
-import kth.iv1201.gohire.service.exception.LoginFailedException;
+import kth.iv1201.gohire.controller.exception.LoginFailedException;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
+import kth.iv1201.gohire.service.exception.UserNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.test.web.servlet.MockMvc;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
 class PersonControllerTest {
 
     @Mock
     PersonService personService;
+    @Mock
+    HttpSession session;
+    @Mock
+    AuthenticationManager authenticationManager;
     @InjectMocks
     PersonController personController;
     LoginRequestDTO mockLoginRequestDTO;
     LoggedInPersonDTO mockLoggedInPersonDTO;
     CreateApplicantRequestDTO mockCreateApplicantRequestDTO;
+    UsernamePasswordAuthenticationToken mockAuthenticatedSuccessfulResponse;
+    UsernamePasswordAuthenticationToken mockAuthenticatedFailedResponse;
+    UsernamePasswordAuthenticationToken mockAuthenticationRequest;
 
     @BeforeEach
     void setUp() {
@@ -35,6 +50,9 @@ class PersonControllerTest {
         mockLoginRequestDTO = new LoginRequestDTO("exampleUsername", "examplePassword");
         mockLoggedInPersonDTO = new LoggedInPersonDTO(0, "exampleUsername", "recruiter");
         mockCreateApplicantRequestDTO = new CreateApplicantRequestDTO("exampleFirstName", "exampleLastName", "example@example.com", "123456-7890", "exampleUsername", "examplePassword");
+        mockAuthenticatedSuccessfulResponse = UsernamePasswordAuthenticationToken.authenticated("exampleUsername2", "examplePassword2", null);
+        mockAuthenticatedFailedResponse = UsernamePasswordAuthenticationToken.unauthenticated("exampleUsername", "examplePassword");
+        mockAuthenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated("exampleUsername", "examplePassword");
     }
 
     @AfterEach
@@ -45,18 +63,22 @@ class PersonControllerTest {
     }
 
     @Test
-    void testIfUserReturnedWhenLoginCorrect() throws LoginFailedException, LoggerException {
-        when(personService.login(mockLoginRequestDTO)).thenReturn(mockLoggedInPersonDTO);
-        LoggedInPersonDTO returnedLoggedInPersonDTO = personController.login(mockLoginRequestDTO);
+    void testIfUserReturnedWhenLoginCorrect() throws LoginFailedException, LoggerException, UserNotFoundException {
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(mockAuthenticatedSuccessfulResponse);
+        when(personService.fetchLoggedInPersonByUsername(mockLoginRequestDTO.getUsername()))
+                .thenReturn(mockLoggedInPersonDTO);
+        LoggedInPersonDTO returnedLoggedInPersonDTO = personController.login(mockLoginRequestDTO, session);
         assertEquals(mockLoggedInPersonDTO, returnedLoggedInPersonDTO,
                 "Returned LoggedInPersonDTO from PersonController does not equal returned" +
                         "LoggedInPersonDTO from PersonService.");
     }
 
     @Test
-    void testIfLoginFailedExceptionIsThrownWhenCredentialsPresentButIncorrect() throws LoginFailedException {
-        when(personService.login(mockLoginRequestDTO)).thenThrow(new LoginFailedException("Login Failed"));
-        assertThrowsExactly(LoginFailedException.class, () -> personController.login(mockLoginRequestDTO),
+    void testIfLoginFailedExceptionIsThrownWhenCredentialsPresentButIncorrect() {
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(mockAuthenticatedFailedResponse);
+        assertThrowsExactly(LoginFailedException.class, () -> personController.login(mockLoginRequestDTO, session),
                 "No LoginFailedException was thrown when credentials were incorrect.");
     }
 

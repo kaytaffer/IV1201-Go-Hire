@@ -44,6 +44,9 @@ The server handling HTTP calls.
 
 `StartController` - Responsible for returning the whole React App.
 
+### exception/
+`LoginFailedException` - Exception thrown then the logging in of a user to the application fails.
+
 ### util
 
 `ErrorType` - ENUM representing error types.
@@ -55,10 +58,13 @@ The server handling HTTP calls.
 ## service/
 `PersonService` - Service Class that handles business logic related to persons.
 
+`SpringDataJpaUserDetailsService` - Used by Spring Security AuthenticationManager for fetching user information when authenticating.
+
 ### exceptions/
-`LoginFailedException` - Exception thrown then the logging in of a user to the application fails.
 
 `UserCreationFailedException` - Exception thrown when the creation of a new user to the application fails.
+
+`UserNotFoundException` - Exception thrown when requesting a user which does not exist in the database.
 
 ## repository/
 `PersonRepository` - Repository responsible for accessing data related to a `PersonEntity`.
@@ -77,3 +83,5 @@ The server handling HTTP calls.
 
 `LoginRequestDTO` - DTO containing information about a login request.
 
+## config/
+`SecurityConfiguration`- Configuration for Spring security.

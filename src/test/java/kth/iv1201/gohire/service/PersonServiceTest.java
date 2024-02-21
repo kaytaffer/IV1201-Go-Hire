@@ -7,8 +7,9 @@ import kth.iv1201.gohire.entity.PersonEntity;
 import kth.iv1201.gohire.entity.RoleEntity;
 import kth.iv1201.gohire.repository.PersonRepository;
 import kth.iv1201.gohire.repository.RoleRepository;
-import kth.iv1201.gohire.service.exception.LoginFailedException;
+import kth.iv1201.gohire.controller.exception.LoginFailedException;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
+import kth.iv1201.gohire.service.exception.UserNotFoundException;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -53,25 +54,19 @@ public class PersonServiceTest {
     }
 
     @Test
-    public void testIfLoginFailedExceptionIsThrownIfGivenWrongUsernameAndPassword() {
-        LoginRequestDTO loginRequest = new LoginRequestDTO("esCod", "whatever");
-        when(personRepository.findByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword())).thenReturn(null);
-        try {
-            personService.login(loginRequest);
-            fail("The function did not return an expected exception.");
-        } catch (LoginFailedException exception) {
-            assertEquals(exception.getClass(), LoginFailedException.class);
-        }
+    public void testIfUserNotFoundExceptionIsThrownIfGivenNonExistingUsername() {
+        when(personRepository.findByUsername("esCod")).thenReturn(null);
+        assertThrowsExactly(UserNotFoundException.class, () -> personService.fetchLoggedInPersonByUsername("esCod"),
+                "The function did not return an expected exception.");
     }
 
     @Test
     public void testIfMethodReturnsWorkingLoggedInPersonDTO() {
-        LoginRequestDTO loginRequest = new LoginRequestDTO(fakePersonEntity.getUsername(), fakePersonEntity.getPassword());
-        when(personRepository.findByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword())).thenReturn(fakePersonEntity);
+        when(personRepository.findByUsername(fakePersonEntity.getUsername())).thenReturn(fakePersonEntity);
         try {
-            LoggedInPersonDTO loggedInUser = personService.login(loginRequest);
+            LoggedInPersonDTO loggedInUser = personService.fetchLoggedInPersonByUsername(fakePersonEntity.getUsername());
             assertEquals(fakePersonEntity.getUsername(), loggedInUser.getUsername());
-        } catch (LoginFailedException e) {
+        } catch (UserNotFoundException e) {
             fail("The function failed to fetch the correct data\n");
             e.printStackTrace();
         }
