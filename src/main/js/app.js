@@ -25,16 +25,21 @@ function App() {
 
     function getUserFromLocalStorage() {
         const userFromStorage = JSON.parse(localStorage.getItem('user'));
-        if(userFromStorage && userFromStorage !== user)
-            setUser(user);
+        if(userFromStorage && userFromStorage !== user) {
+            setUser(userFromStorage);
+        }
     }
 
-    React.useEffect(persistUserToLocalStorage, [user]);
+    React.useEffect(() => {
+        persistUserToLocalStorage()
+        if(window.location.pathname !== '/login' && !user)
+            navigate('/login')
+        else if(window.location.pathname === '/login' && user)
+            navigate('/')
+    }, [user]);
 
     React.useEffect(() => { // Runs when component is created
         getUserFromLocalStorage()
-        if(window.location.pathname !== '/login' && !user)
-            navigate('/login')
     }, [])
 
     return (
@@ -42,7 +47,7 @@ function App() {
             <h1>Go Hire</h1>
             <Routes>
                 <Route path='/' element={user ? <HomePage user={user} /> : <div/>}/>
-                <Route path='/login' element={<Login onLoggedIn={onLoggedIn}/>}/>
+                <Route path='/login' element={!user ? <Login onLoggedIn={onLoggedIn}/> : <div/>}/>
             </Routes>
         </div>
     )
