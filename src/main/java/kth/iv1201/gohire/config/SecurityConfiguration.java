@@ -15,6 +15,9 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import static jakarta.servlet.DispatcherType.ERROR;
 import static jakarta.servlet.DispatcherType.FORWARD;
 
+/**
+ * Configuration for Spring security.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -25,6 +28,12 @@ public class SecurityConfiguration {
      */
     final String[] whitelist = { "/api/login", "/api/who", "/api/createApplicant"};
 
+    /**
+     * Configures security filters, which URLs are open and authorization only
+     * @param http needed to configure websecurity
+     * @return security filter chain to use for securing requests.
+     * @throws Exception if SecurityFilterChain creation fails.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -42,6 +51,11 @@ public class SecurityConfiguration {
         return http.build();
     }
 
+    /**
+     * Creates an <code>AuthenticationManager</code> which manages the authentication of a user
+     * @param userDetailsService <code>UserDetailsService</code> for specifying how to access users
+     * @return the <code>AuthenticationManager</code>
+     */
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
