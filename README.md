@@ -21,6 +21,10 @@ View-Presenter React powered web application.
 `errorMessages` - Pre-defined error objects with their error type matched with the message to be displayed to user.
 
 ## view/
+`applicationListingView` - Responsible for rendering an application.
+
+`applicationListView` - Responsible for rendering the list of applications.
+
 `createNewApplicantView` - Responsible for rendering the create new applicant form
 
 `homePageApplicantView` - Responsible for rendering the home page for applicants.
