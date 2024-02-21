@@ -78,7 +78,8 @@ public class PersonService {
      * @return A list of all applicants
      */
     public List<ApplicantDTO> fetchApplicants() {
-        List<PersonEntity> persons = personRepository.findPersonEntitiesByRoleIs(APPLICANTROLEID);
+        RoleEntity roleEntity = roleRepository.findRoleById(APPLICANTROLEID);
+        List<PersonEntity> persons = personRepository.findPersonEntitiesByRoleIs(roleEntity);
         List<ApplicantDTO> applicants = new LinkedList<>();
         for(PersonEntity person : persons) {
             applicants.add(new ApplicantDTO(person.getName(), person.getSurname(),
