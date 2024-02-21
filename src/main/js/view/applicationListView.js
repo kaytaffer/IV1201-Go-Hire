@@ -10,9 +10,16 @@ import {ApplicationListingView} from "./applicationListingView";
 export function ApplicationListView(props) {
     return (
         <table>
+            <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Status</th>
+            </tr>
+            </thead>
             <tbody>
-            {applications.map((application, index) => (
-                <ApplicationListingView key={index} props={application} />
+            {props.applications.map((application, index) => (
+                <ApplicationListingView key={index} application={application} />
             ))}
             </tbody>
         </table>
