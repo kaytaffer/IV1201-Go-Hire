@@ -38,6 +38,9 @@ public class SpringDataJpaUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
         PersonEntity person = this.repository.findByUsername(name);
+        if (person == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
         return User.withDefaultPasswordEncoder()
                 .username(person.getUsername())
                 .password(person.getPassword())

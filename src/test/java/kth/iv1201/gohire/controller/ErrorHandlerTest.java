@@ -3,7 +3,6 @@ package kth.iv1201.gohire.controller;
 import kth.iv1201.gohire.DTO.ErrorDTO;
 import kth.iv1201.gohire.controller.util.ErrorType;
 import kth.iv1201.gohire.controller.util.LoggerException;
-import kth.iv1201.gohire.controller.exception.LoginFailedException;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -60,14 +60,14 @@ public class ErrorHandlerTest {
     }
 
     @Test
-    void testIfHandlehandleLoginFailedExceptionReturnsValidErrorType() throws LoggerException {
-        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new LoginFailedException("error message"));
+    void testIfHandleBadCredentialsExceptionReturnsValidErrorType() throws LoggerException {
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new BadCredentialsException("error message"));
         assertEquals(ErrorType.LOGIN_FAIL, Objects.requireNonNull(error.getBody()).getErrorType(), "Method didn't return correct ErrorType");
     }
 
     @Test
-    void testIfHandleLoginFailedExceptionReturnsRightStatusCode() throws LoggerException {
-        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new LoginFailedException("error message"));
+    void testIfHandleBadCredentialsExceptionReturnsRightStatusCode() throws LoggerException {
+        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new BadCredentialsException("error message"));
         assertEquals(HttpStatus.UNAUTHORIZED, error.getStatusCode(), "Method didn't return correct Status Code");
     }
 
@@ -78,9 +78,13 @@ public class ErrorHandlerTest {
     }
 
     @Test
-    void testIfHandleExceptionReturnsNullIfGenericExceptionIsSupplied() throws LoggerException {
-        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new Exception("error message"));
-        assertNull(error, "Method didn't return a valid instance");
+    void testIfHandleExceptionReturnsValidErrorTypeIfGenericExceptionIsSupplied() throws LoggerException {
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new Exception("error message"));
+        assertEquals(ErrorType.SERVER_INTERNAL, Objects.requireNonNull(error.getBody()).getErrorType(), "Method didn't return correct ErrorType");
     }
-
+    @Test
+    void testIfHandleExceptionReturnsRightStatusCodeIfGenericExceptionIsSupplied() throws LoggerException{
+        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new Exception("error message"));
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, error.getStatusCode(), "Method didn't return correct Status Code");
+    }
 }

@@ -7,4 +7,7 @@ public enum ErrorType {
     LOGIN_FAIL,
     USER_INPUT_ERROR,
     USERNAME_ALREADY_EXISTS,
+    SERVER_INTERNAL,
+
+
 }

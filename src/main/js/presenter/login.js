@@ -2,7 +2,12 @@ import React, {useState} from "react";
 import {LoginView} from "../view/loginView";
 import {authenticateLogin, createNewApplicant} from "./api/apiCallHandler";
 import {CreateNewApplicantView} from "../view/createNewApplicantView";
-import {LOGIN_FAIL, USER_INPUT_ERROR, USERNAME_ALREADY_EXISTS} from "./api/errorMessages";
+import {
+    LOGIN_FAIL,
+    SERVER_INTERNAL,
+    USER_INPUT_ERROR,
+    USERNAME_ALREADY_EXISTS
+} from "./api/errorMessages";
 import {UserNoticeView} from "../view/userNoticeView";
 
 /**
@@ -17,13 +22,13 @@ export function Login(props){
     const [newUserIsCreated, setNewUserIsCreated] = useState(false)
     const [errorMessage, setErrorMessage] = useState(null)
 
+    const POSSIBLE_LOGIN_ERRORS = [LOGIN_FAIL, USER_INPUT_ERROR, USERNAME_ALREADY_EXISTS, SERVER_INTERNAL]
+
     function catchPromiseError(error) {
-        if (error.message === LOGIN_FAIL.errorType)
-            setErrorMessage(LOGIN_FAIL.message)
-        else if (error.message === USER_INPUT_ERROR.errorType)
-            setErrorMessage(USER_INPUT_ERROR.message)
-        else if (error.message === USERNAME_ALREADY_EXISTS.errorType) {
-            setErrorMessage(USERNAME_ALREADY_EXISTS.message) }
+        function checkErrorType(possibleError) {
+            return error.message === possibleError.errorType
+        }
+        setErrorMessage(POSSIBLE_LOGIN_ERRORS.find(checkErrorType).message)
     }
 
     function login(username, password) {
