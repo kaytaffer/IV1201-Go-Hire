@@ -6,8 +6,7 @@ import {
     LOGIN_FAIL,
     SERVER_INTERNAL,
     USER_INPUT_ERROR,
-    USERNAME_ALREADY_EXISTS,
-    USERNAME_DOESNT_EXIST
+    USERNAME_ALREADY_EXISTS
 } from "./api/errorMessages";
 import {UserNoticeView} from "../view/userNoticeView";
 
@@ -23,8 +22,7 @@ export function Login(props){
     const [newUserIsCreated, setNewUserIsCreated] = useState(false)
     const [errorMessage, setErrorMessage] = useState(null)
 
-    const POSSIBLE_LOGIN_ERRORS = [LOGIN_FAIL, USER_INPUT_ERROR, USERNAME_ALREADY_EXISTS, USERNAME_DOESNT_EXIST,
-        SERVER_INTERNAL]
+    const POSSIBLE_LOGIN_ERRORS = [LOGIN_FAIL, USER_INPUT_ERROR, USERNAME_ALREADY_EXISTS, SERVER_INTERNAL]
 
     function catchPromiseError(error) {
         function checkErrorType(possibleError) {
