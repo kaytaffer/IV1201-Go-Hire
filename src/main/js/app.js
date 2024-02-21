@@ -12,24 +12,50 @@ import {Login} from "./presenter/login";
 function App() {
     const navigate = useNavigate()
     const [user, setUser] = useState(null)
+    const [isLoading, setIsLoading] = useState(true)
+    const [pathRequestedByUnauthorizedUser, setPathRequestedByUnauthorizedUser] = useState('')
 
     function onLoggedIn(user){
         setUser(user)
-        navigate('/')
+        navigate(pathRequestedByUnauthorizedUser || '/')
+        setPathRequestedByUnauthorizedUser('')
     }
 
-    React.useEffect(() => { // Runs when component is created
-        if(window.location.pathname !== '/login' && !user)
+    function persistUserToLocalStorage() {
+        if(user)
+            localStorage.setItem('user', JSON.stringify(user));
+    }
+
+    function getUserFromLocalStorage() {
+        const userFromStorage = JSON.parse(localStorage.getItem('user'));
+        if(userFromStorage && userFromStorage !== user)
+            setUser(userFromStorage);
+        setIsLoading(false)
+    }
+
+    React.useEffect(() => {
+        persistUserToLocalStorage()
+        if(window.location.pathname !== '/login' && !user) {
+            setPathRequestedByUnauthorizedUser(window.location.pathname)
             navigate('/login')
+        }
+        else if(window.location.pathname === '/login' && user)
+            navigate('/')
+    }, [user]);
+
+    React.useEffect(() => { // Runs when component is created
+        getUserFromLocalStorage()
     }, [])
 
     return (
         <div>
             <h1>Go Hire</h1>
-            <Routes>
-                <Route path='/' element={user ? <HomePage user={user} /> : <div/>}/>
-                <Route path='/login' element={<Login onLoggedIn={onLoggedIn}/>}/>
-            </Routes>
+            {!isLoading &&
+                <Routes>
+                    <Route path='/' element={<HomePage user={user} />}/>
+                    <Route path='/login' element={<Login onLoggedIn={onLoggedIn}/>}/>
+                </Routes>
+            }
         </div>
     )
 }

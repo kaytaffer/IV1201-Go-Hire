@@ -3,7 +3,7 @@ package kth.iv1201.gohire.controller;
 import kth.iv1201.gohire.DTO.ErrorDTO;
 import kth.iv1201.gohire.controller.util.ErrorType;
 import kth.iv1201.gohire.controller.util.LoggerException;
-import kth.iv1201.gohire.service.exception.LoginFailedException;
+import kth.iv1201.gohire.controller.exception.LoginFailedException;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
