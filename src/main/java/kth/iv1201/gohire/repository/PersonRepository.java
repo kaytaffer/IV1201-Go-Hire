@@ -1,6 +1,7 @@
 package kth.iv1201.gohire.repository;
 
 import kth.iv1201.gohire.entity.PersonEntity;
+import kth.iv1201.gohire.entity.RoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -16,5 +17,5 @@ import java.util.List;
 public interface PersonRepository extends JpaRepository<PersonEntity, Integer> {
     PersonEntity findByUsername(String username);
     boolean existsByUsername(String username);
-    List<PersonEntity> findPersonEntitiesByRoleIs(int role);
+    List<PersonEntity> findPersonEntitiesByRoleIs(RoleEntity role);
 }
