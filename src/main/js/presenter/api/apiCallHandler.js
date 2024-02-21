@@ -1,13 +1,21 @@
 const baseUrl = '/api'
 
 function sendPostRequest(endpoint, body){
+
+    function checkIfServerReturnedError(response) {
+        if('errorType' in response) {
+            throw new Error(response.errorType)
+        } else
+            return response
+    }
+
     return fetch(baseUrl + endpoint, {
         method: 'POST',
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         },
         body: JSON.stringify(body)
-    }).then(response => response.json());
+    }).then(response => response.json()).then(checkIfServerReturnedError)
 }
 
 /**
