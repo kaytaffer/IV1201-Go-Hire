@@ -12,6 +12,7 @@ import {Login} from "./presenter/login";
 function App() {
     const navigate = useNavigate()
     const [user, setUser] = useState(null)
+    const [isLoading, setIsLoading] = useState(true)
 
     function onLoggedIn(user){
         setUser(user)
@@ -28,6 +29,7 @@ function App() {
         if(userFromStorage && userFromStorage !== user) {
             setUser(userFromStorage);
         }
+        setIsLoading(false)
     }
 
     React.useEffect(() => {
@@ -45,10 +47,12 @@ function App() {
     return (
         <div>
             <h1>Go Hire</h1>
-            <Routes>
-                <Route path='/' element={user ? <HomePage user={user} /> : <div/>}/>
-                <Route path='/login' element={!user ? <Login onLoggedIn={onLoggedIn}/> : <div/>}/>
-            </Routes>
+            {!isLoading &&
+                <Routes>
+                    <Route path='/' element={<HomePage user={user} />}/>
+                    <Route path='/login' element={<Login onLoggedIn={onLoggedIn}/>}/>
+                </Routes>
+            }
         </div>
     )
 }
