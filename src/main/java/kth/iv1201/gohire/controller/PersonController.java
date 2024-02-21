@@ -2,6 +2,7 @@ package kth.iv1201.gohire.controller;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import kth.iv1201.gohire.DTO.ApplicantDTO;
 import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.DTO.LoginRequestDTO;
@@ -19,6 +20,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Controller responsible for API calls related to a <code>PersonEntity</code>
@@ -108,4 +111,13 @@ public class PersonController {
                 SecurityContextHolder.getContext());
     }
 
+    /**
+     * Fetches all applications
+     * @return All applications
+     */
+    @PreAuthorize("hasRole('recruiter')")
+    @GetMapping("/applications")
+    public List<ApplicantDTO> fetchApplicants(){
+        return personService.fetchApplicants();
+    }
 }
