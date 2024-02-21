@@ -29,7 +29,6 @@ public class ErrorHandler implements ErrorController {
      */
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ErrorDTO> handleException (Exception exception) throws LoggerException {
-        System.out.println(exception.toString());
 
         if (exception instanceof UserCreationFailedException) {
             return handleUserCreationFailedException((UserCreationFailedException) exception);
