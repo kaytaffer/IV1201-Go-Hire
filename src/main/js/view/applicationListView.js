@@ -1,3 +1,4 @@
+import React from "react";
 import {ApplicationListingView} from "./applicationListingView";
 
 /**
@@ -9,6 +10,10 @@ import {ApplicationListingView} from "./applicationListingView";
 export function ApplicationListView(props) {
     return (
         <table>
-            {props.map(application => <ApplicationListingView props={application}/>)}
+            <tbody>
+            {applications.map((application, index) => (
+                <ApplicationListingView key={index} props={application} />
+            ))}
+            </tbody>
         </table>
 )}
