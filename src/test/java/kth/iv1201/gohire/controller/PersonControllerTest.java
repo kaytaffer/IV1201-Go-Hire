@@ -61,20 +61,6 @@ class PersonControllerTest {
     }
 
     @Test
-    void testIfMethodArgumentNotValidExceptionIsThrownWhenCredentialsAreNull(){
-        // TODO
-    }
-
-    @Test
-    void testIfCorrectExceptionThrownWhenCredentialsAreBlank(){
-        // TODO
-    }
-
-    @Test
-    void testIfExceptionThrownWhenCredentialsAreGreaterThenMax(){
-        // TODO
-    }
-    @Test
     void testIfApplicantCreationFailedExceptionIsThrownWhenUsernameAlreadyExistsInDB() throws UserCreationFailedException {
         when(personService.createApplicantAccount(mockCreateApplicantRequestDTO)).thenThrow(new UserCreationFailedException("Username already exists in database"));
         assertThrowsExactly(UserCreationFailedException.class, () -> personController.createNewApplicant(mockCreateApplicantRequestDTO),
@@ -87,69 +73,5 @@ class PersonControllerTest {
         LoggedInPersonDTO user = personController.createNewApplicant(mockCreateApplicantRequestDTO);
         assertEquals(mockCreateApplicantRequestDTO.getUsername(), user.getUsername(),"Returned LoggedInPersonDTO" +
                 "from PersonController does not equal returned LoggedInPersonDTO from PersonService.");
-    }
-
-    @Test
-    void testCreateApplicanIfExceptionIsThrownIfFirstNameIsEmpty() {
-        //TODO
-    }
-
-    @Test
-    void testCreateApplicanIfExceptionIsThrownIfFirstNameIsTooLong() {
-        //TODO
-    }
-
-    @Test
-    void testCreateApplicanIfExceptionIsThrownIfLastNameIsEmpty() {
-        //TODO
-    }
-
-    @Test
-    void testCreateApplicanIfExceptionIsThrownIfLastNameIsTooLong() {
-        //TODO
-    }
-    @Test
-    void testCreateApplicanIfExceptionIsThrownIfEmailIsNotFormattedAsEmail() {
-        //TODO
-    }
-
-    @Test
-    void testCreateApplicanIfExceptionIsThrownIfEmailIsEmpty() {
-        //TODO
-    }
-
-    @Test
-    void testCreateApplicantIfExceptionIsThrownIfEmailIsTooLong () {
-        //TODO
-    }
-
-    @Test
-    void testCreateApplicanIfExceptionIsThrownIfPersonNumberIsEmpty() {
-        //TODO
-    }
-
-    @Test
-    void testCreateApplicanIfExceptionIsThrownIfPersonNumberIsPoorlyFormatted() {
-        //TODO
-    }
-
-    @Test
-    void testCreateApplicanIfExceptionIsThrownIfUsernameIsEmpty() {
-        //TODO
-    }
-
-    @Test
-    void testCreateApplicanIfExceptionIsThrownIfUsernameIsTooLong() {
-        //TODO
-    }
-
-    @Test
-    void testCreateApplicanIfExceptionIsThrownIfPasswordIsEmpty() {
-        //TODO
-    }
-
-    @Test
-    void testCreateApplicanIfExceptionIsThrownIfPasswordIsTooLong() {
-
     }
 }
