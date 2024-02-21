@@ -2,6 +2,9 @@ package kth.iv1201.gohire.entity;
 
 import jakarta.persistence.*;
 
+/**
+ * JPA entity representing an application status
+ */
 @Entity
 @Table(name = "application_status")
 public class ApplicationStatusEntity {
