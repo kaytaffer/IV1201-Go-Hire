@@ -1,5 +1,6 @@
 package kth.iv1201.gohire.service;
 
+import kth.iv1201.gohire.DTO.ApplicantDTO;
 import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.entity.PersonEntity;
@@ -12,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Service Class that handles business logic related to persons.
@@ -67,6 +71,20 @@ public class PersonService {
         personEntity.setPassword(createUserRequestDTO.getPassword());
         personEntity = personRepository.save(personEntity);
         return new LoggedInPersonDTO(personEntity.getId(), personEntity.getUsername(), personEntity.getRole().getName());
+    }
+
+    /**
+     * Fetches all applicants from the database.
+     * @return A list of all applicants
+     */
+    public List<ApplicantDTO> fetchApplicants() {
+        List<PersonEntity> persons = personRepository.findPersonEntitiesByRoleIs(APPLICANTROLEID);
+        List<ApplicantDTO> applicants = new LinkedList<>();
+        for(PersonEntity person : persons) {
+            applicants.add(new ApplicantDTO(person.getName(), person.getSurname(),
+                    person.getApplicationStatus().getStatus()));
+        }
+        return applicants;
     }
 
 }
