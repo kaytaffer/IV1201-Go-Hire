@@ -18,7 +18,21 @@ function App() {
         navigate('/')
     }
 
+    function persistUserToLocalStorage() {
+        if(user)
+            localStorage.setItem('user', JSON.stringify(user));
+    }
+
+    function getUserFromLocalStorage() {
+        const userFromStorage = JSON.parse(localStorage.getItem('user'));
+        if(userFromStorage && userFromStorage !== user)
+            setUser(user);
+    }
+
+    React.useEffect(persistUserToLocalStorage, [user]);
+
     React.useEffect(() => { // Runs when component is created
+        getUserFromLocalStorage()
         if(window.location.pathname !== '/login' && !user)
             navigate('/login')
     }, [])
