@@ -1,6 +1,7 @@
 package kth.iv1201.gohire.controller;
 
 import jakarta.servlet.http.HttpSession;
+import kth.iv1201.gohire.DTO.ApplicantDTO;
 import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.DTO.LoginRequestDTO;
@@ -19,6 +20,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -41,6 +46,7 @@ class PersonControllerTest {
     UsernamePasswordAuthenticationToken mockAuthenticatedSuccessfulResponse;
     UsernamePasswordAuthenticationToken mockAuthenticatedFailedResponse;
     UsernamePasswordAuthenticationToken mockAuthenticationRequest;
+    LinkedList<ApplicantDTO> mockListOfApplicants;
 
     @BeforeEach
     void setUp() {
@@ -51,6 +57,7 @@ class PersonControllerTest {
         mockAuthenticatedSuccessfulResponse = UsernamePasswordAuthenticationToken.authenticated("exampleUsername2", "examplePassword2", null);
         mockAuthenticatedFailedResponse = UsernamePasswordAuthenticationToken.unauthenticated("exampleUsername", "examplePassword");
         mockAuthenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated("exampleUsername", "examplePassword");
+        mockListOfApplicants = new LinkedList<>();
     }
 
     @AfterEach
@@ -58,6 +65,7 @@ class PersonControllerTest {
         mockLoginRequestDTO = null;
         mockLoggedInPersonDTO = null;
         mockCreateApplicantRequestDTO = null;
+        mockListOfApplicants = null;
     }
 
     @Test
@@ -93,5 +101,12 @@ class PersonControllerTest {
         LoggedInPersonDTO user = personController.createNewApplicant(mockCreateApplicantRequestDTO);
         assertEquals(mockCreateApplicantRequestDTO.getUsername(), user.getUsername(),"Returned LoggedInPersonDTO" +
                 "from PersonController does not equal returned LoggedInPersonDTO from PersonService.");
+    }
+
+    @Test
+    void testIfFetchApplicantsReturnsListOfApplicants() {
+        when(personService.fetchApplicants()).thenReturn(mockListOfApplicants);
+        List<ApplicantDTO> applicants = personController.fetchApplicants();
+        assertEquals(LinkedList.class, applicants.getClass(), "");
     }
 }
