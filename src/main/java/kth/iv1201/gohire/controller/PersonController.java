@@ -103,7 +103,7 @@ public class PersonController {
         return authenticationResponse;
     }
 
-    private void saveAuthenticedUserInSession(Authentication authenticationResponse, HttpSession session) {
+    private void saveAuthenticatedUserInSession(Authentication authenticationResponse, HttpSession session) {
         SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                 SecurityContextHolder.getContext());
