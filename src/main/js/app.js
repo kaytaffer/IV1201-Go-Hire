@@ -13,10 +13,12 @@ function App() {
     const navigate = useNavigate()
     const [user, setUser] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
+    const [pathRequestedByUnauthorizedUser, setPathRequestedByUnauthorizedUser] = useState('')
 
     function onLoggedIn(user){
         setUser(user)
-        navigate('/')
+        navigate(pathRequestedByUnauthorizedUser || '/')
+        setPathRequestedByUnauthorizedUser('')
     }
 
     function persistUserToLocalStorage() {
@@ -26,16 +28,17 @@ function App() {
 
     function getUserFromLocalStorage() {
         const userFromStorage = JSON.parse(localStorage.getItem('user'));
-        if(userFromStorage && userFromStorage !== user) {
+        if(userFromStorage && userFromStorage !== user)
             setUser(userFromStorage);
-        }
         setIsLoading(false)
     }
 
     React.useEffect(() => {
         persistUserToLocalStorage()
-        if(window.location.pathname !== '/login' && !user)
+        if(window.location.pathname !== '/login' && !user) {
+            setPathRequestedByUnauthorizedUser(window.location.pathname)
             navigate('/login')
+        }
         else if(window.location.pathname === '/login' && user)
             navigate('/')
     }, [user]);
