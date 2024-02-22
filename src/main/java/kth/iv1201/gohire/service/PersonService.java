@@ -3,8 +3,10 @@ package kth.iv1201.gohire.service;
 import kth.iv1201.gohire.DTO.ApplicantDTO;
 import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
+import kth.iv1201.gohire.entity.ApplicationStatusEntity;
 import kth.iv1201.gohire.entity.PersonEntity;
 import kth.iv1201.gohire.entity.RoleEntity;
+import kth.iv1201.gohire.repository.ApplicationStatusRepository;
 import kth.iv1201.gohire.repository.RoleRepository;
 import kth.iv1201.gohire.repository.PersonRepository;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
@@ -24,14 +26,18 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 public class PersonService {
     private final int APPLICANTROLEID = 2;
+    private final int APPLICATIONSTATUSUNHANDLED = 3;
 
     private final PersonRepository personRepository;
     private final RoleRepository roleRepository;
+    private final ApplicationStatusRepository applicationStatusRepository;
 
     @Autowired
-    public PersonService(PersonRepository personRepository, RoleRepository roleRepository) {
+    public PersonService(PersonRepository personRepository, RoleRepository roleRepository,
+                         ApplicationStatusRepository applicationStatusRepository) {
         this.personRepository = personRepository;
         this.roleRepository = roleRepository;
+        this.applicationStatusRepository = applicationStatusRepository;
     }
 
     /**
@@ -61,6 +67,7 @@ public class PersonService {
         }
         PersonEntity personEntity = new PersonEntity();
         RoleEntity roleEntity = roleRepository.findRoleById(APPLICANTROLEID);
+        ApplicationStatusEntity applicationStatusEntity = applicationStatusRepository.findById(APPLICATIONSTATUSUNHANDLED);
 
         personEntity.setRole(roleEntity);
         personEntity.setName(createUserRequestDTO.getFirstName());
@@ -69,6 +76,7 @@ public class PersonService {
         personEntity.setPersonNumber(createUserRequestDTO.getPersonNumber());
         personEntity.setUsername(createUserRequestDTO.getUsername());
         personEntity.setPassword(createUserRequestDTO.getPassword());
+        personEntity.setApplicationStatus(applicationStatusEntity);
         personEntity = personRepository.save(personEntity);
         return new LoggedInPersonDTO(personEntity.getId(), personEntity.getUsername(), personEntity.getRole().getName());
     }

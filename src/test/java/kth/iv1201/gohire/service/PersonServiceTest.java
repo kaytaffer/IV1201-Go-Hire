@@ -6,6 +6,7 @@ import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.entity.ApplicationStatusEntity;
 import kth.iv1201.gohire.entity.PersonEntity;
 import kth.iv1201.gohire.entity.RoleEntity;
+import kth.iv1201.gohire.repository.ApplicationStatusRepository;
 import kth.iv1201.gohire.repository.PersonRepository;
 import kth.iv1201.gohire.repository.RoleRepository;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
@@ -28,6 +29,8 @@ public class PersonServiceTest {
     PersonRepository personRepository;
     @Mock
     RoleRepository roleRepository;
+    @Mock
+    ApplicationStatusRepository applicationStatusRepository;
     @InjectMocks
     PersonService personService;
     PersonEntity fakePersonEntity;
@@ -39,7 +42,8 @@ public class PersonServiceTest {
     public void setUp() {
         Mockito.reset(personRepository);
         Mockito.reset(roleRepository);
-        this.personService = new PersonService(personRepository, roleRepository);
+        Mockito.reset(applicationStatusRepository);
+        this.personService = new PersonService(personRepository, roleRepository, applicationStatusRepository);
         this.fakePersonEntity = new PersonEntity();
         fakePersonEntity.setUsername("aValidUsername");
         fakePersonEntity.setPassword("aValidPassword");

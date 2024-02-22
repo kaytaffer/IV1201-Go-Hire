@@ -12,6 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional(propagation = Propagation.MANDATORY)
 public interface ApplicationStatusRepository extends JpaRepository<ApplicationStatusEntity, Integer> {
-
+    ApplicationStatusEntity findById(int id);
 
 }
