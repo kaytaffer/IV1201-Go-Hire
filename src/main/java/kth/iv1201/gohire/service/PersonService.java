@@ -32,6 +32,11 @@ public class PersonService {
     private final RoleRepository roleRepository;
     private final ApplicationStatusRepository applicationStatusRepository;
 
+    /**
+    * Creates an instance of the <code>PersonService</code>.
+    * @param personRepository The <code>PersonRepository</code> to use.
+    * @param roleRepository The <code>RoleRepository</code> to use.
+    */
     @Autowired
     public PersonService(PersonRepository personRepository, RoleRepository roleRepository,
                          ApplicationStatusRepository applicationStatusRepository) {
