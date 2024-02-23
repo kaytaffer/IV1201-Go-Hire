@@ -44,7 +44,7 @@ export function authenticateLogin(username, password){
  * @param personNumber the new applicant's person number.
  * @param username the username.
  * @param password the password.
- * @returns {Promise<any>} a promise either resolving to a object containing a list of applicants or an error object
+ * @returns {Promise<any>} a promise either resolving to a user object or an error object
  */
 export function createNewApplicant(firstName, lastName, email, personNumber, username, password) {
     return sendPostRequest('/createApplicant', {firstName, lastName, email, personNumber, username, password})
@@ -52,7 +52,7 @@ export function createNewApplicant(firstName, lastName, email, personNumber, use
 
 /**
  * Tasks server to fetch all applications
- * @returns {Promise<any>} a promise either resolving to a user object or an error object
+ * @returns {Promise<any>} a promise either resolving to a object containing a list of applicants  or an error object
  */
 export function fetchListOfApplications() {
     return sendGetRequest('/applications')
