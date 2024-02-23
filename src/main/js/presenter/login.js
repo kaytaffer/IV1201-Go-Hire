@@ -20,7 +20,7 @@ import {UserNoticeView} from "../view/userNoticeView";
 export function Login(props){
 
     const [newUserIsCreated, setNewUserIsCreated] = useState(false)
-    const [errorMessage, setErrorMessage] = useState(null)
+    const [errorMessage, setErrorMessage] = useState("")
 
     const POSSIBLE_LOGIN_ERRORS = [LOGIN_FAIL, USER_INPUT_ERROR, USERNAME_ALREADY_EXISTS, SERVER_INTERNAL]
 

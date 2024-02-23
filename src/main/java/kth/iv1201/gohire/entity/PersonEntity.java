@@ -35,6 +35,11 @@ public class PersonEntity {
 
     @Column(length = 255)
     private String username;
+
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "application_status_id", referencedColumnName = "application_status_id")
+    private ApplicationStatusEntity applicationStatus;
+
     public Integer getId() {
         return id;
     }
@@ -87,5 +92,13 @@ public class PersonEntity {
     }
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public ApplicationStatusEntity getApplicationStatus() {
+        return applicationStatus;
+    }
+
+    public void setApplicationStatus(ApplicationStatusEntity applicationStatus) {
+        this.applicationStatus = applicationStatus;
     }
 }
