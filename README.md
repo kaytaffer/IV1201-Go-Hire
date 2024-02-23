@@ -78,14 +78,18 @@ The server handling HTTP calls.
 
 `RoleEntity` - JPA Entity representing a person's role.
 
+`ApplicationStatusEntity` - JPA entity representing an application status
+
 ## DTO/ 
-`CreateUserRequestDTO` - DTO containing information about a user creation request.
+`CreateApplicantRequestDTO` - DTO containing information about a user creation request.
 
 `ErrorDTO` - Class representing an error response.
 
 `LoggedInPersonDTO` - DTO containing information about a logged-in persons username and role.
 
 `LoginRequestDTO` - DTO containing information about a login request.
+
+`ApplicantDTO` - DTO containing information about an application.
 
 ## config/
 `SecurityConfiguration`- Configuration for Spring security.
