@@ -48,9 +48,6 @@ The server handling HTTP calls.
 
 `StartController` - Responsible for returning the whole React App.
 
-### exception/
-`LoginFailedException` - Exception thrown then the logging in of a user to the application fails.
-
 ### util
 
 `ErrorType` - ENUM representing error types.
@@ -72,6 +69,10 @@ The server handling HTTP calls.
 
 ## repository/
 `PersonRepository` - Repository responsible for accessing data related to a `PersonEntity`.
+
+`ApplicationStatusRepository` - Repository responsible for accessing data related to `ApplicationStatusEntity`.
+
+`RoleRepository` - Repository responsible for accessing data related to `RoleEntity`.
 
 ## entity/ 
 `PersonEntity` - JPA Entity representing a person.
