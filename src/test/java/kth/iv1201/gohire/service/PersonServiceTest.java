@@ -171,7 +171,7 @@ public class PersonServiceTest {
     void testIfFetchApplicantsReturnsCorrectApplicationStatus() {
         List<ApplicantDTO> applicants = mockRepositoryAndCallFetchApplicants(1);
         assertEquals(applicants.get(0).getStatus(), fakeApplicationStatus.getStatus(),
-                "Incorrect surname in fetched applicant.");
+                "Incorrect status in fetched applicant.");
     }
 
     private List<ApplicantDTO> mockRepositoryAndCallFetchApplicants(int numberOfPersons) {
