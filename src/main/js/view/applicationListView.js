@@ -5,6 +5,7 @@ import {ApplicationListingView} from "./applicationListingView";
  * Responsible for rendering the list of applications.
  * @param props - props
  * @param {Array} props.applications - list of application objects
+ * @param {function} props.onHandleApplication - Passed to each ApplicationListingView.
  * @returns {JSX.Element} the rendered recruiter home page
  */
 export function ApplicationListView(props) {
@@ -19,7 +20,7 @@ export function ApplicationListView(props) {
             </thead>
             <tbody>
             {props.applications.map((application, index) => (
-                <ApplicationListingView key={index} application={application} />
+                <ApplicationListingView key={index} application={application} onHandleApplication={props.onHandleApplication}/>
             ))}
             </tbody>
         </table>

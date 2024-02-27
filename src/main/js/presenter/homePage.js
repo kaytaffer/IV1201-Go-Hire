@@ -33,10 +33,14 @@ export function HomePage(props){
         fetchListOfApplications().then(setApplications).catch(resolveErrors)
     }
 
+    function handleApplication(application) {
+        //TODO
+    }
+
     if(props.user.role === 'applicant')
         return errorMessage ? <UserNoticeView message={errorMessage} error={true}/> : <HomePageApplicantView user={props.user}/>;
     else if(props.user.role === 'recruiter') {
         return errorMessage ? <UserNoticeView message={errorMessage} error={true}/> : <HomePageRecruiterView
-            user={props.user} applications={applications} onShowApplications={showApplications}/>
+            user={props.user} applications={applications} onShowApplications={showApplications} onHandleApplication={handleApplication}/>
     }
 }
