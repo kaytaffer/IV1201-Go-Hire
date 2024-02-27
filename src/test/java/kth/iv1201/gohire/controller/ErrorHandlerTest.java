@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -77,6 +78,12 @@ public class ErrorHandlerTest {
     void testIfHandleNoResourceFoundExceptionReturnsRightStatusCode() throws LoggerException {
         ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new NoResourceFoundException(HttpMethod.PUT, ""));
         assertEquals(HttpStatus.NOT_FOUND, error.getStatusCode(), "Method didn't return correct Status Code");
+    }
+
+    @Test
+    void testIfHandleInsufficientAuthenticationExceptionReturnsRightStatusCode() throws LoggerException {
+        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new InsufficientAuthenticationException("error message"));
+        assertEquals(HttpStatus.UNAUTHORIZED, error.getStatusCode(), "Method didn't return correct Status Code");
     }
 
     @Test

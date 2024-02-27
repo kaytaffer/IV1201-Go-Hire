@@ -3,6 +3,7 @@ import {HomePageApplicantView} from "../view/homePageApplicantView";
 import {HomePageRecruiterView} from "../view/homePageRecruiterView";
 import {fetchListOfApplications} from "./api/apiCallHandler";
 import {
+    INSUFFICIENT_CREDENTIALS,
     PAGE_DOES_NOT_EXIST,
     SERVER_INTERNAL,
 } from "./api/errorMessages";
@@ -20,7 +21,7 @@ export function HomePage(props){
     const [applications, setApplications] = useState(null)
     const [errorMessage, setErrorMessage] = useState("")
 
-        const POSSIBLE_FETCH_APPLICATION_ERRORS = [PAGE_DOES_NOT_EXIST, SERVER_INTERNAL]
+        const POSSIBLE_FETCH_APPLICATION_ERRORS = [PAGE_DOES_NOT_EXIST, SERVER_INTERNAL, INSUFFICIENT_CREDENTIALS]
 
     function showApplications() {
         function resolveErrors(error) {

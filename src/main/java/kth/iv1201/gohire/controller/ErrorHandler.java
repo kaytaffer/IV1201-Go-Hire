@@ -8,6 +8,7 @@ import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -41,6 +42,8 @@ public class ErrorHandler implements ErrorController {
             return handleLoggerException((LoggerException) exception);
         } else if (exception instanceof NoResourceFoundException) {
             return handleNoResourceFoundException((NoResourceFoundException) exception);
+        } else if (exception instanceof InsufficientAuthenticationException) {
+            return handleInsufficientAuthenticationException((InsufficientAuthenticationException) exception);
         }
         return handleOtherExceptions(exception);
     }
@@ -60,6 +63,10 @@ public class ErrorHandler implements ErrorController {
 
     private ResponseEntity<ErrorDTO> handleNoResourceFoundException(NoResourceFoundException exception) {
         return new ResponseEntity<>(new ErrorDTO(ErrorType.PAGE_DOES_NOT_EXIST, exception.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    private ResponseEntity<ErrorDTO> handleInsufficientAuthenticationException(InsufficientAuthenticationException exception) {
+        return new ResponseEntity<> (new ErrorDTO(ErrorType.INSUFFICIENT_CREDENTIALS, exception.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
     private ResponseEntity<ErrorDTO> handleLoggerException(LoggerException exception) {
