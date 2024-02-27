@@ -42,12 +42,18 @@ public class SecurityConfiguration {
                         .requestMatchers(whitelist).permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
-                ).csrf(csrf -> csrf // TODO unsafe
+                )
+                .csrf(csrf -> csrf // TODO unsafe
                         .ignoringRequestMatchers("/**") )
                 .securityContext((securityContext) -> securityContext
                         .securityContextRepository(new HttpSessionSecurityContextRepository())
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/test/logout").permitAll()
+                        .logoutSuccessUrl("/login")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                 );
-
         return http.build();
     }
 
