@@ -44,16 +44,16 @@ public class SecurityConfiguration {
                         .anyRequest().permitAll()
                 )
                 .csrf(csrf -> csrf // TODO unsafe
-                        .ignoringRequestMatchers("/**") )
+                        .ignoringRequestMatchers("/**").disable())
                 .securityContext((securityContext) -> securityContext
                         .securityContextRepository(new HttpSessionSecurityContextRepository())
                 )
-                .logout(logout -> logout
-                        .logoutUrl("/test/logout").permitAll()
+                /*.logout(logout -> logout
+                        .logoutUrl("/api/logout").permitAll()
                         .logoutSuccessUrl("/login")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
-                );
+                )*/;
         return http.build();
     }
 

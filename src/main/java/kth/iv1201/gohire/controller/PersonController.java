@@ -1,5 +1,7 @@
 package kth.iv1201.gohire.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
@@ -11,12 +13,14 @@ import kth.iv1201.gohire.service.PersonService;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import kth.iv1201.gohire.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,6 +82,15 @@ public class PersonController {
     }
 
     /* The following methods are for testing purposes since there is no other protected content */
+
+    SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> performLogout(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok().build();
+    }
+
 
     @PreAuthorize("hasRole('recruiter')")
     @GetMapping("/recruiter")

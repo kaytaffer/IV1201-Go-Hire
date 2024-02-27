@@ -3,6 +3,7 @@ const ReactDOM= require('react-dom');
 import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
 import {HomePage} from "./presenter/homePage";
 import {Login} from "./presenter/login";
+import {logout} from "./presenter/api/apiCallHandler";
 
 /**
  * Root component for the application
@@ -47,9 +48,16 @@ function App() {
         getUserFromLocalStorage()
     }, [])
 
+    function onLogout() {
+        logout().then(() => {
+            localStorage.clear()
+        });
+    }
+
     return (
         <div>
             <h1>Go Hire</h1>
+            <button onClick={onLogout}>Logout</button>
             {!isLoading &&
                 <Routes>
                     <Route path='/' element={<HomePage user={user} />}/>
