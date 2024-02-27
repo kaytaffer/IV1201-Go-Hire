@@ -51,6 +51,7 @@ function App() {
     function onLogout() {
         logout().then(() => {
             localStorage.clear()
+            navigate('/login')
         });
     }
 

@@ -84,17 +84,16 @@ public class PersonController {
         return auth.getName();
     }
 
-    /* The following methods are for testing purposes since there is no other protected content */
-
-    SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
-
-    @PostMapping("/logout")
-    public ResponseEntity<Void> performLogout(HttpSession session) {
+    @GetMapping("/logout")
+    public ResponseEntity<Void> performLogout(HttpSession session) throws LoggerException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        auth.setAuthenticated(false);
         session.invalidate();
+        Logger.logEvent("User logged out: " + auth.getName());
         return ResponseEntity.ok().build();
     }
 
-
+    /* The following methods are for testing purposes since there is no other protected content */
     @PreAuthorize("hasRole('recruiter')")
     @GetMapping("/recruiter")
     public String getRecruiterSecret() {

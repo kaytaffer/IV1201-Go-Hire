@@ -50,15 +50,15 @@ export function createNewApplicant(firstName, lastName, email, personNumber, use
     return sendPostRequest('/createApplicant', {firstName, lastName, email, personNumber, username, password})
 }
 
-export function logout(){
-    //return sendPostRequest('/logout', {firstName: 'test', id: 1});
-    return sendPostRequest('/logout', {});
-}
-
 /**
  * Tasks server to fetch all applications
  * @returns {Promise<any>} a promise either resolving to a object containing a list of applicants  or an error object
  */
 export function fetchListOfApplications() {
     return sendGetRequest('/applications')
+}
+
+export function logout(){
+    //return sendPostRequest('/logout', {});
+    return sendGetRequest('/logout');
 }
