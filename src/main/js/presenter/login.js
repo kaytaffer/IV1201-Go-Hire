@@ -20,7 +20,7 @@ import {UserNoticeView} from "../view/userNoticeView";
 export function Login(props){
 
     const [newUserIsCreated, setNewUserIsCreated] = useState(false)
-    const [errorMessage, setErrorMessage] = useState(null)
+    const [displayMessage, setDisplayMessage] = useState("")
 
     const POSSIBLE_LOGIN_ERRORS = [LOGIN_FAIL, USER_INPUT_ERROR, USERNAME_ALREADY_EXISTS, SERVER_INTERNAL]
 
@@ -28,7 +28,7 @@ export function Login(props){
         function checkErrorType(possibleError) {
             return error.message === possibleError.errorType
         }
-        setErrorMessage(POSSIBLE_LOGIN_ERRORS.find(checkErrorType).message)
+        setDisplayMessage(POSSIBLE_LOGIN_ERRORS.find(checkErrorType).message)
     }
 
     function login(username, password) {
@@ -38,15 +38,19 @@ export function Login(props){
 
     function newApplicant(firstName, lastName, email, personNumber, username, password) {
         createNewApplicant(firstName, lastName, email, personNumber, username, password)
-            .then(user => {if(user) setNewUserIsCreated(true)}).catch(catchPromiseError)
+            .then(user => {if(user) {
+                setDisplayMessage("Account successfully created");
+                setNewUserIsCreated(true);
+            }
+            }).catch(catchPromiseError)
     }
 
     return (
         <div>
+            {displayMessage && <UserNoticeView message={displayMessage}/>}
             <LoginView onLogin={login}/>
-            {newUserIsCreated ? <UserNoticeView message={"Account successfully created"} error={false}/> :
-                            <CreateNewApplicantView onCreate={newApplicant}/>}
-            {errorMessage && <UserNoticeView message={errorMessage} error={true}/>}
+            {!newUserIsCreated && <CreateNewApplicantView onCreate={newApplicant}/>}
+
         </div>
     )
 }

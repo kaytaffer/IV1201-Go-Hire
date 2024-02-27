@@ -28,6 +28,12 @@ public class SecurityConfiguration {
      */
     final String[] whitelist = { "/api/login", "/api/who", "/api/createApplicant"};
 
+    private final AuthenticationEntryPoint authEntryPoint;
+
+    public SecurityConfiguration(AuthenticationEntryPoint authEntryPoint) {
+        this.authEntryPoint = authEntryPoint;
+    }
+
     /**
      * Configures security filters, which URLs are open and authorization only
      * @param http needed to configure websecurity
@@ -42,9 +48,8 @@ public class SecurityConfiguration {
                         .requestMatchers(whitelist).permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
-                )
-                .csrf(csrf -> csrf // TODO unsafe
-                        .ignoringRequestMatchers("/**").disable())
+                ).csrf(csrf -> csrf // TODO unsafe
+                        .ignoringRequestMatchers("/**") )
                 .securityContext((securityContext) -> securityContext
                         .securityContextRepository(new HttpSessionSecurityContextRepository())
                 )

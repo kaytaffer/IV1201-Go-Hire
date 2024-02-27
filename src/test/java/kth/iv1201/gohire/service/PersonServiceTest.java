@@ -1,9 +1,12 @@
 package kth.iv1201.gohire.service;
 
+import kth.iv1201.gohire.DTO.ApplicantDTO;
 import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
+import kth.iv1201.gohire.entity.ApplicationStatusEntity;
 import kth.iv1201.gohire.entity.PersonEntity;
 import kth.iv1201.gohire.entity.RoleEntity;
+import kth.iv1201.gohire.repository.ApplicationStatusRepository;
 import kth.iv1201.gohire.repository.PersonRepository;
 import kth.iv1201.gohire.repository.RoleRepository;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
@@ -17,22 +20,30 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.LinkedList;
+import java.util.List;
+
 @SpringBootTest
 public class PersonServiceTest {
     @Mock
     PersonRepository personRepository;
     @Mock
     RoleRepository roleRepository;
+    @Mock
+    ApplicationStatusRepository applicationStatusRepository;
     @InjectMocks
     PersonService personService;
     PersonEntity fakePersonEntity;
     RoleEntity roleEntity;
+    ApplicationStatusEntity fakeApplicationStatus;
+    PersonEntity fakeApplicantPerson;
 
     @BeforeEach
     public void setUp() {
         Mockito.reset(personRepository);
         Mockito.reset(roleRepository);
-        this.personService = new PersonService(personRepository, roleRepository);
+        Mockito.reset(applicationStatusRepository);
+        this.personService = new PersonService(personRepository, roleRepository, applicationStatusRepository);
         this.fakePersonEntity = new PersonEntity();
         fakePersonEntity.setUsername("aValidUsername");
         fakePersonEntity.setPassword("aValidPassword");
@@ -41,6 +52,13 @@ public class PersonServiceTest {
         roleEntity.setName("recruiter");
         when(roleRepository.findRoleById(2)).thenReturn(roleEntity);
         fakePersonEntity.setRole(roleEntity);
+
+        this.fakeApplicantPerson = new PersonEntity();
+        fakeApplicantPerson.setName("ApplicantFirstName");
+        fakeApplicantPerson.setSurname("ApplicantLastName");
+        this.fakeApplicationStatus = new ApplicationStatusEntity();
+        fakeApplicationStatus.setStatus("unhandled");
+        fakeApplicantPerson.setApplicationStatus(fakeApplicationStatus);
     }
 
     @AfterEach
@@ -125,6 +143,44 @@ public class PersonServiceTest {
         } catch (UserCreationFailedException e) {
             fail("The user creation failed even though valid arguments were sent");
         }
+    }
+    
+    @Test
+    void testIfFetchApplicantsReturnsCorrectNumberOfApplicants() {
+        int numberOfPersons = 5;
+        List<ApplicantDTO> applicants = mockRepositoryAndCallFetchApplicants(numberOfPersons);
+        assertEquals(numberOfPersons, applicants.size(),
+                "Incorrect number of applicants was returned.");
+    }
+
+    @Test
+    void testIfFetchApplicantsReturnsCorrectFirstName() {
+        List<ApplicantDTO> applicants = mockRepositoryAndCallFetchApplicants(1);
+        assertEquals(applicants.get(0).getFirstName(), fakeApplicantPerson.getName(),
+                "Incorrect first name in fetched applicant.");
+    }
+
+    @Test
+    void testIfFetchApplicantsReturnsCorrectLastName() {
+        List<ApplicantDTO> applicants = mockRepositoryAndCallFetchApplicants(1);
+        assertEquals(applicants.get(0).getLastName(), fakeApplicantPerson.getSurname(),
+                "Incorrect surname in fetched applicant.");
+    }
+
+    @Test
+    void testIfFetchApplicantsReturnsCorrectApplicationStatus() {
+        List<ApplicantDTO> applicants = mockRepositoryAndCallFetchApplicants(1);
+        assertEquals(applicants.get(0).getStatus(), fakeApplicationStatus.getStatus(),
+                "Incorrect status in fetched applicant.");
+    }
+
+    private List<ApplicantDTO> mockRepositoryAndCallFetchApplicants(int numberOfPersons) {
+        List<PersonEntity> inputPersons = new LinkedList<>();
+        for (int i = 0; i < numberOfPersons; i++) {
+            inputPersons.add(fakeApplicantPerson);
+        }
+        when(personRepository.findPersonEntitiesByRoleIs(any())).thenReturn(inputPersons);
+        return personService.fetchApplicants();
     }
 
 }

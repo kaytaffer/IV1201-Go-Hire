@@ -1,14 +1,6 @@
 const baseUrl = '/api'
 
 function sendPostRequest(endpoint, body){
-
-    function checkIfServerReturnedError(response) {
-        if('errorType' in response) {
-            throw new Error(response.errorType)
-        } else
-            return response
-    }
-
     return fetch(baseUrl + endpoint, {
         method: 'POST',
         headers: {
@@ -16,6 +8,22 @@ function sendPostRequest(endpoint, body){
         },
         body: JSON.stringify(body)
     }).then(response => response.json()).then(checkIfServerReturnedError)
+}
+
+function sendGetRequest(endpoint) {
+    return fetch(baseUrl + endpoint, {
+        method: 'GET',
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    }).then(response => response.json()).then(checkIfServerReturnedError)
+}
+
+function checkIfServerReturnedError(response) {
+    if('errorType' in response) {
+        throw new Error(response.errorType)
+    } else
+        return response
 }
 
 /**
@@ -45,4 +53,12 @@ export function createNewApplicant(firstName, lastName, email, personNumber, use
 export function logout(){
     //return sendPostRequest('/logout', {firstName: 'test', id: 1});
     return sendPostRequest('/logout', {});
+}
+
+/**
+ * Tasks server to fetch all applications
+ * @returns {Promise<any>} a promise either resolving to a object containing a list of applicants  or an error object
+ */
+export function fetchListOfApplications() {
+    return sendGetRequest('/applications')
 }

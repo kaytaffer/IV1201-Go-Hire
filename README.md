@@ -21,6 +21,10 @@ View-Presenter React powered web application.
 `errorMessages` - Pre-defined error objects with their error type matched with the message to be displayed to user.
 
 ## view/
+`applicationListingView` - Responsible for rendering an application.
+
+`applicationListView` - Responsible for rendering the list of applications.
+
 `createNewApplicantView` - Responsible for rendering the create new applicant form
 
 `homePageApplicantView` - Responsible for rendering the home page for applicants.
@@ -44,9 +48,6 @@ The server handling HTTP calls.
 
 `StartController` - Responsible for returning the whole React App.
 
-### exception/
-`LoginFailedException` - Exception thrown then the logging in of a user to the application fails.
-
 ### util
 
 `ErrorType` - ENUM representing error types.
@@ -69,13 +70,19 @@ The server handling HTTP calls.
 ## repository/
 `PersonRepository` - Repository responsible for accessing data related to a `PersonEntity`.
 
+`ApplicationStatusRepository` - Repository responsible for accessing data related to `ApplicationStatusEntity`.
+
+`RoleRepository` - Repository responsible for accessing data related to `RoleEntity`.
+
 ## entity/ 
 `PersonEntity` - JPA Entity representing a person.
 
 `RoleEntity` - JPA Entity representing a person's role.
 
+`ApplicationStatusEntity` - JPA entity representing an application status
+
 ## DTO/ 
-`CreateUserRequestDTO` - DTO containing information about a user creation request.
+`CreateApplicantRequestDTO` - DTO containing information about a user creation request.
 
 `ErrorDTO` - Class representing an error response.
 
@@ -83,5 +90,9 @@ The server handling HTTP calls.
 
 `LoginRequestDTO` - DTO containing information about a login request.
 
+`ApplicantDTO` - DTO containing information about an application.
+
 ## config/
 `SecurityConfiguration`- Configuration for Spring security.
+
+`DelegatedAuthenticationEntryPoint` - Configures the authentication entry point
