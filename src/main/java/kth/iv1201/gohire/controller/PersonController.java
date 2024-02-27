@@ -64,6 +64,21 @@ public class PersonController {
     }
 
     /**
+     * Handles the logout API-request
+     * @param session The HttpSession associated with the logged in user's session
+     * @return ResponseEntity with an empty object and ok status
+     * @throws LoggerException if there is a problem with logging an event.
+     */
+    @GetMapping("/logout")
+    public ResponseEntity<String> performLogout(HttpSession session) throws LoggerException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        auth.setAuthenticated(false);
+        session.invalidate();
+        Logger.logEvent("User logged out: " + auth.getName());
+        return ResponseEntity.ok("{}");
+    }
+
+    /**
      * Handles the create applicant API-request.
      * @param createApplicantRequest DTO containing applicant request data.
      * @return <code>LoggedInPersonDTO</code> representing the newly created and logged-in user
@@ -82,15 +97,6 @@ public class PersonController {
     public String notSecret() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName();
-    }
-
-    @GetMapping("/logout")
-    public ResponseEntity<Void> performLogout(HttpSession session) throws LoggerException {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        auth.setAuthenticated(false);
-        session.invalidate();
-        Logger.logEvent("User logged out: " + auth.getName());
-        return ResponseEntity.ok().build();
     }
 
     /* The following methods are for testing purposes since there is no other protected content */
