@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import kth.iv1201.gohire.controller.util.ErrorType;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
  * Class handling exceptions.
@@ -38,7 +39,9 @@ public class ErrorHandler implements ErrorController {
             return handleBadCredentialsException((BadCredentialsException) exception);
         } else if (exception instanceof LoggerException) {
             return handleLoggerException((LoggerException) exception);
-        } else
+        } else if (exception instanceof NoResourceFoundException) {
+            return handleNoResourceFoundException((NoResourceFoundException) exception);
+        }
         return handleOtherExceptions(exception);
     }
 
@@ -53,6 +56,10 @@ public class ErrorHandler implements ErrorController {
 
     private ResponseEntity<ErrorDTO> handleBadCredentialsException(BadCredentialsException exception){
         return new ResponseEntity<> (new ErrorDTO(ErrorType.LOGIN_FAIL,exception.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    private ResponseEntity<ErrorDTO> handleNoResourceFoundException(NoResourceFoundException exception) {
+        return new ResponseEntity<>(new ErrorDTO(ErrorType.PAGE_DOES_NOT_EXIST, exception.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     private ResponseEntity<ErrorDTO> handleLoggerException(LoggerException exception) {
