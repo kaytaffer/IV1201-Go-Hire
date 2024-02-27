@@ -94,3 +94,5 @@ The server handling HTTP calls.
 
 ## config/
 `SecurityConfiguration`- Configuration for Spring security.
+
+`DelegatedAuthenticationEntryPoint` - Configures the authentication entry point
