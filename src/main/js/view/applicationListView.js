@@ -6,7 +6,7 @@ import {ApplicationListingView} from "./applicationListingView";
  * @param props - props
  * @param {Array} props.applications - list of application objects
  * @param {function} props.onHandleApplication - Passed to each ApplicationListingView.
- * @returns {JSX.Element} the rendered recruiter home page
+ * @returns {JSX.Element} the rendered application list.
  */
 export function ApplicationListView(props) {
     return (

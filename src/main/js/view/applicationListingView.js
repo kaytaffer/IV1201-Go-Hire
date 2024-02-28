@@ -1,10 +1,10 @@
 import React from "react";
 /**
- * Responsible for an application.
+ * Responsible for rendering an application listing.
  * @param props - props
  * @param {Object} props.application - A single applicant
  * @param {function} props.onHandleApplication - Called when clicking the 'handle' button.
- * @returns {JSX.Element} the rendered recruiter home page
+ * @returns {JSX.Element} the rendered application listing.
  */
 export function ApplicationListingView(props) {
     return(
