@@ -8,7 +8,7 @@ import {
     SERVER_INTERNAL,
 } from "./api/errorMessages";
 import {UserNoticeView} from "../view/userNoticeView";
-import {PopupView} from "../view/PopupView";
+import {PopupView} from "../view/popupView";
 import {HandleApplicationView} from "../view/handleApplicationView";
 
 /**
