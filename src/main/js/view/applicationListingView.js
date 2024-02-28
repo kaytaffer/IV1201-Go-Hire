@@ -12,6 +12,6 @@ export function ApplicationListingView(props) {
             <td>{props.application.firstName}</td>
             <td>{props.application.lastName}</td>
             <td>{props.application.status}</td>
-            <td><button onClick={() => props.onHandleApplication(props.application)}>handle</button></td>
+            {props.application.status === "unhandled" && <td><button onClick={() => props.onHandleApplication(props.application)}>handle</button></td>}
         </tr>
     )}
