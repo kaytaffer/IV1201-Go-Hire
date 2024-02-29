@@ -3,6 +3,7 @@ package kth.iv1201.gohire.controller;
 import kth.iv1201.gohire.DTO.ErrorDTO;
 import kth.iv1201.gohire.controller.util.Logger;
 import kth.iv1201.gohire.controller.util.LoggerException;
+import kth.iv1201.gohire.service.exception.ApplicationHandledException;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class ErrorHandler implements ErrorController {
      */
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ErrorDTO> handleException (Exception exception) throws LoggerException {
-
+        Logger.logError(exception);
         if (exception instanceof UserCreationFailedException) {
             return handleUserCreationFailedException((UserCreationFailedException) exception);
         } else if (exception instanceof MethodArgumentNotValidException) {
@@ -44,6 +45,8 @@ public class ErrorHandler implements ErrorController {
             return handleNoResourceFoundException((NoResourceFoundException) exception);
         } else if (exception instanceof InsufficientAuthenticationException) {
             return handleInsufficientAuthenticationException((InsufficientAuthenticationException) exception);
+        } else if (exception instanceof ApplicationHandledException) {
+            return handleApplicationHandledException((ApplicationHandledException) exception);
         }
         return handleOtherExceptions(exception);
     }
@@ -62,11 +65,15 @@ public class ErrorHandler implements ErrorController {
     }
 
     private ResponseEntity<ErrorDTO> handleNoResourceFoundException(NoResourceFoundException exception) {
-        return new ResponseEntity<>(new ErrorDTO(ErrorType.PAGE_DOES_NOT_EXIST, exception.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<> (new ErrorDTO(ErrorType.PAGE_DOES_NOT_EXIST, exception.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     private ResponseEntity<ErrorDTO> handleInsufficientAuthenticationException(InsufficientAuthenticationException exception) {
         return new ResponseEntity<> (new ErrorDTO(ErrorType.INSUFFICIENT_CREDENTIALS, exception.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    private ResponseEntity<ErrorDTO> handleApplicationHandledException(ApplicationHandledException exception) {
+        return new ResponseEntity<> (new ErrorDTO(ErrorType.APPLICATION_ALREADY_HANDLED, exception.getMessage()), HttpStatus.FORBIDDEN);
     }
 
     private ResponseEntity<ErrorDTO> handleLoggerException(LoggerException exception) {
