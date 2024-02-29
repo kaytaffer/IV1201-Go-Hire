@@ -60,7 +60,7 @@ export function fetchListOfApplications() {
 
 /**
  * Tasks server to logout user
- * @returns {Promise<any>} a promise resolving to successful login message
+ * @returns {Promise<any>} a promise resolving to a successful login message or an error object
  */
 
 export function logout(){
