@@ -1,0 +1,30 @@
+/* --- Popup --- */
+.popup-background {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.popup {
+    position: fixed;
+    width: 450px;
+    height: 300px;
+    border:1px solid black;
+    background: white;
+    padding: 20px 30px;
+    box-sizing: border-box;
+    left: calc(50vw - 225px);
+    top: calc(50vh - 150px)
+}
+
+button.close-popup {
+    position: absolute;
+    top:15px;
+    right:15px;
+}

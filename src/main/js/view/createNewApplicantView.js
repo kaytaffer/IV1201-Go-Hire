@@ -1,7 +1,7 @@
 import React from "react";
 
 /**
- * Responsible for rendering the create new applicant form
+ * Responsible for rendering the create new applicant form.
  * @param props props
  * @param {function} props.onCreate - called when user submits new applicant form
  * @returns {JSX.Element} the rendered new applicant view
@@ -34,7 +34,7 @@ export function CreateNewApplicantView(props) {
             <input id="create-applicant-form-username" type="text" placeholder="max 255 characters"/><br/>
             <label>Password</label>
             <input id="create-applicant-form-password" type="password" placeholder="max 255 characters"/><br/>
-            <input type="submit"/>
+            <input type="submit" value="Submit"/>
         </form>
     </div>
 

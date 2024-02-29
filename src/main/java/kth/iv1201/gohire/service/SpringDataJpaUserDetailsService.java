@@ -41,8 +41,7 @@ public class SpringDataJpaUserDetailsService implements UserDetailsService {
         if (person == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        return User.withDefaultPasswordEncoder()
-                .username(person.getUsername())
+        return User.withUsername(person.getUsername())
                 .password(person.getPassword())
                 .roles(person.getRole().getName())
                 .build();
