@@ -8,12 +8,21 @@ import React from "react";
  * @returns {JSX.Element} the rendered application handling component.
  */
 export function HandleApplicationView(props) {
+
+    function submission(event) {
+        event.preventDefault()
+        let newStatus = document.getElementById("handle-application-form-new-status").value
+        let username = document.getElementById("handle-application-form-username").value
+        let password = document.getElementById("handle-application-form-password").value
+        props.submitForm(props.application.id, newStatus, username, password)
+    }
+
     return (<div>
         <h4>Handle application for '{props.application.firstName} {props.application.lastName}</h4>
         <p>Select the new status and verify your identity by entering username and password</p>
 
-        <form onSubmit={props.submitForm}>
-            <select id="new-status">
+        <form onSubmit={submission}>
+            <select id="handle-application-form-new-status">
                 <option value="">Unhandled</option>
                 <option value="accept">Accept applicant</option>
                 <option value="reject">Reject applicant</option>

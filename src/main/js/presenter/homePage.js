@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {HomePageApplicantView} from "../view/homePageApplicantView";
 import {HomePageRecruiterView} from "../view/homePageRecruiterView";
-import {fetchListOfApplications} from "./api/apiCallHandler";
+import {changeApplicationStatus, fetchListOfApplications} from "./api/apiCallHandler";
 import {
     INSUFFICIENT_CREDENTIALS,
     PAGE_DOES_NOT_EXIST,
@@ -40,8 +40,8 @@ export function HomePage(props){
         setShowSingleApplicant(applicant)
     }
 
-    function changeStatus(request) {
-
+    function changeStatus(id, newStatus, username, password) {
+        changeApplicationStatus(id, newStatus, username, password).then(/*TODO*/).catch(/*TODO*/)
     }
 
     if(props.user.role === 'applicant')
