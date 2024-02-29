@@ -67,7 +67,8 @@ The server handling HTTP calls.
 
 `SpringDataJpaUserDetailsService` - Used by Spring Security AuthenticationManager for fetching user information when authenticating.
 
-### exceptions/
+### exception/
+`ApplicationHandledException` - Exception thrown when an application that has already been handled is ordered to change.
 
 `UserCreationFailedException` - Exception thrown when the creation of a new user to the application fails.
 
