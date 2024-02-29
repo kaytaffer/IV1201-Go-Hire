@@ -50,7 +50,7 @@ public class PersonController {
     @PostMapping("/login")
     public LoggedInPersonDTO login(@RequestBody @Valid LoginRequestDTO loginRequest, HttpSession session)
             throws LoggerException, UserNotFoundException {
-        Authentication authenticationResponse = authenticateLoginRequest(loginRequest);
+        Authentication authenticationResponse = authenticateRequest(loginRequest.getUsername(), loginRequest.getPassword());
         saveAuthenticatedUserInSession(authenticationResponse, session);
         Logger.logEvent("User logged in: " + loginRequest.getUsername());
         return personService.fetchLoggedInPersonByUsername(loginRequest.getUsername());
@@ -77,10 +77,36 @@ public class PersonController {
         return auth.getName();
     }
 
-    private Authentication authenticateLoginRequest(LoginRequestDTO loginRequest) throws BadCredentialsException {
+    /**
+     * Fetches all applications
+     * @return All applications
+     */
+    @PreAuthorize("hasRole('recruiter')")
+    @GetMapping("/applications")
+    public List<ApplicantDTO> fetchApplicants(){
+        return personService.fetchApplicants();
+    }
+
+    /**
+     * Changes the status of an application.
+     * @param request DTO containing application change request data.
+     * @return the changed and saved application.
+     */
+    @PreAuthorize("hasRole('recruiter')")
+    @PostMapping("/changeApplicationStatus")
+    public ApplicantDTO changeApplicationStatus(@RequestBody @Valid ChangeApplicationStatusRequestDTO request)
+            throws LoggerException {
+        authenticateRequest(request.getUsername(), request.getPassword());
+        ApplicantDTO changedApplicant = personService.changeApplicantStatus(request);
+        Logger.logEvent("Recruiter " + request.getUsername() + " changed status of applicant " + changedApplicant.getFirstName() + " " +
+                changedApplicant.getLastName() + " to " + changedApplicant.getStatus() + ".");
+        return changedApplicant;
+    }
+
+
+    private Authentication authenticateRequest(String username, String password) throws BadCredentialsException {
         Authentication authenticationRequest =
-                UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getUsername(),
-                        loginRequest.getPassword());
+                UsernamePasswordAuthenticationToken.unauthenticated(username, password);
         Authentication authenticationResponse =
                 this.authenticationManager.authenticate(authenticationRequest);
         if(!authenticationResponse.isAuthenticated())
@@ -92,23 +118,6 @@ public class PersonController {
         SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                 SecurityContextHolder.getContext());
-    }
-
-    /**
-     * Fetches all applications
-     * @return All applications
-     */
-    @PreAuthorize("hasRole('recruiter')")
-    @GetMapping("/applications")
-    public List<ApplicantDTO> fetchApplicants(){
-        return personService.fetchApplicants();
-    }
-
-    @PreAuthorize("hasRole('recruiter')")
-    @PostMapping("/changeApplicationStatus")
-    public ApplicantDTO changeApplicationStatus(@RequestBody @Valid ChangeApplicationStatusRequestDTO changeApplicationStatusRequestDTO) {
-        //TODO implement
-        return null;
     }
 }
 
