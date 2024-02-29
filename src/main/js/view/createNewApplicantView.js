@@ -1,7 +1,7 @@
 import React from "react";
 
 /**
- * Responsible for rendering the create new applicant form
+ * Responsible for rendering the create new applicant form.
  * @param props props
  * @param {function} props.onCreate - called when user submits new applicant form
  * @returns {JSX.Element} the rendered new applicant view

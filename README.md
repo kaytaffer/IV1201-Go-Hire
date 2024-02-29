@@ -25,13 +25,19 @@ View-Presenter React powered web application.
 
 `applicationListView` - Responsible for rendering the list of applications.
 
-`createNewApplicantView` - Responsible for rendering the create new applicant form
+`createNewApplicantView` - Responsible for rendering the create new applicant form.
+
+`handleApplicationView` - Responsible for rendering a view in which to handle application status.
 
 `homePageApplicantView` - Responsible for rendering the home page for applicants.
 
 `homePageRecruiterView` - Responsible for rendering the home page for recruiters.
 
 `loginView` - Responsible for rendering the login page.
+
+`popupView` - Popup container meant to wrap child components as a popup view.
+
+`userNoticeView` - Responsible for rendering user notice messages.
 
 # Server
 The server handling HTTP calls.

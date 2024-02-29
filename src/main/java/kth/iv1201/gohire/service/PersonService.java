@@ -12,6 +12,7 @@ import kth.iv1201.gohire.repository.PersonRepository;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import kth.iv1201.gohire.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,18 +32,21 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final RoleRepository roleRepository;
     private final ApplicationStatusRepository applicationStatusRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
     * Creates an instance of the <code>PersonService</code>.
     * @param personRepository The <code>PersonRepository</code> to use.
     * @param roleRepository The <code>RoleRepository</code> to use.
+     * @param passwordEncoder the <code>PasswordEncoder</code> implementation to use for encoding passwords
     */
     @Autowired
     public PersonService(PersonRepository personRepository, RoleRepository roleRepository,
-                         ApplicationStatusRepository applicationStatusRepository) {
+                         ApplicationStatusRepository applicationStatusRepository,PasswordEncoder passwordEncoder) {
         this.personRepository = personRepository;
         this.roleRepository = roleRepository;
         this.applicationStatusRepository = applicationStatusRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -74,13 +78,16 @@ public class PersonService {
         RoleEntity roleEntity = roleRepository.findRoleById(APPLICANTROLEID);
         ApplicationStatusEntity applicationStatusEntity = applicationStatusRepository.findById(APPLICATIONSTATUSUNHANDLED);
 
+        // Encode raw password for secure storage.
+        String encodedPassword = passwordEncoder.encode(createUserRequestDTO.getPassword());
+
         personEntity.setRole(roleEntity);
         personEntity.setName(createUserRequestDTO.getFirstName());
         personEntity.setSurname(createUserRequestDTO.getLastName());
         personEntity.setEmail(createUserRequestDTO.getEmail());
         personEntity.setPersonNumber(createUserRequestDTO.getPersonNumber());
         personEntity.setUsername(createUserRequestDTO.getUsername());
-        personEntity.setPassword(createUserRequestDTO.getPassword());
+        personEntity.setPassword(encodedPassword);
         personEntity.setApplicationStatus(applicationStatusEntity);
         personEntity = personRepository.save(personEntity);
         return new LoggedInPersonDTO(personEntity.getId(), personEntity.getUsername(), personEntity.getRole().getName());
@@ -95,7 +102,7 @@ public class PersonService {
         List<PersonEntity> persons = personRepository.findPersonEntitiesByRoleIs(roleEntity);
         List<ApplicantDTO> applicants = new LinkedList<>();
         for(PersonEntity person : persons) {
-            applicants.add(new ApplicantDTO(person.getName(), person.getSurname(),
+            applicants.add(new ApplicantDTO(person.getId(), person.getName(), person.getSurname(),
                     person.getApplicationStatus().getStatus()));
         }
         return applicants;
