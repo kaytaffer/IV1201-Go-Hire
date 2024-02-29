@@ -3,6 +3,10 @@ const ReactDOM= require('react-dom');
 import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
 import {HomePage} from "./presenter/homePage";
 import {Login} from "./presenter/login";
+import {TopBar} from "./presenter/topBar";
+import {MainContentView} from "./view/mainContentView";
+import {FooterView} from "./view/footerView";
+import {ContainerView} from "./view/ContainerView";
 
 /**
  * Root component for the application
@@ -49,13 +53,18 @@ function App() {
 
     return (
         <div>
-            <h1>Go Hire</h1>
-            {!isLoading &&
-                <Routes>
-                    <Route path='/' element={<HomePage user={user} />}/>
-                    <Route path='/login' element={<Login onLoggedIn={onLoggedIn}/>}/>
-                </Routes>
-            }
+            <ContainerView>
+                <TopBar user={user}/>
+                <MainContentView>
+                    {!isLoading &&
+                        <Routes>
+                            <Route path='/' element={<HomePage user={user} />}/>
+                            <Route path='/login' element={<Login onLoggedIn={onLoggedIn}/>}/>
+                        </Routes>
+                    }
+                </MainContentView>
+                <FooterView/>
+            </ContainerView>
         </div>
     )
 }
