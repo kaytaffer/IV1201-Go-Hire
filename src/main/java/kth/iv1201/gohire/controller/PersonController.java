@@ -70,12 +70,12 @@ public class PersonController {
      * @throws LoggerException if there is a problem with logging an event.
      */
     @GetMapping("/logout")
-    public ResponseEntity<String> performLogout(HttpSession session) throws LoggerException {
+    public ResponseEntity<Void> performLogout(HttpSession session) throws LoggerException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         auth.setAuthenticated(false);
         session.invalidate();
         Logger.logEvent("User logged out: " + auth.getName());
-        return ResponseEntity.ok("{}");
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -93,6 +93,7 @@ public class PersonController {
         return newApplicant;
     }
 
+    // TODO Move this to debug controller
     @GetMapping("/who")
     public String notSecret() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
