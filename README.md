@@ -88,6 +88,8 @@ The server handling HTTP calls.
 `ApplicationStatusEntity` - JPA entity representing an application status
 
 ## DTO/ 
+`ChangeApplicationStatusRequestDTO.java` - DTO containing information about an applicant creation request.
+
 `CreateApplicantRequestDTO` - DTO containing information about a user creation request.
 
 `ErrorDTO` - Class representing an error response.
