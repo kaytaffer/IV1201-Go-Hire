@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +32,9 @@ public class PersonServiceTest {
     RoleRepository roleRepository;
     @Mock
     ApplicationStatusRepository applicationStatusRepository;
+    @Mock
+    PasswordEncoder passwordEncoder;
+
     @InjectMocks
     PersonService personService;
     PersonEntity fakeRecruiterEntity;
@@ -38,12 +42,13 @@ public class PersonServiceTest {
     ApplicationStatusEntity fakeApplicationStatus;
     PersonEntity fakeApplicantPerson;
 
+
     @BeforeEach
     public void setUp() {
         Mockito.reset(personRepository);
         Mockito.reset(roleRepository);
         Mockito.reset(applicationStatusRepository);
-        this.personService = new PersonService(personRepository, roleRepository, applicationStatusRepository);
+        this.personService = new PersonService(personRepository, roleRepository, applicationStatusRepository,passwordEncoder);
         this.fakeRecruiterEntity = new PersonEntity();
         fakeRecruiterEntity.setUsername("aValidUsername");
         fakeRecruiterEntity.setPassword("aValidPassword");
@@ -68,6 +73,8 @@ public class PersonServiceTest {
         personRepository.delete(fakeRecruiterEntity);
         fakeRecruiterEntity = null;
         roleEntity = null;
+        passwordEncoder = null;
+
     }
 
     @Test
