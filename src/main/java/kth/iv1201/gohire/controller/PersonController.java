@@ -93,9 +93,6 @@ public class PersonController {
         return newApplicant;
     }
 
-    // TODO Move this to debug controller
-
-
     private Authentication authenticateLoginRequest(LoginRequestDTO loginRequest) throws BadCredentialsException {
         Authentication authenticationRequest =
                 UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getUsername(),
