@@ -16,7 +16,14 @@ function sendGetRequest(endpoint) {
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
-    }).then(response => response.json()).then(checkIfServerReturnedError)
+    }).then(response => {
+        if (parseInt(response.headers.get('content-length')) > 0) {
+            return response.json();
+        } else {
+            return {};
+        }
+    })
+        .then(checkIfServerReturnedError);
 }
 
 function checkIfServerReturnedError(response) {
