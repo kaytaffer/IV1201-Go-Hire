@@ -71,6 +71,5 @@ export function fetchListOfApplications() {
  */
 
 export function logout(){
-    //return sendPostRequest('/logout', {});
     return sendGetRequest('/logout');
 }
