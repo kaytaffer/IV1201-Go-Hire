@@ -48,7 +48,7 @@ public class PersonServiceTest {
         Mockito.reset(personRepository);
         Mockito.reset(roleRepository);
         Mockito.reset(applicationStatusRepository);
-        this.personService = new PersonService(personRepository, roleRepository, applicationStatusRepository);
+        this.personService = new PersonService(personRepository, roleRepository, applicationStatusRepository,passwordEncoder);
         this.fakeRecruiterEntity = new PersonEntity();
         fakeRecruiterEntity.setUsername("aValidUsername");
         fakeRecruiterEntity.setPassword("aValidPassword");
