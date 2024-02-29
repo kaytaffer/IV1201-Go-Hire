@@ -33,7 +33,7 @@ public class PersonServiceTest {
     ApplicationStatusRepository applicationStatusRepository;
     @InjectMocks
     PersonService personService;
-    PersonEntity fakePersonEntity;
+    PersonEntity fakeRecruiterEntity;
     RoleEntity roleEntity;
     ApplicationStatusEntity fakeApplicationStatus;
     PersonEntity fakeApplicantPerson;
@@ -44,18 +44,19 @@ public class PersonServiceTest {
         Mockito.reset(roleRepository);
         Mockito.reset(applicationStatusRepository);
         this.personService = new PersonService(personRepository, roleRepository, applicationStatusRepository);
-        this.fakePersonEntity = new PersonEntity();
-        fakePersonEntity.setUsername("aValidUsername");
-        fakePersonEntity.setPassword("aValidPassword");
-        fakePersonEntity.setId(1);
+        this.fakeRecruiterEntity = new PersonEntity();
+        fakeRecruiterEntity.setUsername("aValidUsername");
+        fakeRecruiterEntity.setPassword("aValidPassword");
+        fakeRecruiterEntity.setId(1);
         roleEntity = new RoleEntity();
         roleEntity.setName("recruiter");
         when(roleRepository.findRoleById(2)).thenReturn(roleEntity);
-        fakePersonEntity.setRole(roleEntity);
+        fakeRecruiterEntity.setRole(roleEntity);
 
         this.fakeApplicantPerson = new PersonEntity();
         fakeApplicantPerson.setName("ApplicantFirstName");
         fakeApplicantPerson.setSurname("ApplicantLastName");
+        fakeApplicantPerson.setId(2);
         this.fakeApplicationStatus = new ApplicationStatusEntity();
         fakeApplicationStatus.setStatus("unhandled");
         fakeApplicantPerson.setApplicationStatus(fakeApplicationStatus);
@@ -64,8 +65,8 @@ public class PersonServiceTest {
     @AfterEach
     public void tearDown() {
         personService = null;
-        personRepository.delete(fakePersonEntity);
-        fakePersonEntity = null;
+        personRepository.delete(fakeRecruiterEntity);
+        fakeRecruiterEntity = null;
         roleEntity = null;
     }
 
@@ -78,10 +79,10 @@ public class PersonServiceTest {
 
     @Test
     public void testIfMethodReturnsWorkingLoggedInPersonDTO() {
-        when(personRepository.findByUsername(fakePersonEntity.getUsername())).thenReturn(fakePersonEntity);
+        when(personRepository.findByUsername(fakeRecruiterEntity.getUsername())).thenReturn(fakeRecruiterEntity);
         try {
-            LoggedInPersonDTO loggedInUser = personService.fetchLoggedInPersonByUsername(fakePersonEntity.getUsername());
-            assertEquals(fakePersonEntity.getUsername(), loggedInUser.getUsername());
+            LoggedInPersonDTO loggedInUser = personService.fetchLoggedInPersonByUsername(fakeRecruiterEntity.getUsername());
+            assertEquals(fakeRecruiterEntity.getUsername(), loggedInUser.getUsername());
         } catch (UserNotFoundException e) {
             fail("The function failed to fetch the correct data\n");
             e.printStackTrace();
@@ -90,9 +91,9 @@ public class PersonServiceTest {
 
     @Test
     public void testIfCreateUserReturnsALoggedInPersonDTO() {
-        CreateApplicantRequestDTO request = new CreateApplicantRequestDTO(null,null,null,null, fakePersonEntity.getUsername(),null);
+        CreateApplicantRequestDTO request = new CreateApplicantRequestDTO(null,null,null,null, fakeRecruiterEntity.getUsername(),null);
         try {
-            when(personRepository.save(any(PersonEntity.class))).thenReturn(fakePersonEntity);
+            when(personRepository.save(any(PersonEntity.class))).thenReturn(fakeRecruiterEntity);
             LoggedInPersonDTO user = personService.createApplicantAccount(request);
             assertEquals(LoggedInPersonDTO.class, user.getClass(), "Did not return a LoggedInPersonDTO");
         } catch (UserCreationFailedException e) {
@@ -102,8 +103,8 @@ public class PersonServiceTest {
 
     @Test
     public void testIfCreateUserThrowsUserCreateFailedException() {
-        CreateApplicantRequestDTO request = new CreateApplicantRequestDTO(null,null,null,null, fakePersonEntity.getUsername(),null);
-        when(personRepository.existsByUsername(fakePersonEntity.getUsername())).thenReturn(true);
+        CreateApplicantRequestDTO request = new CreateApplicantRequestDTO(null,null,null,null, fakeRecruiterEntity.getUsername(),null);
+        when(personRepository.existsByUsername(fakeRecruiterEntity.getUsername())).thenReturn(true);
         try {
             personService.createApplicantAccount(request);
             fail("Method returned correctly when it should have thrown an exception");
@@ -113,33 +114,33 @@ public class PersonServiceTest {
     }
 
     @Test void testIfCreateUserConstructsReturnDTOWithUsernameProperly() {
-        CreateApplicantRequestDTO request = new CreateApplicantRequestDTO(null,null,null,null, fakePersonEntity.getUsername(),null);
+        CreateApplicantRequestDTO request = new CreateApplicantRequestDTO(null,null,null,null, fakeRecruiterEntity.getUsername(),null);
         try {
-            when(personRepository.save(any(PersonEntity.class))).thenReturn(fakePersonEntity);
+            when(personRepository.save(any(PersonEntity.class))).thenReturn(fakeRecruiterEntity);
             LoggedInPersonDTO user = personService.createApplicantAccount(request);
-            assertEquals(fakePersonEntity.getUsername(), user.getUsername(), "DTO does not contain correct information");
+            assertEquals(fakeRecruiterEntity.getUsername(), user.getUsername(), "DTO does not contain correct information");
         } catch (UserCreationFailedException e) {
             fail("The user creation failed even though valid arguments were sent");
         }
     }
 
     @Test void testIfCreateUserConstructsReturnDTOWithRoleProperly() {
-        CreateApplicantRequestDTO request = new CreateApplicantRequestDTO(null,null,null,null, fakePersonEntity.getUsername(),null);
+        CreateApplicantRequestDTO request = new CreateApplicantRequestDTO(null,null,null,null, fakeRecruiterEntity.getUsername(),null);
         try {
-            when(personRepository.save(any(PersonEntity.class))).thenReturn(fakePersonEntity);
+            when(personRepository.save(any(PersonEntity.class))).thenReturn(fakeRecruiterEntity);
             LoggedInPersonDTO user = personService.createApplicantAccount(request);
-            assertEquals(fakePersonEntity.getRole().getName(), user.getRole(), "DTO does not contain correct information");
+            assertEquals(fakeRecruiterEntity.getRole().getName(), user.getRole(), "DTO does not contain correct information");
         } catch (UserCreationFailedException e) {
             fail("The user creation failed even though valid arguments were sent");
         }
     }
 
     @Test void testIfCreateUserConstructsReturnDTOWithIdProperly() {
-        CreateApplicantRequestDTO request = new CreateApplicantRequestDTO(null,null,null,null, fakePersonEntity.getUsername(),null);
+        CreateApplicantRequestDTO request = new CreateApplicantRequestDTO(null,null,null,null, fakeRecruiterEntity.getUsername(),null);
         try {
-            when(personRepository.save(any(PersonEntity.class))).thenReturn(fakePersonEntity);
+            when(personRepository.save(any(PersonEntity.class))).thenReturn(fakeRecruiterEntity);
             LoggedInPersonDTO user = personService.createApplicantAccount(request);
-            assertEquals(fakePersonEntity.getId(), user.getId(), "DTO does not contain correct information");
+            assertEquals(fakeRecruiterEntity.getId(), user.getId(), "DTO does not contain correct information");
         } catch (UserCreationFailedException e) {
             fail("The user creation failed even though valid arguments were sent");
         }
