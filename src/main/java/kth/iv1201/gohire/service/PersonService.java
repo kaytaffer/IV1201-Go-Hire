@@ -1,6 +1,7 @@
 package kth.iv1201.gohire.service;
 
 import kth.iv1201.gohire.DTO.ApplicantDTO;
+import kth.iv1201.gohire.DTO.ChangeApplicationStatusRequestDTO;
 import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.entity.ApplicationStatusEntity;
@@ -78,8 +79,7 @@ public class PersonService {
         RoleEntity roleEntity = roleRepository.findRoleById(APPLICANTROLEID);
         ApplicationStatusEntity applicationStatusEntity = applicationStatusRepository.findById(APPLICATIONSTATUSUNHANDLED);
 
-        // Encode raw password for secure storage.
-        String encodedPassword = passwordEncoder.encode(createUserRequestDTO.getPassword());
+        String encodedPassword = passwordEncoder.encode(createUserRequestDTO.getPassword()); // Encodes raw password for secure storage.
 
         personEntity.setRole(roleEntity);
         personEntity.setName(createUserRequestDTO.getFirstName());
@@ -106,6 +106,20 @@ public class PersonService {
                     person.getApplicationStatus().getStatus()));
         }
         return applicants;
+    }
+
+    /**
+     * Changes the status of an application.
+     * @param request DTO containing application change request data.
+     * @return the changed and saved application.
+     */
+    public ApplicantDTO changeApplicantStatus(ChangeApplicationStatusRequestDTO request) {
+        String newStatus = request.getNewStatus();
+            //TODO save and return
+        return null;
+
+        //TODO handle alternate flow stale request
+
     }
 
 }
