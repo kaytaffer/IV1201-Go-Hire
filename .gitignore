@@ -5,7 +5,9 @@ target/
 !**/src/test/**/target/
 src/main/resources/application-local.properties
 src/main/resources/application-heroku.properties
+src/main/resources/static/built/
 *.DS_Store
+node/
 
 ### STS ###
 .apt_generated
