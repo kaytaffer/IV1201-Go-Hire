@@ -59,6 +59,7 @@ export function fetchListOfApplications() {
 }
 
 /**
+ * Calls the API to change the status of an application.
  * @param id the identifier of the applicant for which to change the status.
  * @param newStatus The new status of the application: 'accepted' or 'rejected'
  * @param username The username of the recruiter changing the status.

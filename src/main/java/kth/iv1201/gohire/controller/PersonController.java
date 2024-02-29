@@ -2,10 +2,7 @@ package kth.iv1201.gohire.controller;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import kth.iv1201.gohire.DTO.ApplicantDTO;
-import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
-import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
-import kth.iv1201.gohire.DTO.LoginRequestDTO;
+import kth.iv1201.gohire.DTO.*;
 import kth.iv1201.gohire.controller.util.Logger;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.PersonService;
@@ -80,20 +77,6 @@ public class PersonController {
         return auth.getName();
     }
 
-    /* The following methods are for testing purposes since there is no other protected content */
-
-    @PreAuthorize("hasRole('recruiter')")
-    @GetMapping("/recruiter")
-    public String getRecruiterSecret() {
-        return "Secret thing";
-    }
-
-    @PreAuthorize("hasRole('applicant')")
-    @GetMapping("/applicant")
-    public String getApplicantSecret() {
-        return "Secret thing";
-    }
-
     private Authentication authenticateLoginRequest(LoginRequestDTO loginRequest) throws BadCredentialsException {
         Authentication authenticationRequest =
                 UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getUsername(),
@@ -120,4 +103,12 @@ public class PersonController {
     public List<ApplicantDTO> fetchApplicants(){
         return personService.fetchApplicants();
     }
+
+    @PreAuthorize("hasRole('recruiter')")
+    @PostMapping("/changeApplicationStatus")
+    public ApplicantDTO changeApplicationStatus(@RequestBody @Valid ChangeApplicationStatusRequestDTO changeApplicationStatusRequestDTO) {
+        //TODO implement
+        return null;
+    }
 }
+
