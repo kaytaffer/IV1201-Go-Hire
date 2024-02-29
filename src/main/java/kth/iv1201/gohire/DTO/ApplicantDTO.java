@@ -23,7 +23,9 @@ public class ApplicantDTO {
         this.status = status;
     }
 
-    public int getId() {return id; }
+    public int getId() {
+        return id;
+    }
     public String getFirstName() {
         return firstName;
     }
