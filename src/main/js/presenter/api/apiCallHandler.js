@@ -16,14 +16,7 @@ function sendGetRequest(endpoint) {
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
-    }).then(response => {
-        if (parseInt(response.headers.get('content-length')) > 0) {
-            return response.json();
-        } else {
-            return {};
-        }
-    })
-        .then(checkIfServerReturnedError);
+    }).then(response => response.json()).then(checkIfServerReturnedError)
 }
 
 function checkIfServerReturnedError(response) {
@@ -67,7 +60,7 @@ export function fetchListOfApplications() {
 
 /**
  * Tasks server to logout user
- * @returns {Promise<any>} a promise containing an empty body or an error response
+ * @returns {Promise<any>} a promise resolving to a successful login message or an error object
  */
 
 export function logout(){
