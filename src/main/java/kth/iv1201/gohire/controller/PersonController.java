@@ -94,24 +94,7 @@ public class PersonController {
     }
 
     // TODO Move this to debug controller
-    @GetMapping("/who")
-    public String notSecret() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth.getName();
-    }
 
-    /* The following methods are for testing purposes since there is no other protected content */
-    @PreAuthorize("hasRole('recruiter')")
-    @GetMapping("/recruiter")
-    public String getRecruiterSecret() {
-        return "Secret thing";
-    }
-
-    @PreAuthorize("hasRole('applicant')")
-    @GetMapping("/applicant")
-    public String getApplicantSecret() {
-        return "Secret thing";
-    }
 
     private Authentication authenticateLoginRequest(LoginRequestDTO loginRequest) throws BadCredentialsException {
         Authentication authenticationRequest =
