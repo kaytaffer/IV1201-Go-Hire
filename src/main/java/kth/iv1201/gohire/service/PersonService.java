@@ -102,7 +102,7 @@ public class PersonService {
         List<PersonEntity> persons = personRepository.findPersonEntitiesByRoleIs(roleEntity);
         List<ApplicantDTO> applicants = new LinkedList<>();
         for(PersonEntity person : persons) {
-            applicants.add(new ApplicantDTO(person.getName(), person.getSurname(),
+            applicants.add(new ApplicantDTO(person.getId(), person.getName(), person.getSurname(),
                     person.getApplicationStatus().getStatus()));
         }
         return applicants;
