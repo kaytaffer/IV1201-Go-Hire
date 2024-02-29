@@ -1,8 +1,6 @@
 package kth.iv1201.gohire.DTO;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 /**
  * DTO containing information about an applicant status change request.
@@ -27,7 +25,8 @@ public class ChangeApplicationStatusRequestDTO {
         this.password = password;
     }
 
-    @NotBlank(message = "Invalid id: Id can not be empty.")
+    @NotNull(message = "Invalid id: Id can not be empty.")
+    @Min(1)
     public int getId() {
         return id;
     }
