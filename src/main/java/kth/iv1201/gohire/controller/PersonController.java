@@ -68,7 +68,7 @@ public class PersonController {
     /**
      * Handles the logout API-request
      * @param session The HttpSession associated with the logged in user's session
-     * @return ResponseEntity with an empty object and ok status
+     * @return ResponseEntity with an ok status and logout successful message
      * @throws LoggerException if there is a problem with logging an event.
      */
     @GetMapping("/logout")
