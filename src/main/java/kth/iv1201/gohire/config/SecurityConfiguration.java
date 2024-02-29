@@ -55,13 +55,7 @@ public class SecurityConfiguration {
                         .ignoringRequestMatchers("/**").disable())
                 .securityContext((securityContext) -> securityContext
                         .securityContextRepository(new HttpSessionSecurityContextRepository())
-                )
-                /*.logout(logout -> logout
-                        .logoutUrl("/api/logout").permitAll()
-                        .logoutSuccessUrl("/login")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                )*/;
+                );
         return http.build();
     }
     /**
