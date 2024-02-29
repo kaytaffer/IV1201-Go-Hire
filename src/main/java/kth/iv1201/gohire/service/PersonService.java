@@ -118,9 +118,8 @@ public class PersonService {
      */
     public ApplicantDTO changeApplicantStatus(ChangeApplicationStatusRequestDTO request) throws ApplicationHandledException {
         PersonEntity applicant = personRepository.findPersonById(request.getId());
-        if (applicant.getApplicationStatus().getId() == APPLICATION_STATUS_UNHANDLED)
-            throw new ApplicationHandledException("The application has already been handled.");
-        else {
+
+        if (applicant.getApplicationStatus().getId() == APPLICATION_STATUS_UNHANDLED){
             int applicationStatus;
             if(request.getNewStatus().equals("accepted"))
                 applicationStatus = APPLICATION_STATUS_ACCEPTED;
@@ -130,6 +129,8 @@ public class PersonService {
             applicant = personRepository.save(applicant);
             return new ApplicantDTO(applicant.getId(), applicant.getName(), applicant.getSurname(), request.getNewStatus());
         }
+        else
+            throw new ApplicationHandledException("The application has already been handled.");
     }
 
 }
