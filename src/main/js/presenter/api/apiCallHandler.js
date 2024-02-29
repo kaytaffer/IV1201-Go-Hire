@@ -16,7 +16,14 @@ function sendGetRequest(endpoint) {
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
-    }).then(response => response.json()).then(checkIfServerReturnedError)
+    }).then(response => {
+        if (parseInt(response.headers.get('content-length')) > 0) {
+            return response.json();
+        } else {
+            return {};
+        }
+    })
+        .then(checkIfServerReturnedError);
 }
 
 function checkIfServerReturnedError(response) {
@@ -52,7 +59,7 @@ export function createNewApplicant(firstName, lastName, email, personNumber, use
 
 /**
  * Tasks server to fetch all applications
- * @returns {Promise<any>} a promise either resolving to an object containing a list of applicants  or an error object
+ * @returns {Promise<any>} a promise either resolving to an object containing a list of applicants or an error object
  */
 export function fetchListOfApplications() {
     return sendGetRequest('/applications')
@@ -68,4 +75,13 @@ export function fetchListOfApplications() {
  */
 export function changeApplicationStatus(id, newStatus, username, password) {
     return sendPostRequest('/changeApplicationStatus', {id, newStatus, username, password})
+}
+
+/**
+ * Tasks server to logout user
+ * @returns {Promise<any>} a promise containing an empty body or an error response
+ */
+
+export function logout(){
+    return sendGetRequest('/logout');
 }

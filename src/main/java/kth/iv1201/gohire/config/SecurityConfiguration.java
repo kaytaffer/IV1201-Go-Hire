@@ -51,15 +51,11 @@ public class SecurityConfiguration {
                         .requestMatchers(whitelist).permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
-
                 ).csrf(csrf -> csrf // TODO unsafe
-                        .ignoringRequestMatchers("/**") )
+                        .ignoringRequestMatchers("/**").disable())
                 .securityContext((securityContext) -> securityContext
                         .securityContextRepository(new HttpSessionSecurityContextRepository())
                 );
-
-        http.httpBasic(hbc -> hbc.authenticationEntryPoint(authEntryPoint));
-
         return http.build();
     }
     /**
