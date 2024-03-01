@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +20,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,13 +49,12 @@ class PersonControllerTest {
     UsernamePasswordAuthenticationToken mockAuthenticatedSuccessfulResponse;
     UsernamePasswordAuthenticationToken mockAuthenticatedFailedResponse;
     UsernamePasswordAuthenticationToken mockAuthenticationRequest;
-
-    Authentication mockSuccessfulAuthentication;
-
     ChangeApplicationStatusRequestDTO mockChangeApplicationStatusRequestDTO;
     ApplicantDTO mockAcceptedApplicantDTO;
-    ApplicantDTO mockRejectedApplicantDTO;
     LinkedList<ApplicantDTO> mockListOfApplicants;
+
+    String filePathEventLog;
+    String filePathErrorLog;
 
     @BeforeEach
     void setUp() {
@@ -66,8 +68,11 @@ class PersonControllerTest {
         mockListOfApplicants = new LinkedList<>();
         int mockApplicantID = 1;
         mockChangeApplicationStatusRequestDTO = new ChangeApplicationStatusRequestDTO(mockApplicantID, "anyStatus", "exampleUsername", "examplePassword");
-        mockAcceptedApplicantDTO = new ApplicantDTO(mockApplicantID, "exampleFirstName", "exampleLastName", "accceted");
+        mockAcceptedApplicantDTO = new ApplicantDTO(mockApplicantID, "exampleFirstName", "exampleLastName", "accepted");
 
+        String date = LocalDate.now().toString();
+        filePathEventLog = date + "_" + "eventlog.txt";
+        filePathErrorLog = date + "_" + "errorlog.txt";
     }
 
     @AfterEach
@@ -109,7 +114,7 @@ class PersonControllerTest {
     void testIfUserReturnedWhenCreateNewApplicantSucceeded() throws UserCreationFailedException, LoggerException {
         when(personService.createApplicantAccount(mockCreateApplicantRequestDTO)).thenReturn(mockLoggedInPersonDTO);
         LoggedInPersonDTO user = personController.createNewApplicant(mockCreateApplicantRequestDTO);
-        assertEquals(mockCreateApplicantRequestDTO.getUsername(), user.getUsername(),"Returned LoggedInPersonDTO" +
+        assertEquals(mockCreateApplicantRequestDTO.getUsername(), user.getUsername(), "Returned LoggedInPersonDTO" +
                 "from PersonController does not equal returned LoggedInPersonDTO from PersonService.");
     }
 
@@ -128,6 +133,15 @@ class PersonControllerTest {
         assertThrowsExactly(ApplicationHandledException.class, () -> personController.changeApplicationStatus(mockChangeApplicationStatusRequestDTO),
                 "No ApplicationHandledException was thrown when applicant has already been handled.");
     }
+
+    @Test
+    void testIfBadCredentials() throws ApplicationHandledException {
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(mockAuthenticatedFailedResponse);
+        assertThrowsExactly(BadCredentialsException.class, () -> personController.changeApplicationStatus(mockChangeApplicationStatusRequestDTO),
+                "No BadCredentialsException was thrown when credentials were incorrect.");
+    }
+
     @Test
     void testIfChangeApplicantStatusReturnCorrectDTO() throws ApplicationHandledException, LoggerException {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
@@ -136,7 +150,55 @@ class PersonControllerTest {
                 .thenReturn(mockAcceptedApplicantDTO);
         ApplicantDTO returnedApplicantDTO = personController.changeApplicationStatus(mockChangeApplicationStatusRequestDTO);
         assertEquals(mockChangeApplicationStatusRequestDTO.getId(), returnedApplicantDTO.getId(),
-                "Returned ApplicantDTOs id"  +
-                "from PersonController does not equal returned ApplicantDTOs id from PersonService.");
+                "Returned ApplicantDTOs id" +
+                        "from PersonController does not equal returned ApplicantDTOs id from PersonService.");
+    }
+
+    @Test
+    void testIfSuccessfulChangeApplicantStatusIsLoggedCorrectly() throws ApplicationHandledException, LoggerException, IOException {
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(mockAuthenticatedSuccessfulResponse);
+        when(personService.changeApplicantStatus(mockChangeApplicationStatusRequestDTO))
+                .thenReturn(mockAcceptedApplicantDTO);
+        ApplicantDTO changedApplicant = personController.changeApplicationStatus(mockChangeApplicationStatusRequestDTO);
+        String messageThatShouldBeLogged = "Recruiter " + mockChangeApplicationStatusRequestDTO.getUsername() + " changed status of applicant " + changedApplicant.getFirstName() + " " +
+                changedApplicant.getLastName() + " to " + changedApplicant.getStatus() + ".";
+        boolean match = checkIfCorrectEventMessageWasLogged(messageThatShouldBeLogged);
+        assertTrue(match, "Expected event message not written to eventlog");
+    }
+
+    @Test
+    void testIfSuccessfulCreateNewApplicantIsLoggedCorrectly() throws UserCreationFailedException, LoggerException, IOException {
+        when(personService.createApplicantAccount(mockCreateApplicantRequestDTO)).thenReturn(mockLoggedInPersonDTO);
+        LoggedInPersonDTO newApplicant = personController.createNewApplicant(mockCreateApplicantRequestDTO);
+        String messageThatShouldBeLogged = "New applicant registered: " + newApplicant.getUsername();
+        boolean match = checkIfCorrectEventMessageWasLogged(messageThatShouldBeLogged);
+        assertTrue(match, "Expected event message not written to eventlog");
+    }
+
+    @Test
+    void testIfSuccessfulLoginIsLoggedCorrectly() throws UserNotFoundException, LoggerException, IOException {
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(mockAuthenticatedSuccessfulResponse);
+        when(personService.fetchLoggedInPersonByUsername(mockLoginRequestDTO.getUsername()))
+                .thenReturn(mockLoggedInPersonDTO);
+        personController.login(mockLoginRequestDTO, session);
+        String messageThatShouldBeLogged = "New applicant registered: " + mockLoginRequestDTO.getUsername();
+        boolean match = checkIfCorrectEventMessageWasLogged(messageThatShouldBeLogged);
+        assertTrue(match, "Expected event message not written to eventlog");
+    }
+
+    private boolean checkIfCorrectEventMessageWasLogged(String messageThatShouldBeLogged) throws IOException {
+        FileReader fileReader = new FileReader(filePathEventLog);
+        BufferedReader reader = new BufferedReader(fileReader);
+        boolean match = false;
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if (line.contains(messageThatShouldBeLogged)) {
+                match = true;
+            }
+        }
+        reader.close();
+        return match;
     }
 }
