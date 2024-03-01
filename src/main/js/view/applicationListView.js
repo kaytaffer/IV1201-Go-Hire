@@ -12,6 +12,7 @@ export function ApplicationListView(props) {
     return (
         <table>
             <thead>
+            <h3>Applications</h3>
             <tr>
                 <th>First Name</th>
                 <th>Last Name</th>
