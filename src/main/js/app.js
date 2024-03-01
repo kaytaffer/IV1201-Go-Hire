@@ -56,6 +56,7 @@ function App() {
         logout().then(() => {
             localStorage.clear()
             navigate('/login')
+            setUser(null)
         });
     }
 
