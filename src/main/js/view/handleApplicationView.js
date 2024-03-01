@@ -24,8 +24,8 @@ export function HandleApplicationView(props) {
         <form onSubmit={submission}>
             <select id="handle-application-form-new-status">
                 <option value="">Unhandled</option>
-                <option value="accept">Accept applicant</option>
-                <option value="reject">Reject applicant</option>
+                <option value="accepted">Accept applicant</option>
+                <option value="rejected">Reject applicant</option>
             </select><br/>
             <label>Username</label>
             <input id="handle-application-form-username" type="text"/><br/>
