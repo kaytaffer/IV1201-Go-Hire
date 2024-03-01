@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
@@ -49,30 +51,32 @@ public class SecurityConfiguration {
                         .requestMatchers(whitelist).permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
-
                 ).csrf(csrf -> csrf // TODO unsafe
-                        .ignoringRequestMatchers("/**") )
+                        .ignoringRequestMatchers("/**").disable())
                 .securityContext((securityContext) -> securityContext
                         .securityContextRepository(new HttpSessionSecurityContextRepository())
                 );
-
-        http.httpBasic(hbc -> hbc.authenticationEntryPoint(authEntryPoint));
-
         return http.build();
     }
+    /**
+     * Creates a configured <code>PasswordEncoder</code> that uses the BCrypt hashing algorithm.
+     * @return the configured <code>BCryptPasswordEncoder</code>
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder(){return new BCryptPasswordEncoder();}
 
     /**
      * Creates an <code>AuthenticationManager</code> which manages the authentication of a user
      * @param userDetailsService <code>UserDetailsService</code> for specifying how to access users
+     * @param passwordEncoder the <code>PasswordEncoder</code> implementation to use for encoding passwords
      * @return the <code>AuthenticationManager</code>
      */
     @Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
-
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(authenticationProvider);
     }
-
 
 }

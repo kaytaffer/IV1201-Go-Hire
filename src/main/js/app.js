@@ -7,6 +7,7 @@ import {TopBar} from "./presenter/topBar";
 import {MainContentView} from "./view/mainContentView";
 import {FooterView} from "./view/footerView";
 import {ContainerView} from "./view/ContainerView";
+import {logout} from "./presenter/api/apiCallHandler";
 
 /**
  * Root component for the application
@@ -51,14 +52,22 @@ function App() {
         getUserFromLocalStorage()
     }, [])
 
+    function onLogout() {
+        logout().then(() => {
+            localStorage.clear()
+            navigate('/login')
+        });
+    }
+
     return (
         <div>
             <ContainerView>
                 <TopBar user={user}/>
+                <button onClick={onLogout}>Logout</button>
                 <MainContentView>
                     {!isLoading &&
                         <Routes>
-                            <Route path='/' element={<HomePage user={user} />}/>
+                            <Route path='/' element={<HomePage user={user}/>}/>
                             <Route path='/login' element={<Login onLoggedIn={onLoggedIn}/>}/>
                         </Routes>
                     }

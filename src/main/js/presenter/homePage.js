@@ -8,6 +8,8 @@ import {
     SERVER_INTERNAL,
 } from "./api/errorMessages";
 import {UserNoticeView} from "../view/userNoticeView";
+import {PopupView} from "../view/popupView";
+import {HandleApplicationView} from "../view/handleApplicationView";
 
 /**
  * Responsible for the logic of the home page
@@ -20,6 +22,7 @@ export function HomePage(props){
 
     const [applications, setApplications] = useState(null)
     const [errorMessage, setErrorMessage] = useState("")
+    const [showSingleApplicant, setShowSingleApplicant] = useState(null)
 
         const POSSIBLE_FETCH_APPLICATION_ERRORS = [PAGE_DOES_NOT_EXIST, SERVER_INTERNAL, INSUFFICIENT_CREDENTIALS]
 
@@ -33,10 +36,24 @@ export function HomePage(props){
         fetchListOfApplications().then(setApplications).catch(resolveErrors)
     }
 
+    function handleApplication(applicant) {
+        setShowSingleApplicant(applicant)
+    }
+
+    function changeStatus(request) {
+
+    }
+
     if(props.user.role === 'applicant')
         return errorMessage ? <UserNoticeView message={errorMessage} error={true}/> : <HomePageApplicantView user={props.user}/>;
     else if(props.user.role === 'recruiter') {
-        return errorMessage ? <UserNoticeView message={errorMessage} error={true}/> : <HomePageRecruiterView
-            user={props.user} applications={applications} onShowApplications={showApplications}/>
+        return (<div> {
+            errorMessage ? <UserNoticeView message={errorMessage} error={true}/> : <HomePageRecruiterView
+            user={props.user} applications={applications} onShowApplications={showApplications} onHandleApplication={handleApplication}/>}
+
+            <PopupView open={showSingleApplicant} onClose={() => setShowSingleApplicant(null)}>
+                <HandleApplicationView application={showSingleApplicant} submitForm={changeStatus}/>
+            </PopupView>
+        </div>)
     }
 }

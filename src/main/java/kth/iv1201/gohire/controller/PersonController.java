@@ -1,5 +1,7 @@
 package kth.iv1201.gohire.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kth.iv1201.gohire.DTO.ApplicantDTO;
@@ -12,16 +14,20 @@ import kth.iv1201.gohire.service.PersonService;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import kth.iv1201.gohire.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controller responsible for API calls related to a <code>PersonEntity</code>
@@ -60,6 +66,24 @@ public class PersonController {
     }
 
     /**
+     * Handles the logout API-request
+     * @param session The HttpSession associated with the logged in user's session
+     * @return ResponseEntity with an ok status and logout successful message
+     * @throws LoggerException if there is a problem with logging an event.
+     */
+    @GetMapping("/logout")
+    public ResponseEntity<Map<String, String>> performLogout(HttpSession session) throws LoggerException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        auth.setAuthenticated(false);
+        session.invalidate();
+        Logger.logEvent("User logged out: " + auth.getName());
+
+        Map<String, String> responseMap = new HashMap<>();
+        responseMap.put("message", "Logout successful");
+        return ResponseEntity.ok().body(responseMap);
+    }
+
+    /**
      * Handles the create applicant API-request.
      * @param createApplicantRequest DTO containing applicant request data.
      * @return <code>LoggedInPersonDTO</code> representing the newly created and logged-in user
@@ -72,26 +96,6 @@ public class PersonController {
         LoggedInPersonDTO newApplicant = personService.createApplicantAccount(createApplicantRequest);
         Logger.logEvent("New applicant registered: " + newApplicant.getUsername());
         return newApplicant;
-    }
-
-    @GetMapping("/who")
-    public String notSecret() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth.getName();
-    }
-
-    /* The following methods are for testing purposes since there is no other protected content */
-
-    @PreAuthorize("hasRole('recruiter')")
-    @GetMapping("/recruiter")
-    public String getRecruiterSecret() {
-        return "Secret thing";
-    }
-
-    @PreAuthorize("hasRole('applicant')")
-    @GetMapping("/applicant")
-    public String getApplicantSecret() {
-        return "Secret thing";
     }
 
     private Authentication authenticateLoginRequest(LoginRequestDTO loginRequest) throws BadCredentialsException {

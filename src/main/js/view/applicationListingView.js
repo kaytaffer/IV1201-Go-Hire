@@ -1,9 +1,10 @@
 import React from "react";
 /**
- * Responsible for an application.
+ * Responsible for rendering an application listing.
  * @param props - props
  * @param {Object} props.application - A single applicant
- * @returns {JSX.Element} the rendered recruiter home page
+ * @param {function} props.onHandleApplication - Called when clicking the 'handle' button.
+ * @returns {JSX.Element} the rendered application listing.
  */
 export function ApplicationListingView(props) {
     return(
@@ -11,5 +12,6 @@ export function ApplicationListingView(props) {
             <td>{props.application.firstName}</td>
             <td>{props.application.lastName}</td>
             <td>{props.application.status}</td>
+            {props.application.status === "unhandled" && <td><button onClick={() => props.onHandleApplication(props.application)}>handle</button></td>}
         </tr>
     )}

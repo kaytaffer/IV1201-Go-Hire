@@ -52,8 +52,17 @@ export function createNewApplicant(firstName, lastName, email, personNumber, use
 
 /**
  * Tasks server to fetch all applications
- * @returns {Promise<any>} a promise either resolving to a object containing a list of applicants  or an error object
+ * @returns {Promise<any>} a promise either resolving to a object containing a list of applicants or an error object
  */
 export function fetchListOfApplications() {
     return sendGetRequest('/applications')
+}
+
+/**
+ * Tasks server to logout user
+ * @returns {Promise<any>} a promise resolving to a successful login message or an error object
+ */
+
+export function logout(){
+    return sendGetRequest('/logout');
 }
