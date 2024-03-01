@@ -7,7 +7,8 @@ export function TopBarView(props) {
                 <h1>Go Hire</h1>
             </div>
             <div className={"right"}>
-                {props.user && <p>Logged in as: {props.user.username}</p>}
+                {props.username && <p>Logged in as: {props.username}</p>}
+                {props.username && <button onClick={props.onLogout}>Logout</button>}
             </div>
         </div>
     )

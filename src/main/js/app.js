@@ -3,11 +3,11 @@ const ReactDOM= require('react-dom');
 import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
 import {HomePage} from "./presenter/homePage";
 import {Login} from "./presenter/login";
-import {TopBar} from "./presenter/topBar";
 import {MainContentView} from "./view/mainContentView";
 import {FooterView} from "./view/footerView";
 import {ContainerView} from "./view/ContainerView";
 import {logout} from "./presenter/api/apiCallHandler";
+import {TopBarView} from "./view/topBarView";
 
 /**
  * Root component for the application
@@ -62,8 +62,8 @@ function App() {
     return (
         <div>
             <ContainerView>
-                <TopBar user={user}/>
-                <button onClick={onLogout}>Logout</button>
+                <TopBarView username={user && user.username}
+                            onLogout={onLogout}/>
                 <MainContentView>
                     {!isLoading &&
                         <Routes>
