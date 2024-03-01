@@ -2,7 +2,6 @@ package kth.iv1201.gohire.controller;
 
 import jakarta.servlet.http.HttpSession;
 import kth.iv1201.gohire.DTO.*;
-import kth.iv1201.gohire.controller.util.Logger;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.PersonService;
 import kth.iv1201.gohire.service.exception.ApplicationHandledException;
@@ -14,17 +13,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -53,13 +49,8 @@ class PersonControllerTest {
     UsernamePasswordAuthenticationToken mockAuthenticatedSuccessfulResponse;
     UsernamePasswordAuthenticationToken mockAuthenticatedFailedResponse;
     UsernamePasswordAuthenticationToken mockAuthenticationRequest;
-    Authentication mockAuthentication;
-
-    Authentication mockSuccessfulAuthentication;
-
     ChangeApplicationStatusRequestDTO mockChangeApplicationStatusRequestDTO;
     ApplicantDTO mockAcceptedApplicantDTO;
-    ApplicantDTO mockRejectedApplicantDTO;
     LinkedList<ApplicantDTO> mockListOfApplicants;
 
     String filePathEventLog;
