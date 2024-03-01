@@ -8,5 +8,5 @@ import React from "react";
  * @returns {JSX.Element} the rendered user notice message
  */
 export function UserNoticeView(props) {
-    return <div>{props.message}</div>
+    return <div id="user-notice">{props.message}</div>
 }

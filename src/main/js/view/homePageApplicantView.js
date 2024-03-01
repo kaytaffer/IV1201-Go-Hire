@@ -10,7 +10,7 @@ import React from "react";
 export function HomePageApplicantView(props) {
     return (
         <div>
-            <h1>Applicant</h1>
+            <h1 id="caption">Applicant</h1>
             <p>Welcome {props.user.username}</p>
         </div>
     )
