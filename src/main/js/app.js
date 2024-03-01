@@ -3,7 +3,11 @@ const ReactDOM= require('react-dom');
 import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
 import {HomePage} from "./presenter/homePage";
 import {Login} from "./presenter/login";
+import {MainContentView} from "./view/mainContentView";
+import {FooterView} from "./view/footerView";
+import {ContainerView} from "./view/ContainerView";
 import {logout} from "./presenter/api/apiCallHandler";
+import {TopBarView} from "./view/topBarView";
 
 /**
  * Root component for the application
@@ -52,19 +56,25 @@ function App() {
         logout().then(() => {
             localStorage.clear()
             navigate('/login')
+            setUser(null)
         });
     }
 
     return (
         <div>
-            <h1>Go Hire</h1>
-            <button onClick={onLogout}>Logout</button>
-            {!isLoading &&
-                <Routes>
-                    <Route path='/' element={<HomePage user={user} />}/>
-                    <Route path='/login' element={<Login onLoggedIn={onLoggedIn}/>}/>
-                </Routes>
-            }
+            <ContainerView>
+                <TopBarView username={user && user.username}
+                            onLogout={onLogout}/>
+                <MainContentView>
+                    {!isLoading &&
+                        <Routes>
+                            <Route path='/' element={<HomePage user={user}/>}/>
+                            <Route path='/login' element={<Login onLoggedIn={onLoggedIn}/>}/>
+                        </Routes>
+                    }
+                </MainContentView>
+                <FooterView/>
+            </ContainerView>
         </div>
     )
 }

@@ -27,6 +27,10 @@ View-Presenter React powered web application.
 
 `createNewApplicantView` - Responsible for rendering the create new applicant form.
 
+`containerView` - Responsible for rendering the container around the entire page content
+
+`footerView` - Responsible for rendering the page footer
+
 `handleApplicationView` - Responsible for rendering a view in which to handle application status.
 
 `homePageApplicantView` - Responsible for rendering the home page for applicants.
@@ -35,7 +39,11 @@ View-Presenter React powered web application.
 
 `loginView` - Responsible for rendering the login page.
 
+`mainContentView` - Responsible for rendering the container around the main page content
+
 `popupView` - Popup container meant to wrap child components as a popup view.
+
+`topBarView` - Responsible for rendering the top bar
 
 `userNoticeView` - Responsible for rendering user notice messages.
 

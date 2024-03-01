@@ -25,7 +25,9 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controller responsible for API calls related to a <code>PersonEntity</code>
@@ -66,16 +68,19 @@ public class PersonController {
     /**
      * Handles the logout API-request
      * @param session The HttpSession associated with the logged in user's session
-     * @return ResponseEntity with an empty object and ok status
+     * @return ResponseEntity with an ok status and logout successful message
      * @throws LoggerException if there is a problem with logging an event.
      */
     @GetMapping("/logout")
-    public ResponseEntity<Void> performLogout(HttpSession session) throws LoggerException {
+    public ResponseEntity<Map<String, String>> performLogout(HttpSession session) throws LoggerException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         auth.setAuthenticated(false);
         session.invalidate();
         Logger.logEvent("User logged out: " + auth.getName());
-        return ResponseEntity.ok().build();
+
+        Map<String, String> responseMap = new HashMap<>();
+        responseMap.put("message", "Logout successful");
+        return ResponseEntity.ok().body(responseMap);
     }
 
     /**
