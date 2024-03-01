@@ -1,12 +1,10 @@
 package kth.iv1201.gohire.controller;
 
 import jakarta.servlet.http.HttpSession;
-import kth.iv1201.gohire.DTO.ApplicantDTO;
-import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
-import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
-import kth.iv1201.gohire.DTO.LoginRequestDTO;
+import kth.iv1201.gohire.DTO.*;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.PersonService;
+import kth.iv1201.gohire.service.exception.ApplicationHandledException;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import kth.iv1201.gohire.service.exception.UserNotFoundException;
 import org.junit.jupiter.api.AfterEach;
@@ -15,11 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +46,12 @@ class PersonControllerTest {
     UsernamePasswordAuthenticationToken mockAuthenticatedSuccessfulResponse;
     UsernamePasswordAuthenticationToken mockAuthenticatedFailedResponse;
     UsernamePasswordAuthenticationToken mockAuthenticationRequest;
+
+    Authentication mockSuccessfulAuthentication;
+
+    ChangeApplicationStatusRequestDTO mockChangeApplicationStatusRequestDTO;
+    ApplicantDTO mockAcceptedApplicantDTO;
+    ApplicantDTO mockRejectedApplicantDTO;
     LinkedList<ApplicantDTO> mockListOfApplicants;
 
     @BeforeEach
@@ -58,6 +64,10 @@ class PersonControllerTest {
         mockAuthenticatedFailedResponse = UsernamePasswordAuthenticationToken.unauthenticated("exampleUsername", "examplePassword");
         mockAuthenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated("exampleUsername", "examplePassword");
         mockListOfApplicants = new LinkedList<>();
+        int mockApplicantID = 1;
+        mockChangeApplicationStatusRequestDTO = new ChangeApplicationStatusRequestDTO(mockApplicantID, "anyStatus", "exampleUsername", "examplePassword");
+        mockAcceptedApplicantDTO = new ApplicantDTO(mockApplicantID, "exampleFirstName", "exampleLastName", "accceted");
+
     }
 
     @AfterEach
@@ -108,5 +118,25 @@ class PersonControllerTest {
         when(personService.fetchApplicants()).thenReturn(mockListOfApplicants);
         List<ApplicantDTO> applicants = personController.fetchApplicants();
         assertEquals(LinkedList.class, applicants.getClass(), "");
+    }
+
+    @Test
+    void testIfApplicationHandledExceptionIsThrown() throws ApplicationHandledException {
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(mockAuthenticatedSuccessfulResponse);
+        when(personService.changeApplicantStatus(mockChangeApplicationStatusRequestDTO)).thenThrow(new ApplicationHandledException("The application has already been handled"));
+        assertThrowsExactly(ApplicationHandledException.class, () -> personController.changeApplicationStatus(mockChangeApplicationStatusRequestDTO),
+                "No ApplicationHandledException was thrown when applicant has already been handled.");
+    }
+    @Test
+    void testIfChangeApplicantStatusReturnCorrectDTO() throws ApplicationHandledException, LoggerException {
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(mockAuthenticatedSuccessfulResponse);
+        when(personService.changeApplicantStatus(mockChangeApplicationStatusRequestDTO))
+                .thenReturn(mockAcceptedApplicantDTO);
+        ApplicantDTO returnedApplicantDTO = personController.changeApplicationStatus(mockChangeApplicationStatusRequestDTO);
+        assertEquals(mockChangeApplicationStatusRequestDTO.getId(), returnedApplicantDTO.getId(),
+                "Returned ApplicantDTOs id"  +
+                "from PersonController does not equal returned ApplicantDTOs id from PersonService.");
     }
 }
