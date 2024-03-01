@@ -218,7 +218,6 @@ public class PersonServiceTest {
         ChangeApplicationStatusRequestDTO unhandledUserRequest = new ChangeApplicationStatusRequestDTO(fakeUnhandledApplicantPerson.getId(),
                 "status", null, null);
         when(personRepository.findPersonById(fakeUnhandledApplicantPerson.getId())).thenReturn(fakeUnhandledApplicantPerson);
-        //when(applicationStatusRepository.findById(1)).thenReturn(fakeAcceptedApplicationStatus);
         when(personRepository.save(fakeUnhandledApplicantPerson)).thenReturn(fakeUnhandledApplicantPerson);
         try {
             ApplicantDTO returnedApplicantDTO = personService.changeApplicantStatus(unhandledUserRequest);
@@ -246,7 +245,6 @@ public class PersonServiceTest {
         ChangeApplicationStatusRequestDTO unhandledUserRequest = new ChangeApplicationStatusRequestDTO(fakeUnhandledApplicantPerson.getId(),
                 "status", "userName", null);
         when(personRepository.findPersonById(fakeUnhandledApplicantPerson.getId())).thenReturn(fakeUnhandledApplicantPerson);
-        //when(applicationStatusRepository.findById(1)).thenReturn(fakeAcceptedApplicationStatus);
         when(personRepository.save(fakeUnhandledApplicantPerson)).thenReturn(fakeUnhandledApplicantPerson);
         try {
             ApplicantDTO returnedApplicantDTO = personService.changeApplicantStatus(unhandledUserRequest);
@@ -260,7 +258,6 @@ public class PersonServiceTest {
         ChangeApplicationStatusRequestDTO unhandledUserRequest = new ChangeApplicationStatusRequestDTO(fakeUnhandledApplicantPerson.getId(),
                 "accepted", null, null);
         when(personRepository.findPersonById(fakeUnhandledApplicantPerson.getId())).thenReturn(fakeUnhandledApplicantPerson);
-        //when(applicationStatusRepository.findById(1)).thenReturn(fakeAcceptedApplicationStatus);
         when(personRepository.save(fakeUnhandledApplicantPerson)).thenReturn(fakeUnhandledApplicantPerson);
         try {
             ApplicantDTO returnedApplicantDTO = personService.changeApplicantStatus(unhandledUserRequest);
@@ -274,7 +271,6 @@ public class PersonServiceTest {
         ChangeApplicationStatusRequestDTO unhandledUserRequest = new ChangeApplicationStatusRequestDTO(fakeUnhandledApplicantPerson.getId(),
                 "rejected", null, null);
         when(personRepository.findPersonById(fakeUnhandledApplicantPerson.getId())).thenReturn(fakeUnhandledApplicantPerson);
-        //when(applicationStatusRepository.findById(1)).thenReturn(fakeAcceptedApplicationStatus);
         when(personRepository.save(fakeUnhandledApplicantPerson)).thenReturn(fakeUnhandledApplicantPerson);
         try {
             ApplicantDTO returnedApplicantDTO = personService.changeApplicantStatus(unhandledUserRequest);
