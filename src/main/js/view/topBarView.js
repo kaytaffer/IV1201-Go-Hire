@@ -1,5 +1,12 @@
 import React from "react";
 
+/**
+ * Responsible for rendering the top bar
+ * @param props - props
+ * @param {String} props.username - the username of the logged-in user, or null if no one is logged in
+ * @param {Function} props.onLogout - callback for when the logged-in user clicks the log-out button
+ * @returns {JSX.Element} the rendered top bar
+ */
 export function TopBarView(props) {
     return (
         <div id={"top-bar"}>

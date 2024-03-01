@@ -1,5 +1,9 @@
 import React from "react";
 
-export function FooterView(props) {
+/**
+ * Responsible for rendering the page footer
+ * @returns {JSX.Element} the rendered page footer
+ */
+export function FooterView() {
     return <div id={"footer"}></div>
 }
