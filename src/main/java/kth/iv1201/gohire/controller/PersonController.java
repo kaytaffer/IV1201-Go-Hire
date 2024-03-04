@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Controller responsible for API calls related to a <code>PersonEntity</code>
+ * Controller responsible for API calls related to a <code>PersonEntity</code>.
  */
 @RestController
 @RequestMapping("/api")
@@ -35,8 +35,8 @@ public class PersonController {
     private final AuthenticationManager authenticationManager;
 
     /**
-     * Creates a new <code>PersonController</code>
-     * @param personService The <code>PersonService</code> to use
+     * Creates a new <code>PersonController</code>.
+     * @param personService The <code>PersonService</code> to use.
      */
     @Autowired
     public PersonController(PersonService personService, AuthenticationManager authenticationManager) {
@@ -45,11 +45,11 @@ public class PersonController {
     }
 
     /**
-     * Handles the login API-request
-     * @param loginRequest DTO containing login request data
+     * Handles the login API-request.
+     * @param loginRequest DTO containing login request data.
      * @throws LoggerException if there is a problem with logging an event.
      * @throws UserNotFoundException If the user is authenticated but can not be fetched from the database.
-     * @return <code>LoggedInPersonDTO</code> representing the logged-in user
+     * @return <code>LoggedInPersonDTO</code> representing the logged-in user.
      */
     @PostMapping("/login")
     public LoggedInPersonDTO login(@RequestBody @Valid LoginRequestDTO loginRequest, HttpSession session)
@@ -61,9 +61,9 @@ public class PersonController {
     }
 
     /**
-     * Handles the logout API-request
-     * @param session The HttpSession associated with the logged in user's session
-     * @return ResponseEntity with an ok status and logout successful message
+     * Handles the logout API-request.
+     * @param session The HttpSession associated with the logged-in user's session.
+     * @return ResponseEntity with an ok status and logout successful message.
      * @throws LoggerException if there is a problem with logging an event.
      */
     @GetMapping("/logout")
@@ -81,7 +81,7 @@ public class PersonController {
     /**
      * Handles the create applicant API-request.
      * @param createApplicantRequest DTO containing applicant request data.
-     * @return <code>LoggedInPersonDTO</code> representing the newly created and logged-in user
+     * @return <code>LoggedInPersonDTO</code> representing the newly created and logged-in user.
      * @throws UserCreationFailedException If the requested username already exists.
      * @throws LoggerException if there is a problem with logging an event.
      */
@@ -94,8 +94,8 @@ public class PersonController {
     }
 
     /**
-     * Fetches all applications
-     * @return All applications
+     * Fetches all applications.
+     * @return All applications.
      */
     @PreAuthorize("hasRole('recruiter')")
     @GetMapping("/applications")
@@ -118,7 +118,6 @@ public class PersonController {
                 changedApplicant.getLastName() + " to " + changedApplicant.getStatus() + ".");
         return changedApplicant;
     }
-
 
     private Authentication authenticateRequest(String username, String password) throws BadCredentialsException {
         Authentication authenticationRequest =

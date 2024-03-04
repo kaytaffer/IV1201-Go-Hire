@@ -10,17 +10,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 /**
- * Configures the authentication entry point
+ * Configures the authentication entry point.
  */
 @Component
 public class DelegatedAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-
     private final HandlerExceptionResolver resolver;
 
     /**
-     * Creates a new instance of DelegatedAuthenticationEntryPoint
-     * @param resolver the HandlerExceptionResolver
+     * Creates a new instance of DelegatedAuthenticationEntryPoint.
+     * @param resolver the HandlerExceptionResolver.
      */
     @Autowired
     public DelegatedAuthenticationEntryPoint(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
@@ -28,10 +27,10 @@ public class DelegatedAuthenticationEntryPoint implements AuthenticationEntryPoi
     }
 
     /**
-     * Configures errors to be resolved by the ErrorHandler
-     * @param request the HTTP request
-     * @param response the HTTP response
-     * @param authException the exception that should be handled by the ErrorHandler
+     * Configures errors to be resolved by the ErrorHandler.
+     * @param request the HTTP request.
+     * @param response the HTTP response.
+     * @param authException the exception that should be handled by the ErrorHandler.
      */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
