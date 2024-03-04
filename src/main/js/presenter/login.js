@@ -11,10 +11,10 @@ import {
 import {UserNoticeView} from "../view/userNoticeView";
 
 /**
- * Responsible for the logic of the login page
+ * Responsible for the logic of the login form.
  * @param props props
- * @param {function} props.onLoggedIn - called when user successfully logs in
- * @returns {JSX.Element} the rendered login view
+ * @param {function} props.onLoggedIn - called when user successfully logs in.
+ * @returns {JSX.Element} the rendered login component.
  */
 export function Login(props){
 
@@ -49,7 +49,6 @@ export function Login(props){
             {displayMessage && <UserNoticeView message={displayMessage}/>}
             <LoginView onLogin={login}/>
             {!newUserIsCreated && <CreateNewApplicantView onCreate={newApplicant}/>}
-
         </div>
     )
 }

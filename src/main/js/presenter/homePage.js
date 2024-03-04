@@ -13,10 +13,10 @@ import {PopupView} from "../view/popupView";
 import {HandleApplicationView} from "../view/handleApplicationView";
 
 /**
- * Responsible for the logic of the home page
- * @param props - props
- * @param {Object} props.user - the current logged-in user
- * @returns {JSX.Element} the rendered home page
+ * Responsible for the logic of the home page.
+ * @param props - props.
+ * @param {Object} props.user - the current logged-in user.
+ * @returns {JSX.Element} the rendered home page.
  * @constructor
  */
 export function HomePage(props){
