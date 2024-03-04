@@ -1,16 +1,12 @@
 package kth.iv1201.gohire.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import kth.iv1201.gohire.DTO.ApplicantDTO;
-import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
-import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
-import kth.iv1201.gohire.DTO.LoginRequestDTO;
+import kth.iv1201.gohire.DTO.*;
 import kth.iv1201.gohire.controller.util.Logger;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.PersonService;
+import kth.iv1201.gohire.service.exception.ApplicationHandledException;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import kth.iv1201.gohire.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +17,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +54,7 @@ public class PersonController {
     @PostMapping("/login")
     public LoggedInPersonDTO login(@RequestBody @Valid LoginRequestDTO loginRequest, HttpSession session)
             throws LoggerException, UserNotFoundException {
-        Authentication authenticationResponse = authenticateLoginRequest(loginRequest);
+        Authentication authenticationResponse = authenticateRequest(loginRequest.getUsername(), loginRequest.getPassword());
         saveAuthenticatedUserInSession(authenticationResponse, session);
         Logger.logEvent("User logged in: " + loginRequest.getUsername());
         return personService.fetchLoggedInPersonByUsername(loginRequest.getUsername());
@@ -98,10 +93,36 @@ public class PersonController {
         return newApplicant;
     }
 
-    private Authentication authenticateLoginRequest(LoginRequestDTO loginRequest) throws BadCredentialsException {
+    /**
+     * Fetches all applications
+     * @return All applications
+     */
+    @PreAuthorize("hasRole('recruiter')")
+    @GetMapping("/applications")
+    public List<ApplicantDTO> fetchApplicants(){
+        return personService.fetchApplicants();
+    }
+
+    /**
+     * Changes the status of an application.
+     * @param request DTO containing application change request data.
+     * @return the changed and saved application.
+     */
+    @PreAuthorize("hasRole('recruiter')")
+    @PostMapping("/changeApplicationStatus")
+    public ApplicantDTO changeApplicationStatus(@RequestBody @Valid ChangeApplicationStatusRequestDTO request)
+            throws LoggerException, ApplicationHandledException {
+        authenticateRequest(request.getUsername(), request.getPassword());
+        ApplicantDTO changedApplicant = personService.changeApplicantStatus(request);
+        Logger.logEvent("Recruiter " + request.getUsername() + " changed status of applicant " + changedApplicant.getFirstName() + " " +
+                changedApplicant.getLastName() + " to " + changedApplicant.getStatus() + ".");
+        return changedApplicant;
+    }
+
+
+    private Authentication authenticateRequest(String username, String password) throws BadCredentialsException {
         Authentication authenticationRequest =
-                UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getUsername(),
-                        loginRequest.getPassword());
+                UsernamePasswordAuthenticationToken.unauthenticated(username, password);
         Authentication authenticationResponse =
                 this.authenticationManager.authenticate(authenticationRequest);
         if(!authenticationResponse.isAuthenticated())
@@ -114,14 +135,5 @@ public class PersonController {
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                 SecurityContextHolder.getContext());
     }
-
-    /**
-     * Fetches all applications
-     * @return All applications
-     */
-    @PreAuthorize("hasRole('recruiter')")
-    @GetMapping("/applications")
-    public List<ApplicantDTO> fetchApplicants(){
-        return personService.fetchApplicants();
-    }
 }
+

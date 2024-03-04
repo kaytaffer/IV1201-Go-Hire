@@ -1,9 +1,10 @@
 import React, {useState} from "react";
 import {HomePageApplicantView} from "../view/homePageApplicantView";
 import {HomePageRecruiterView} from "../view/homePageRecruiterView";
-import {fetchListOfApplications} from "./api/apiCallHandler";
+import {changeApplicationStatus, fetchListOfApplications} from "./api/apiCallHandler";
 import {
-    INSUFFICIENT_CREDENTIALS,
+    APPLICATION_ALREADY_HANDLED,
+    INSUFFICIENT_CREDENTIALS, LOGIN_FAIL,
     PAGE_DOES_NOT_EXIST,
     SERVER_INTERNAL,
 } from "./api/errorMessages";
@@ -24,36 +25,42 @@ export function HomePage(props){
     const [errorMessage, setErrorMessage] = useState("")
     const [showSingleApplicant, setShowSingleApplicant] = useState(null)
 
-        const POSSIBLE_FETCH_APPLICATION_ERRORS = [PAGE_DOES_NOT_EXIST, SERVER_INTERNAL, INSUFFICIENT_CREDENTIALS]
+    const POSSIBLE_FETCH_APPLICATION_ERRORS = [LOGIN_FAIL, APPLICATION_ALREADY_HANDLED, PAGE_DOES_NOT_EXIST, SERVER_INTERNAL, INSUFFICIENT_CREDENTIALS]
+
+    function resolveApiErrors(error) {
+        function checkErrorType(possibleError) {
+            return error.message === possibleError.errorType
+        }
+        setErrorMessage(POSSIBLE_FETCH_APPLICATION_ERRORS.find(checkErrorType).message)
+    }
 
     function showApplications() {
-        function resolveErrors(error) {
-            function checkErrorType(possibleError) {
-                return error.message === possibleError.errorType
-            }
-            setErrorMessage(POSSIBLE_FETCH_APPLICATION_ERRORS.find(checkErrorType).message)
-        }
-        fetchListOfApplications().then(setApplications).catch(resolveErrors)
+        fetchListOfApplications().then(setApplications).catch(resolveApiErrors)
     }
 
     function handleApplication(applicant) {
         setShowSingleApplicant(applicant)
     }
 
-    function changeStatus(request) {
-
+    function changeStatus(id, newStatus, username, password) {
+        function updateApplications(changedApplication) {
+            setErrorMessage("")
+            setShowSingleApplicant(null)
+            return applications.map(application => {
+                if (application.id === changedApplication.id)
+                    return changedApplication
+                else return application
+            })
+        }
+        changeApplicationStatus(id, newStatus, username, password).then(updateApplications).then(setApplications).catch(resolveApiErrors)
     }
 
-    if(props.user.role === 'applicant')
-        return errorMessage ? <UserNoticeView message={errorMessage} error={true}/> : <HomePageApplicantView user={props.user}/>;
-    else if(props.user.role === 'recruiter') {
-        return (<div> {
-            errorMessage ? <UserNoticeView message={errorMessage} error={true}/> : <HomePageRecruiterView
-            user={props.user} applications={applications} onShowApplications={showApplications} onHandleApplication={handleApplication}/>}
-
-            <PopupView open={showSingleApplicant} onClose={() => setShowSingleApplicant(null)}>
-                <HandleApplicationView application={showSingleApplicant} submitForm={changeStatus}/>
-            </PopupView>
-        </div>)
-    }
+    return (<div>
+        {errorMessage && !showSingleApplicant && <UserNoticeView message={errorMessage} error={true}/>}
+        {props.user.role === 'applicant' && <HomePageApplicantView user={props.user}/>}
+        {props.user.role === 'recruiter' && <HomePageRecruiterView user={props.user} applications={applications} onShowApplications={showApplications} onHandleApplication={handleApplication}/>}
+        <PopupView open={showSingleApplicant} onClose={() => setShowSingleApplicant(null)}>
+        <HandleApplicationView application={showSingleApplicant} submitForm={changeStatus} errorMessage={errorMessage}/>
+        </PopupView>
+    </div>)
 }

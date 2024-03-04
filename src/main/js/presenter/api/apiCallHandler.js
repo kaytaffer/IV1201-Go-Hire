@@ -52,10 +52,22 @@ export function createNewApplicant(firstName, lastName, email, personNumber, use
 
 /**
  * Tasks server to fetch all applications
- * @returns {Promise<any>} a promise either resolving to a object containing a list of applicants or an error object
+ * @returns {Promise<any>} a promise either resolving to an object containing a list of applicants or an error object
  */
 export function fetchListOfApplications() {
     return sendGetRequest('/applications')
+}
+
+/**
+ * Calls the API to change the status of an application.
+ * @param id the identifier of the applicant for which to change the status.
+ * @param newStatus The new status of the application: 'accepted' or 'rejected'
+ * @param username The username of the recruiter changing the status.
+ * @param password The username of the recruiter changing the status.
+ * @returns {Promise<any>} a promise either resolving to a changed application object or an error object
+ */
+export function changeApplicationStatus(id, newStatus, username, password) {
+    return sendPostRequest('/changeApplicationStatus', {id, newStatus, username, password})
 }
 
 /**
