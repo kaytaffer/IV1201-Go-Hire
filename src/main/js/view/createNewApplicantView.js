@@ -34,7 +34,7 @@ export function CreateNewApplicantView(props) {
             <input id="create-applicant-form-username" type="text" placeholder="max 255 characters"/><br/>
             <label>Password</label>
             <input id="create-applicant-form-password" type="password" placeholder="max 255 characters"/><br/>
-            <input type="submit" value="Submit"/>
+            <input id="create-applicant-form-submit" type="submit" value="Submit"/>
         </form>
     </div>
 
