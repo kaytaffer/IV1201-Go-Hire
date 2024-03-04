@@ -18,7 +18,7 @@ import static kth.iv1201.gohire.acceptance.util.WebdriverConfigurator.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * A class for Selenium WebDriver-based automated web testing of Login use case.
+ * A class for Selenium WebDriver-based automated web testing of login functionality.
  */
 @Execution(ExecutionMode.SAME_THREAD)
 public class LoginTest {
@@ -43,17 +43,56 @@ public class LoginTest {
     @Execution(ExecutionMode.SAME_THREAD)
     @MethodSource("provideTestWithWebDrivers")
     void testSuccessfulLoginWithValidCredentials(WebDriver webDriver) {
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+
         WebElement usernameInput = webDriver.findElement(By.id("login-form-username"));
         WebElement passwordInput = webDriver.findElement(By.id("login-form-password"));
+
         usernameInput.sendKeys("validApplicantUser");
         passwordInput.sendKeys("validApplicantPassword");
         WebElement loginButton = webDriver.findElement(By.id("login-button"));
         loginButton.click();
 
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
-
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         String loggedInUser = webDriver.findElement(By.id("caption")).getText();
-        assertTrue(loggedInUser.contains("Applicant"),"The expected caption text does not appear.");
+        assertTrue(loggedInUser.contains("Applicant"), "The expected caption text does not appear.");
+
+    }
+
+    @ParameterizedTest
+    @ValueSource(classes = {ChromeDriver.class})
+        //@ValueSource(classes = { ChromeDriver.class, FirefoxDriver.class, EdgeDriver.class})
+    void testInvalidLoginShowsErrorMessage(Class<? extends WebDriver> webDriverClass) {
+        webDriver = WebDriverManager.getInstance(webDriverClass).create();
+        webDriver.get("http://localhost:8080/login");
+
+        WebElement usernameInput = webDriver.findElement(By.id("login-form-username"));
+        WebElement passwordInput = webDriver.findElement(By.id("login-form-password"));
+        usernameInput.sendKeys("invalidApplicantUser");
+        passwordInput.sendKeys("invalidApplicantPassword");
+        WebElement loginButton = webDriver.findElement(By.id("login-button"));
+        loginButton.click();
+
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        String userNotice = webDriver.findElement(By.id("user-notice")).getText();
+        assertTrue(userNotice.contains("Username and password do not match."), "The expected message does not appear.");
+    }
+
+    @ParameterizedTest
+    @ValueSource(classes = {ChromeDriver.class})
+        //@ValueSource(classes = { ChromeDriver.class, FirefoxDriver.class, EdgeDriver.class})
+    void testEmptyFieldsTriggerErrorMessage(Class<? extends WebDriver> webDriverClass) {
+
+        webDriver = WebDriverManager.getInstance(webDriverClass).create();
+        webDriver.get("http://localhost:8080/login");
+
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        WebElement loginButton = webDriver.findElement(By.id("login-button"));
+        loginButton.click();
+
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        String userNotice = webDriver.findElement(By.id("user-notice")).getText();
+        assertTrue(userNotice.contains("Please follow the form's required input examples."), "The expected message does not appear.");
     }
 
 }
