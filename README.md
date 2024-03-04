@@ -1,5 +1,49 @@
 # Go-Hire 
-A recruitment application architecture design for the KTH course IV1201 
+A recruitment application architecture design for the KTH course IV1201
+
+## Setup
+1. Clone the repository
+2. Make sure node, npm and maven are installed
+3. Create a file `src/main/resources/application-local.properties` containing the database configuration, such as:
+    ```
+   spring.datasource.url=jdbc:postgresql://<host>:<port>/<database>
+    spring.datasource.username=<username>
+    spring.datasource.password=<password>
+   ```
+4. Run `npm install` and `mvn install`
+
+## Running
+Run both `npm run watch` and `GoHireApplication`
+
+# Project Structure
+
+## Overview
+```
+.
+└── src                     # source code
+    ├── main                
+    │   ├── java                  # server source code
+    │   │   └── kth.iv1201.gohire
+    │   │       ├── config             # spring config classes
+    │   │       ├── controller         # backend controller layer
+    │   │       ├── DTO                # DTOs
+    │   │       ├── entity             # JPA entities
+    │   │       ├── repository         # backend repository layer
+    │   │       └── service            # backend service layer
+    │   ├── js                    # client source code
+    │   │   ├── presenter              # frontend presenter layer
+    │   │   └── view                   # frontend view layer
+    │   └── resources            # application resources
+    │       ├── static                 # static web resources, such as favicon and styles
+    │       └── templates              # html templates (contains index.html which loads react)
+    └── test                # acceptance tests and backend unit tests
+        ├── java                # java tests
+        │   └── kth.iv1201.gohire
+        │       ├── config             # tests for spring config
+        │       ├── controller         # tests for controller layer
+        │       └── service            # tests for service layer
+        └── resources           # application resources for testing
+```
 
 # Client
 View-Presenter React powered web application.
