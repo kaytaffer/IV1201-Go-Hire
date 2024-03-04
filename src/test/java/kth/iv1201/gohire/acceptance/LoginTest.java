@@ -38,11 +38,10 @@ public class LoginTest {
     private static Stream<WebDriver> provideTestWithWebDrivers() {
         return fetchWebDrivers(availableBrowserWebDrivers, startingPointURL);
     }
-
     @ParameterizedTest
     @Execution(ExecutionMode.SAME_THREAD)
     @MethodSource("provideTestWithWebDrivers")
-    void testSuccessfulLoginWithValidCredentials(WebDriver webDriver) {
+    void testSuccessfulLoginWithValidApplicantCredentials(WebDriver webDriver) {
         WebElement usernameInput = webDriver.findElement(By.id("login-form-username"));
         WebElement passwordInput = webDriver.findElement(By.id("login-form-password"));
 
@@ -57,6 +56,23 @@ public class LoginTest {
 
     }
 
+    @ParameterizedTest
+    @Execution(ExecutionMode.SAME_THREAD)
+    @MethodSource("provideTestWithWebDrivers")
+    void testSuccessfulLoginWithValidRecruiterCredentials(WebDriver webDriver) {
+        WebElement usernameInput = webDriver.findElement(By.id("login-form-username"));
+        WebElement passwordInput = webDriver.findElement(By.id("login-form-password"));
+
+        usernameInput.sendKeys("validRecruiterUser");
+        passwordInput.sendKeys("validRecruiterPassword");
+        WebElement loginButton = webDriver.findElement(By.id("login-button"));
+        loginButton.click();
+
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        String loggedInUser = webDriver.findElement(By.id("caption")).getText();
+        assertTrue(loggedInUser.contains("Recruiter"), "The expected caption text does not appear.");
+
+    }
     @ParameterizedTest
     @Execution(ExecutionMode.SAME_THREAD)
     @MethodSource("provideTestWithWebDrivers")
