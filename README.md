@@ -10,7 +10,11 @@ A recruitment application architecture design for the KTH course IV1201
     spring.datasource.username=<username>
     spring.datasource.password=<password>
    ```
-4. Run `npm install` and `mvn install`
+4. Run:
+   - `mvn frontend:install-node-and-npm`
+   - `npm install`
+   - `mvn frontend:webpack`
+   - `mvn install`
 
 ## Running
 Run both `npm run watch` and `GoHireApplication`
