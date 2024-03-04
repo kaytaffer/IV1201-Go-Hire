@@ -32,7 +32,7 @@ public class ErrorHandler implements ErrorController {
      */
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ErrorDTO> handleException (Exception exception) throws LoggerException {
-        Logger.logError(exception);
+        
         if (exception instanceof UserCreationFailedException) {
             return handleUserCreationFailedException((UserCreationFailedException) exception);
         } else if (exception instanceof MethodArgumentNotValidException) {
