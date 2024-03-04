@@ -2,6 +2,7 @@ import React from "react";
 
 /**
  * Popup container meant to wrap child components as a popup view.
+ * @param props - props.
  * @param {boolean} props.open Whether the Popup should currently be shown.
  * @param props.className style defining class name.
  * @param {JSX.Element} props.children the content of the Popup.
@@ -11,12 +12,14 @@ import React from "react";
  */
 export function PopupView(props) {
 
-    return ( props.open &&
-        <div className="popup-background">
-            <div className={"popup " + props.className}>
-                <button className="close-popup" onClick={props.onClose}>x</button>
-                {props.children}
+    return (
+        props.open && (
+            <div className="popup-background">
+                <div className={"popup " + props.className}>
+                    <button className="close-popup" onClick={props.onClose}>x</button>
+                    {props.children}
+                </div>
             </div>
-        </div>
+        )
     )
 }

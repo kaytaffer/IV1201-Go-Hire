@@ -10,8 +10,8 @@ import {logout} from "./presenter/api/apiCallHandler";
 import {TopBarView} from "./view/topBarView";
 
 /**
- * Root component for the application
- * @returns {JSX.Element} the rendered application
+ * Root component for the application.
+ * @returns {JSX.Element} the rendered application.
  * @constructor
  */
 function App() {

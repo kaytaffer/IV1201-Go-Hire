@@ -1,10 +1,10 @@
 import React from "react";
 
 /**
- * Responsible for rendering the login page
- * @param props props
- * @param {function} props.onLogin - called when user submits login form
- * @returns {JSX.Element} the rendered login view
+ * Responsible for rendering the login form.
+ * @param props props.
+ * @param {function} props.onLogin - called when user submits login form.
+ * @returns {JSX.Element} the rendered login form.
  * @constructor
  */
 export function LoginView(props) {
@@ -16,14 +16,16 @@ export function LoginView(props) {
         props.onLogin(username, password)
     }
 
-    return <div>
-        <h1>Login</h1>
-        <form onSubmit={loginACB}>
-            <label>Username</label>
-            <input id="login-form-username" type="text"/><br/>
-            <label>Password</label>
-            <input id="login-form-password" type="password"/><br/>
-            <input type="submit" value="Submit" />
-        </form>
-    </div>
+    return (
+        <div>
+            <h1>Login</h1>
+            <form onSubmit={loginACB}>
+                <label>Username</label>
+                <input id="login-form-username" type="text"/><br/>
+                <label>Password</label>
+                <input id="login-form-password" type="password"/><br/>
+                <input type="submit" value="Submit" />
+            </form>
+        </div>
+    )
 }
