@@ -1,6 +1,7 @@
 package kth.iv1201.gohire.service;
 
 import kth.iv1201.gohire.DTO.ApplicantDTO;
+import kth.iv1201.gohire.DTO.ChangeApplicationStatusRequestDTO;
 import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.DTO.LoggedInPersonDTO;
 import kth.iv1201.gohire.entity.ApplicationStatusEntity;
@@ -9,6 +10,7 @@ import kth.iv1201.gohire.entity.RoleEntity;
 import kth.iv1201.gohire.repository.ApplicationStatusRepository;
 import kth.iv1201.gohire.repository.RoleRepository;
 import kth.iv1201.gohire.repository.PersonRepository;
+import kth.iv1201.gohire.service.exception.ApplicationHandledException;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import kth.iv1201.gohire.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +28,10 @@ import java.util.List;
 @Service
 @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 public class PersonService {
-    private final int APPLICANTROLEID = 2;
-    private final int APPLICATIONSTATUSUNHANDLED = 3;
+    private final int APPLICANT_ROLE_ID = 2;
+    private final int APPLICATION_STATUS_ACCEPTED = 1;
+    private final int APPLICATION_STATUS_REJECTED = 2;
+    private final int APPLICATION_STATUS_UNHANDLED = 3;
 
     private final PersonRepository personRepository;
     private final RoleRepository roleRepository;
@@ -75,11 +79,10 @@ public class PersonService {
             throw new UserCreationFailedException("Username" + createUserRequestDTO.getUsername() + "already exists");
         }
         PersonEntity personEntity = new PersonEntity();
-        RoleEntity roleEntity = roleRepository.findRoleById(APPLICANTROLEID);
-        ApplicationStatusEntity applicationStatusEntity = applicationStatusRepository.findById(APPLICATIONSTATUSUNHANDLED);
+        RoleEntity roleEntity = roleRepository.findRoleById(APPLICANT_ROLE_ID);
+        ApplicationStatusEntity applicationStatusEntity = applicationStatusRepository.findById(APPLICATION_STATUS_UNHANDLED);
 
-        // Encode raw password for secure storage.
-        String encodedPassword = passwordEncoder.encode(createUserRequestDTO.getPassword());
+        String encodedPassword = passwordEncoder.encode(createUserRequestDTO.getPassword()); // Encodes raw password for secure storage.
 
         personEntity.setRole(roleEntity);
         personEntity.setName(createUserRequestDTO.getFirstName());
@@ -98,7 +101,7 @@ public class PersonService {
      * @return A list of all applicants
      */
     public List<ApplicantDTO> fetchApplicants() {
-        RoleEntity roleEntity = roleRepository.findRoleById(APPLICANTROLEID);
+        RoleEntity roleEntity = roleRepository.findRoleById(APPLICANT_ROLE_ID);
         List<PersonEntity> persons = personRepository.findPersonEntitiesByRoleIs(roleEntity);
         List<ApplicantDTO> applicants = new LinkedList<>();
         for(PersonEntity person : persons) {
@@ -106,6 +109,28 @@ public class PersonService {
                     person.getApplicationStatus().getStatus()));
         }
         return applicants;
+    }
+
+    /**
+     * Changes the status of an application.
+     * @param request DTO containing application change request data.
+     * @return the changed and saved application.
+     */
+    public ApplicantDTO changeApplicantStatus(ChangeApplicationStatusRequestDTO request) throws ApplicationHandledException {
+        PersonEntity applicant = personRepository.findPersonById(request.getId());
+
+        if (applicant.getApplicationStatus().getId() == APPLICATION_STATUS_UNHANDLED){
+            int applicationStatus;
+            if(request.getNewStatus().equals("accepted"))
+                applicationStatus = APPLICATION_STATUS_ACCEPTED;
+            else
+                applicationStatus = APPLICATION_STATUS_REJECTED;
+            applicant.setApplicationStatus(applicationStatusRepository.findById(applicationStatus));
+            applicant = personRepository.save(applicant);
+            return new ApplicantDTO(applicant.getId(), applicant.getName(), applicant.getSurname(), request.getNewStatus());
+        }
+        else
+            throw new ApplicationHandledException("The application has already been handled.");
     }
 
 }

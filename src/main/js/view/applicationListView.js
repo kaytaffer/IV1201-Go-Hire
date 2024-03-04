@@ -12,6 +12,7 @@ export function ApplicationListView(props) {
     return (
         <table>
             <thead>
+            <h3>Applications</h3>
             <tr>
                 <th>First Name</th>
                 <th>Last Name</th>
@@ -20,7 +21,7 @@ export function ApplicationListView(props) {
             </thead>
             <tbody>
             {props.applications.map((application, index) => (
-                <ApplicationListingView key={index} application={application} onHandleApplication={props.onHandleApplication}/>
+                <ApplicationListingView key={"application-listing-" + index} application={application} onHandleApplication={props.onHandleApplication}/>
             ))}
             </tbody>
         </table>

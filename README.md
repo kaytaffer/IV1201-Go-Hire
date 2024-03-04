@@ -75,7 +75,8 @@ The server handling HTTP calls.
 
 `SpringDataJpaUserDetailsService` - Used by Spring Security AuthenticationManager for fetching user information when authenticating.
 
-### exceptions/
+### exception/
+`ApplicationHandledException` - Exception thrown when an application that has already been handled is ordered to change.
 
 `UserCreationFailedException` - Exception thrown when the creation of a new user to the application fails.
 
@@ -96,6 +97,8 @@ The server handling HTTP calls.
 `ApplicationStatusEntity` - JPA entity representing an application status
 
 ## DTO/ 
+`ChangeApplicationStatusRequestDTO.java` - DTO containing information about an applicant creation request.
+
 `CreateApplicantRequestDTO` - DTO containing information about a user creation request.
 
 `ErrorDTO` - Class representing an error response.
