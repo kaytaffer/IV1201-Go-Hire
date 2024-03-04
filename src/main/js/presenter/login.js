@@ -15,7 +15,6 @@ import {UserNoticeView} from "../view/userNoticeView";
  * @param props props
  * @param {function} props.onLoggedIn - called when user successfully logs in
  * @returns {JSX.Element} the rendered login view
- * @constructor
  */
 export function Login(props){
 

@@ -13,7 +13,7 @@ import {ApplicationListView} from "./applicationListView";
 export function HomePageRecruiterView(props) {
     return (
         <div>
-            <h1>Recruiter</h1>
+            <h1 id="caption">Recruiter</h1>
             {props.applications && <ApplicationListView applications={props.applications} onHandleApplication={props.onHandleApplication}/>}
             <p><button id={"showApplications"} onClick={props.onShowApplications}>Display applications</button></p>
         </div>

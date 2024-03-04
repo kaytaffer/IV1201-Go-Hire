@@ -53,7 +53,6 @@ public class LoginTest {
         webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         String loggedInUser = webDriver.findElement(By.id("caption")).getText();
         assertTrue(loggedInUser.contains("Applicant"), "The expected caption text does not appear.");
-
     }
 
     @ParameterizedTest
@@ -99,6 +98,38 @@ public class LoginTest {
         webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         String userNotice = webDriver.findElement(By.id("user-notice")).getText();
         assertTrue(userNotice.contains("Please follow the form's required input examples."), "The expected message does not appear.");
+    }
+
+    @ParameterizedTest
+    @Execution(ExecutionMode.SAME_THREAD)
+    @MethodSource("provideTestWithWebDrivers")
+    void testIfUserIsRedirectedToLoginPageIfNotLoggedIn(WebDriver webDriver) {
+        webDriver.get("http://localhost:8080/");
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        String url = webDriver.getCurrentUrl();
+        assertEquals(startingPointURL, url, "URL doesn't match expectation");
+    }
+
+    @ParameterizedTest
+    @Execution(ExecutionMode.SAME_THREAD)
+    @MethodSource("provideTestWithWebDrivers")
+    void testIfRequestedUrlIsCorrectAfterLogin(WebDriver webDriver) {
+        String requestedUrl = "http://localhost:8080/";
+        webDriver.get(requestedUrl);
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+
+        WebElement usernameInput = webDriver.findElement(By.id("login-form-username"));
+        WebElement passwordInput = webDriver.findElement(By.id("login-form-password"));
+
+        usernameInput.sendKeys("validApplicantUser");
+        passwordInput.sendKeys("validApplicantPassword");
+        WebElement loginButton = webDriver.findElement(By.id("login-button"));
+        loginButton.click();
+
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        webDriver.findElement(By.id("caption")).getText(); //stalling a bit
+        String url = webDriver.getCurrentUrl();
+        assertEquals(requestedUrl, url, "URL doesn't match expectation");
     }
 
 }
