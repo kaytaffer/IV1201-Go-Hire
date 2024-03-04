@@ -9,6 +9,7 @@ import {ContainerView} from "./view/containerView";
 import {logout} from "./presenter/api/apiCallHandler";
 import {TopBarView} from "./view/topBarView";
 import {i182} from "./view/i18n/i18nConfig";
+import {TopBar} from "./presenter/topBarPresenter";
 
 /**
  * Root component for the application.
@@ -65,8 +66,8 @@ function App() {
         <div>
             <Suspense fallback={<div>loading...</div>}>
                 <ContainerView>
-                    <TopBarView username={user && user.username}
-                                onLogout={onLogout}/>
+                    <TopBar user={user}
+                            onLogout={onLogout}/>
                     <MainContentView>
                         {!isLoading &&
                             <Routes>

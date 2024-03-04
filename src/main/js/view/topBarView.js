@@ -1,6 +1,6 @@
 import React from "react";
-import { useTranslation } from 'react-i18next';
 
+// TODO update javadoc
 /**
  * Responsible for rendering the top bar.
  * @param props - props.
@@ -9,7 +9,10 @@ import { useTranslation } from 'react-i18next';
  * @returns {JSX.Element} the rendered top bar.
  */
 export function TopBarView(props) {
-    const { t } = useTranslation();
+
+    function languageSelected() {
+        props.onLanguageChange(document.getElementById("language-picker").value)
+    }
 
     return (
         <div id={"top-bar"}>
@@ -18,7 +21,13 @@ export function TopBarView(props) {
             </div>
             <div className={"right"}>
                 {props.username && <p>Logged in as: {props.username}</p>}
-                {props.username && <button onClick={props.onLogout}>{t('logout')}</button>}
+                <select id="language-picker" name="language-picker" onChange={languageSelected}>
+                    {props.languageList.map(language =>
+                        <option value={language.key} key={language.key}>
+                            {language.name}
+                        </option>)}
+                </select>
+                {props.username && <button onClick={props.onLogout}>{props.t('logout')}</button>}
             </div>
         </div>
     )
