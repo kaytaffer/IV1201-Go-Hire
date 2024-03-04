@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 
 /**
  * Responsible for rendering the top bar.
@@ -8,6 +9,8 @@ import React from "react";
  * @returns {JSX.Element} the rendered top bar.
  */
 export function TopBarView(props) {
+    const { t } = useTranslation();
+
     return (
         <div id={"top-bar"}>
             <div className={"left"}>
@@ -15,7 +18,7 @@ export function TopBarView(props) {
             </div>
             <div className={"right"}>
                 {props.username && <p>Logged in as: {props.username}</p>}
-                {props.username && <button onClick={props.onLogout}>Logout</button>}
+                {props.username && <button onClick={props.onLogout}>{t('logout')}</button>}
             </div>
         </div>
     )
