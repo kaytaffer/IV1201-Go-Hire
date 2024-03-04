@@ -5,7 +5,7 @@ import {HomePage} from "./presenter/homePage";
 import {Login} from "./presenter/login";
 import {MainContentView} from "./view/mainContentView";
 import {FooterView} from "./view/footerView";
-import {ContainerView} from "./view/ContainerView";
+import {ContainerView} from "./view/containerView";
 import {logout} from "./presenter/api/apiCallHandler";
 import {TopBarView} from "./view/topBarView";
 
