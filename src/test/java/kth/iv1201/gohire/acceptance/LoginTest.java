@@ -43,8 +43,6 @@ public class LoginTest {
     @Execution(ExecutionMode.SAME_THREAD)
     @MethodSource("provideTestWithWebDrivers")
     void testSuccessfulLoginWithValidCredentials(WebDriver webDriver) {
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
         WebElement usernameInput = webDriver.findElement(By.id("login-form-username"));
         WebElement passwordInput = webDriver.findElement(By.id("login-form-password"));
 
@@ -60,12 +58,9 @@ public class LoginTest {
     }
 
     @ParameterizedTest
-    @ValueSource(classes = {ChromeDriver.class})
-        //@ValueSource(classes = { ChromeDriver.class, FirefoxDriver.class, EdgeDriver.class})
-    void testInvalidLoginShowsErrorMessage(Class<? extends WebDriver> webDriverClass) {
-        webDriver = WebDriverManager.getInstance(webDriverClass).create();
-        webDriver.get("http://localhost:8080/login");
-
+    @Execution(ExecutionMode.SAME_THREAD)
+    @MethodSource("provideTestWithWebDrivers")
+    void testInvalidLoginShowsErrorMessage(WebDriver webDriver) {
         WebElement usernameInput = webDriver.findElement(By.id("login-form-username"));
         WebElement passwordInput = webDriver.findElement(By.id("login-form-password"));
         usernameInput.sendKeys("invalidApplicantUser");
@@ -79,14 +74,9 @@ public class LoginTest {
     }
 
     @ParameterizedTest
-    @ValueSource(classes = {ChromeDriver.class})
-        //@ValueSource(classes = { ChromeDriver.class, FirefoxDriver.class, EdgeDriver.class})
-    void testEmptyFieldsTriggerErrorMessage(Class<? extends WebDriver> webDriverClass) {
-
-        webDriver = WebDriverManager.getInstance(webDriverClass).create();
-        webDriver.get("http://localhost:8080/login");
-
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+    @Execution(ExecutionMode.SAME_THREAD)
+    @MethodSource("provideTestWithWebDrivers")
+    void testEmptyFieldsTriggerErrorMessage(WebDriver webDriver) {
         WebElement loginButton = webDriver.findElement(By.id("login-button"));
         loginButton.click();
 

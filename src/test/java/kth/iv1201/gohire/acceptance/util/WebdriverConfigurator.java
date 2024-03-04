@@ -8,6 +8,7 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
+import java.time.Duration;
 import java.util.LinkedList;
 import java.util.stream.Stream;
 
@@ -61,6 +62,7 @@ public class WebdriverConfigurator {
         for(Class<? extends WebDriver> candidateDriver : driverClasses) {
             WebDriver driver = WebDriverManager.getInstance(candidateDriver).create();
             driver.get(startingPointURL);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
             streamBuilder.add(driver);
         }
         return streamBuilder.build();
