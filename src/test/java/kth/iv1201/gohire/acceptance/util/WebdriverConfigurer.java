@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  * Contains static methods to supply acceptance test classes with <code>WebDriver</code>s suited to the system on which
  * the tests are run.
  */
-public class WebdriverConfigurator {
+public class WebdriverConfigurer {
 
     //This method contains a list of all classes of WebDrivers considered possible and relevant to run.
     private static LinkedList<Class<? extends WebDriver>> possibleBrowsersToUseForTest() {
@@ -51,21 +51,28 @@ public class WebdriverConfigurator {
     }
 
     /**
-     * Creates a <code>Stream</code> of instantiated <code>WebDriver</code>s which are navigated to a specific
-     * starting point.
+     * Creates a <code>Stream</code> of instantiated <code>WebDriver</code>s.
      * @param driverClasses the classes for which to instantiate <code>WebDriver</code>s.
-     * @param startingPointURL The URL at which the test expects to start executing.
      * @return The instantiated and prepared <code>WebDriver</code>s.
      */
-    public static Stream<WebDriver> fetchWebDrivers(LinkedList<Class<? extends WebDriver>> driverClasses, String startingPointURL) {
+    public static Stream<WebDriver> fetchWebDrivers(LinkedList<Class<? extends WebDriver>> driverClasses) {
         Stream.Builder<WebDriver> streamBuilder = Stream.builder();
         for(Class<? extends WebDriver> candidateDriver : driverClasses) {
             WebDriver driver = WebDriverManager.getInstance(candidateDriver).create();
-            driver.get(startingPointURL);
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
             streamBuilder.add(driver);
         }
         return streamBuilder.build();
     }
+
+    /**
+     * Tasks the driver to get the page at the supplied path and implicitly wait 5 seconds.
+     * @param driver The driver to task.
+     * @param path the desired URL-path.
+     */
+    public static void goToAndAwait(WebDriver driver, String path) {
+        driver.get(path);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+    }
+
 
 }
