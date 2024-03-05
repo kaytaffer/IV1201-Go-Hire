@@ -28,6 +28,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Execution(ExecutionMode.SAME_THREAD)
 @ActiveProfiles("test")
+
+//TODO @Sql in both LoginTest and CreateAccountTest ?
+//@Sql(scripts = "classpath:selenium-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS) //TODO ExecutionPhase before class or test?
 public class LoginTest {
     @LocalServerPort
     private int port;

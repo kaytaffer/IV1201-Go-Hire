@@ -1,9 +1,7 @@
 package kth.iv1201.gohire.acceptance;
 
 import kth.iv1201.gohire.acceptance.util.WebdriverConfigurer;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,18 +11,28 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.LinkedList;
 import java.util.stream.Stream;
 
 import static kth.iv1201.gohire.acceptance.util.WebdriverConfigurer.determineAvailableBrowserWebDrivers;
 import static kth.iv1201.gohire.acceptance.util.WebdriverConfigurer.fetchWebDrivers;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
+/**
+ * A class for Selenium WebDriver-based automated web testing of account creation functionality.
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Execution(ExecutionMode.SAME_THREAD)
 @ActiveProfiles("test")
+@Transactional
+@Rollback(value = false)
+@Sql(scripts = "classpath:selenium-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)//TODO @Sql ExecutionPhase before class or test?
 public class CreateAccountTest {
     @LocalServerPort
     private int port;
@@ -72,8 +80,11 @@ public class CreateAccountTest {
         password.sendKeys("newPassword");
         submitButton.click();
 
-        String notice = webDriver.findElement(By.id("user-notice")).getText();
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        String userNotice = webDriver.findElement(By.id("user-notice")).getText();
         webDriver.quit();
-        assertTrue(notice.contains("successfully created"));
+
+        Assertions.assertTrue(userNotice.contains("Account successfully created"), "The expected message does not appear.");
     }
 }
+
