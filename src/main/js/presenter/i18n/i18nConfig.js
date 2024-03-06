@@ -8,7 +8,7 @@ import {translations} from "./translations";
  */
 export const languageList = Object.keys(translations).map(key => {return {key: key, name: translations[key].name}})
 
-const i18n2 = i18n
+i18n
     .use(initReactI18next) // passes i18n down to react-i18next
     .init({
         resources: translations,
@@ -21,4 +21,4 @@ const i18n2 = i18n
 /**
  * Used to handle internationalization.
  */
-export default i18n2;
+export default i18n;
