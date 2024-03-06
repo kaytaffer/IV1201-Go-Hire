@@ -1,3 +1,7 @@
+/**
+ * Translations for website content used for internationalization
+ * @type {{sv: {name: string, translation: {logout: string, "logged-in-as": string, handle: string}}, en: {name: string, translation: {logout: string, "logged-in-as": string, handle: string}}}}
+ */
 export const translations = {
     "en": {
         "name": "English",

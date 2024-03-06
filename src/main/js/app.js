@@ -8,7 +8,7 @@ import {FooterView} from "./view/footerView";
 import {ContainerView} from "./view/containerView";
 import {logout} from "./presenter/api/apiCallHandler";
 import {i182} from "./view/i18n/i18nConfig";
-import {TopBar} from "./presenter/topBarPresenter";
+import {TopBar} from "./presenter/topBar";
 
 /**
  * Root component for the application.

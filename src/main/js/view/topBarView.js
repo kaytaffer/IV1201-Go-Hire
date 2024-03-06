@@ -1,11 +1,13 @@
 import React from "react";
 
-// TODO update javadoc
 /**
  * Responsible for rendering the top bar.
  * @param props - props.
  * @param {String} props.username - the username of the logged-in user, or null if no one is logged in.
  * @param {Function} props.onLogout - callback for when the logged-in user clicks the log-out button.
+ * @param {{name: *, key: *}[]} props.languageList - list of available language for internationalization
+ * @param {Function} props.onLanguageChange - called when the user chose a new language
+ * @param {Function} props.t - translation function for internationalization
  * @returns {JSX.Element} the rendered top bar.
  */
 export function TopBarView(props) {

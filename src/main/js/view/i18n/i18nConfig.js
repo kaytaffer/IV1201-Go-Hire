@@ -2,9 +2,10 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import {translations} from "./translations";
 
-// TODO javadoc
-// TODO change README if needed
-
+/**
+ * List of all language available for internationalization.
+ * @type {{name: *, key: *}[]}
+ */
 export const languageList = Object.keys(translations).map(key => {return {key: key, name: translations[key].name}})
 
 const i18n2 = i18n
@@ -17,4 +18,7 @@ const i18n2 = i18n
         }
     });
 
+/**
+ * Used to handle internationalization.
+ */
 export default i18n2;
