@@ -5,16 +5,10 @@ import React from "react";
  * @param props - props.
  * @param {String} props.username - the username of the logged-in user, or null if no one is logged in.
  * @param {Function} props.onLogout - callback for when the logged-in user clicks the log-out button.
- * @param {{name: *, key: *}[]} props.languageList - list of available language for internationalization
- * @param {Function} props.onLanguageChange - called when the user chose a new language
- * @param {Function} props.t - translation function for internationalization.
+ * @param {JSX.Element[]} props.children - the additional children of the top bar
  * @returns {JSX.Element} the rendered top bar.
  */
 export function TopBarView(props) {
-
-    function languageSelected() {
-        props.onLanguageChange(document.getElementById("language-picker").value)
-    }
 
     return (
         <div id={"top-bar"}>
@@ -23,12 +17,7 @@ export function TopBarView(props) {
             </div>
             <div className={"right"}>
                 {props.username && <p>{props.t('logged-in-as')}: {props.username}</p>}
-                <select id="language-picker" name="language-picker" onChange={languageSelected}>
-                    {props.languageList.map(language =>
-                        <option value={language.key} key={language.key}>
-                            {language.name}
-                        </option>)}
-                </select>
+                {props.children}
                 {props.username && <button onClick={props.onLogout}>{props.t('logout')}</button>}
             </div>
         </div>

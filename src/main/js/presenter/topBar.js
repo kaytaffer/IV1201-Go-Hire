@@ -1,6 +1,6 @@
 import React from "react";
 import {TopBarView} from "../view/topBarView";
-import {languageList} from "../view/i18n/i18nConfig";
+import {LanguageSelector} from "./languageSelector";
 import {useTranslation} from "react-i18next";
 
 /**
@@ -11,15 +11,13 @@ import {useTranslation} from "react-i18next";
  * @returns {JSX.Element} the rendered top bar.
  */
 export function TopBar(props) {
-    const { t, i18n } = useTranslation();
+    const { t} = useTranslation();
 
-    function onLanguageChange(language) {
-        i18n.changeLanguage(language)
-    }
-
-    return <TopBarView username={props.user && props.user.username}
-                       onLogout={props.onLogout}
-                       languageList={languageList}
-                       onLanguageChange={onLanguageChange}
-                       t={t}/>
+    return (
+        <TopBarView username={props.user && props.user.username}
+                    onLogout={props.onLogout}
+                    t={t}>
+            <LanguageSelector/>
+        </TopBarView>
+    )
 }
