@@ -4,6 +4,7 @@ import React from "react";
  * Responsible for rendering the create new applicant form.
  * @param props props.
  * @param {function} props.onCreate - called when user submits new applicant form.
+ * @param {Function} props.t - translation function for internationalization
  * @returns {JSX.Element} the rendered new applicant form.
  */
 export function CreateNewApplicantView(props) {
@@ -21,27 +22,27 @@ export function CreateNewApplicantView(props) {
 
     return (
         <div>
-            <h1>Create new Applicant</h1>
+            <h1>{props.t('create-new-applicant')}</h1>
             <form onSubmit={submit}>
-                <label>First Name</label>
-                <input id="create-applicant-form-first-name" type="text" placeholder="max 255 characters"/><br/>
+                <label>{props.t('first-name')}</label>
+                <input id="create-applicant-form-first-name" type="text" placeholder={props.t('max-255-chars')}/><br/>
 
-                <label>Last Name</label>
-                <input id="create-applicant-form-last-name" type="text" placeholder="max 255 characters"/><br/>
+                <label>{props.t('last-name')}</label>
+                <input id="create-applicant-form-last-name" type="text" placeholder={props.t('max-255-chars')}/><br/>
 
-                <label>Email</label>
+                <label>{props.t('email')}</label>
                 <input id="create-applicant-form-email" type="email" placeholder="example@email.com"/><br/>
 
-                <label>Person Number</label>
+                <label>{props.t('person-number')}</label>
                 <input id="create-applicant-form-person-number" type="text" placeholder="YYYYMMDD-XXXX"/><br/>
 
-                <label>Username</label>
-                <input id="create-applicant-form-username" type="text" placeholder="max 255 characters"/><br/>
+                <label>{props.t('username')}</label>
+                <input id="create-applicant-form-username" type="text" placeholder={props.t('max-255-chars')}/><br/>
 
-                <label>Password</label>
-                <input id="create-applicant-form-password" type="password" placeholder="max 255 characters"/><br/>
+                <label>{props.t('password')}</label>
+                <input id="create-applicant-form-password" type="password" placeholder={props.t('max-255-chars')}/><br/>
 
-                <input type="submit" value="Submit"/>
+                <input type="submit" value={props.t('submit')}/>
             </form>
         </div>
     )

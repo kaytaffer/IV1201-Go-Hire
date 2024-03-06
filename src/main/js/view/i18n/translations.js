@@ -21,6 +21,12 @@ export const translations = {
             "username": "Username",
             "password": "Password",
             "submit": "Submit",
+            "first-name": "First name",
+            "last-name": "Last name",
+            "email": "Email",
+            "person-number": "Person Number",
+            "create-new-applicant": "Create New Applicant",
+            "max-255-chars": "max 255 characters"
         }
     },
     "sv": {
@@ -41,6 +47,12 @@ export const translations = {
             "username": "Användarnamn",
             "password": "Lösenord",
             "submit": "Skicka",
+            "first-name": "Förnamn",
+            "last-name": "Efternamn",
+            "email": "Email",
+            "person-number": "Personnummer",
+            "create-new-applicant": "Skapa ny ansökande",
+            "max-255-chars": "max 255 tecken"
         }
     }
 }
