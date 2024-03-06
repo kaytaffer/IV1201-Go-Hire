@@ -26,7 +26,13 @@ export const translations = {
             "email": "Email",
             "person-number": "Person Number",
             "create-new-applicant": "Create New Applicant",
-            "max-255-chars": "max 255 characters"
+            "max-255-chars": "max 255 characters",
+            "handle-application-for": "Handle Application For",
+            "handle-application-description": "Select the new status and verify your identity by entering username " +
+                "and password.",
+            "unhandled": "Unhandled",
+            "accept-applicant": "Accept applicant",
+            "reject-applicant": "Reject applicant",
         }
     },
     "sv": {
@@ -52,7 +58,13 @@ export const translations = {
             "email": "Email",
             "person-number": "Personnummer",
             "create-new-applicant": "Skapa ny ansökande",
-            "max-255-chars": "max 255 tecken"
+            "max-255-chars": "max 255 tecken",
+            "handle-application-for": "Hantera ansökan för",
+            "handle-application-description": "Välj den nya statusen och verifiera din identitet genom att ange " +
+                "användarnamn och lösenord.",
+            "unhandled": "Ohanterad",
+            "accept-applicant": "Acceptera ansökande",
+            "reject-applicant": "Avslå ansökande",
         }
     }
 }

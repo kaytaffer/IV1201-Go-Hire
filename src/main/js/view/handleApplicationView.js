@@ -21,23 +21,23 @@ export function HandleApplicationView(props) {
 
     return (
         <div>
-            <h4>Handle application for '{props.application.firstName} {props.application.lastName}'</h4>
-            <p>Select the new status and verify your identity by entering username and password</p>
+            <h4>{props.t('handle-application-for')} '{props.application.firstName} {props.application.lastName}'</h4>
+            <p>{props.t('handle-application-description')}</p>
 
             <form onSubmit={submission}>
                 <select id="handle-application-form-new-status">
-                    <option value="">Unhandled</option>
-                    <option value="accepted">Accept applicant</option>
-                    <option value="rejected">Reject applicant</option>
+                    <option value="">{props.t('unhandled')}</option>
+                    <option value="accepted">{props.t('accept-applicant')}</option>
+                    <option value="rejected">{props.t('reject-applicant')}</option>
                 </select><br/>
 
-                <label>Username</label>
+                <label>{props.t('username')}</label>
                 <input id="handle-application-form-username" type="text"/><br/>
 
-                <label>Password</label>
+                <label>{props.t('password')}</label>
                 <input id="handle-application-form-password" type="password"/><br/>
 
-                <input type="submit" value="Submit"/>
+                <input type="submit" value={props.t('submit')}/>
             </form>
 
             {props.errorMessage && <UserNoticeView message={props.errorMessage} error={true}/>}
