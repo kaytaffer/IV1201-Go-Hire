@@ -38,6 +38,8 @@ export const translations = {
             "display-applications": "Display applications",
             "applications": "Applications",
             "status": "Status",
+            "accepted": "Accepted",
+            "rejected": "Rejected",
         }
     },
     "sv": {
@@ -75,6 +77,8 @@ export const translations = {
             "display-applications": "Visa ansökande",
             "applications": "Ansökningar",
             "status": "Status",
+            "accepted": "Accepterad",
+            "rejected": "Avslagen",
         }
     }
 }
