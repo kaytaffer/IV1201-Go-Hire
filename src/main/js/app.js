@@ -7,7 +7,7 @@ import {MainContentView} from "./view/mainContentView";
 import {FooterView} from "./view/footerView";
 import {ContainerView} from "./view/containerView";
 import {logout} from "./presenter/api/apiCallHandler";
-import {i182} from "./view/i18n/i18nConfig";
+import {i182} from "./presenter/i18n/i18nConfig";
 import {TopBar} from "./presenter/topBar";
 
 /**

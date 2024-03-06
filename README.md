@@ -64,6 +64,9 @@ View-Presenter React powered web application.
   - **api/**
     - `apiCallHandler` - Authenticates login credentials with the API.
     - `errorMessages` - Pre-defined error objects with their error type matched with the message to be displayed to user.
+  - **i18n/**
+    - `i18nConfig` - Contains configuration for i18n, and language list.
+    - `translations` - All translations for the languages supported by i18n.
 - #### view/
   - `applicationListingView` - Responsible for rendering an application.
   - `applicationListView` - Responsible for rendering the list of applications.
@@ -79,9 +82,6 @@ View-Presenter React powered web application.
   - `popupView` - Popup container meant to wrap child components as a popup view.
   - `topBarView` - Responsible for rendering the top bar.
   - `userNoticeView` - Responsible for rendering user notice messages.
-  - **i18n/**
-    - `i18nConfig` - Contains configuration for i18n, and language list.
-    - `translations` - All translations for the languages supported by i18n.
 
 ## Server
 The server handling HTTP calls.

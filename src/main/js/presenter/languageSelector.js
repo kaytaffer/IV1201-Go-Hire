@@ -1,7 +1,7 @@
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {LanguageSelectorView} from "../view/languageSelectorView";
-import {languageList} from "../view/i18n/i18nConfig";
+import {languageList} from "./i18n/i18nConfig";
 
 /**
  * Responsible for the logic of the language selector.
