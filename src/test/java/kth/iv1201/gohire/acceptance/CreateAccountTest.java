@@ -11,10 +11,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.LinkedList;
@@ -28,11 +26,9 @@ import static kth.iv1201.gohire.acceptance.util.WebdriverConfigurer.fetchWebDriv
  * A class for Selenium WebDriver-based automated web testing of account creation functionality.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Execution(ExecutionMode.SAME_THREAD)
 @ActiveProfiles("test")
-@Transactional
-@Rollback(value = false)
-@Sql(scripts = "classpath:selenium-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)//TODO @Sql ExecutionPhase before class or test?
+@Execution(ExecutionMode.SAME_THREAD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) //Rolls back the test db state.
 public class CreateAccountTest {
     @LocalServerPort
     private int port;
@@ -59,7 +55,6 @@ public class CreateAccountTest {
     }
 
     @ParameterizedTest
-    @Execution(ExecutionMode.SAME_THREAD)
     @MethodSource("provideTestWithWebDrivers")
     void testIfUserCanCreateNewApplicantSuccessfully(WebDriver webDriver) {
         WebdriverConfigurer.goToAndAwait(webDriver, startingPointURL);

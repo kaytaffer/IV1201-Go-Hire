@@ -9,10 +9,12 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Duration;
@@ -26,11 +28,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * A class for Selenium WebDriver-based automated web testing of login functionality.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Execution(ExecutionMode.SAME_THREAD)
 @ActiveProfiles("test")
-
-//TODO @Sql in both LoginTest and CreateAccountTest ?
-//@Sql(scripts = "classpath:selenium-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS) //TODO ExecutionPhase before class or test?
+@Execution(ExecutionMode.SAME_THREAD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) //Rolls back the test db state.
 public class LoginTest {
     @LocalServerPort
     private int port;
@@ -57,7 +57,6 @@ public class LoginTest {
     }
 
     @ParameterizedTest
-    @Execution(ExecutionMode.SAME_THREAD)
     @MethodSource("provideTestWithWebDrivers")
     void testSuccessfulLoginWithValidApplicantCredentials(WebDriver webDriver) {
         WebdriverConfigurer.goToAndAwait(webDriver, startingPointURL);
@@ -71,13 +70,17 @@ public class LoginTest {
         loginButton.click();
 
         webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        String loggedInUser = webDriver.findElement(By.id("caption")).getText();
+        String loggedInUser = "";
+        try {
+            loggedInUser = webDriver.findElement(By.id("caption")).getText();
+        } catch (NoSuchElementException exception) {
+            fail("Cannot find element with id" + "caption");
+        }
         webDriver.quit();
         assertTrue(loggedInUser.contains("Applicant"), "The expected caption text does not appear.");
     }
 
     @ParameterizedTest
-    @Execution(ExecutionMode.SAME_THREAD)
     @MethodSource("provideTestWithWebDrivers")
     void testSuccessfulLoginWithValidRecruiterCredentials(WebDriver webDriver) {
         WebdriverConfigurer.goToAndAwait(webDriver, startingPointURL);
@@ -88,15 +91,19 @@ public class LoginTest {
         passwordInput.sendKeys("validRecruiterPassword");
         WebElement loginButton = webDriver.findElement(By.id("login-button"));
         loginButton.click();
-
         webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        String loggedInUser = webDriver.findElement(By.id("caption")).getText();
+
+        String loggedInUser = "";
+        try {
+            loggedInUser = webDriver.findElement(By.id("caption")).getText();
+        } catch (NoSuchElementException exception) {
+            fail("Cannot find element with id" + "caption");
+        }
         webDriver.quit();
         assertTrue(loggedInUser.contains("Recruiter"), "The expected caption text does not appear.");
     }
 
     @ParameterizedTest
-    @Execution(ExecutionMode.SAME_THREAD)
     @MethodSource("provideTestWithWebDrivers")
     void testInvalidLoginShowsErrorMessage(WebDriver webDriver) {
         WebdriverConfigurer.goToAndAwait(webDriver, startingPointURL);
@@ -115,7 +122,6 @@ public class LoginTest {
     }
 
     @ParameterizedTest
-    @Execution(ExecutionMode.SAME_THREAD)
     @MethodSource("provideTestWithWebDrivers")
     void testEmptyFieldsTriggerErrorMessage(WebDriver webDriver) {
         WebdriverConfigurer.goToAndAwait(webDriver, startingPointURL);
@@ -129,7 +135,6 @@ public class LoginTest {
     }
 
     @ParameterizedTest
-    @Execution(ExecutionMode.SAME_THREAD)
     @MethodSource("provideTestWithWebDrivers")
     void testIfUserIsRedirectedToLoginPageIfNotLoggedIn(WebDriver webDriver) {
         WebdriverConfigurer.goToAndAwait(webDriver, "http://localhost:" + port + "/");
@@ -139,7 +144,6 @@ public class LoginTest {
     }
 
     @ParameterizedTest
-    @Execution(ExecutionMode.SAME_THREAD)
     @MethodSource("provideTestWithWebDrivers")
     void testIfRequestedUrlIsCorrectAfterLogin(WebDriver webDriver) {
         String requestedUrl = "http://localhost:" + port + "/";
@@ -154,7 +158,11 @@ public class LoginTest {
         loginButton.click();
 
         webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        webDriver.findElement(By.id("caption")).getText(); //stalling a bit
+        try {
+            webDriver.findElement(By.id("caption")).getText();
+        } catch (NoSuchElementException exception) {
+            fail("Cannot find element with id" + "caption");
+        }
         String url = webDriver.getCurrentUrl();
         webDriver.quit();
         assertEquals(requestedUrl, url, "URL doesn't match expectation");
