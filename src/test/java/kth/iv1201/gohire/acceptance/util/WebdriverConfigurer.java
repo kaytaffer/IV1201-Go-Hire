@@ -24,7 +24,7 @@ public class WebdriverConfigurer {
         possibleBrowsersToUseForTests.add(ChromeDriver.class);
         possibleBrowsersToUseForTests.add(FirefoxDriver.class);
         possibleBrowsersToUseForTests.add(EdgeDriver.class);
-        possibleBrowsersToUseForTests.add(SafariDriver.class);
+        //possibleBrowsersToUseForTests.add(SafariDriver.class);
         //Add more driver classes here as required
         return possibleBrowsersToUseForTests;
     }

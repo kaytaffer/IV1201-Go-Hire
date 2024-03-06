@@ -4,6 +4,7 @@ import kth.iv1201.gohire.acceptance.util.WebdriverConfigurer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,6 +15,7 @@ import org.openqa.selenium.WebElement;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.time.Duration;
 import java.util.LinkedList;
@@ -28,9 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Execution(ExecutionMode.SAME_THREAD)
 @ActiveProfiles("test")
-
-//TODO @Sql in both LoginTest and CreateAccountTest ?
-//@Sql(scripts = "classpath:selenium-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS) //TODO ExecutionPhase before class or test?
+@Sql(scripts = "classpath:acceptance-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS) //TODO ExecutionPhase before class or test?
 public class LoginTest {
     @LocalServerPort
     private int port;

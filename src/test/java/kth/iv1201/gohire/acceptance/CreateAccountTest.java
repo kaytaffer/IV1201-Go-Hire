@@ -30,9 +30,7 @@ import static kth.iv1201.gohire.acceptance.util.WebdriverConfigurer.fetchWebDriv
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Execution(ExecutionMode.SAME_THREAD)
 @ActiveProfiles("test")
-@Transactional
-@Rollback(value = false)
-@Sql(scripts = "classpath:selenium-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)//TODO @Sql ExecutionPhase before class or test?
+@Sql(scripts = "classpath:acceptance-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)//TODO @Sql ExecutionPhase before class or test?
 public class CreateAccountTest {
     @LocalServerPort
     private int port;
@@ -61,6 +59,7 @@ public class CreateAccountTest {
     @ParameterizedTest
     @Execution(ExecutionMode.SAME_THREAD)
     @MethodSource("provideTestWithWebDrivers")
+    @Sql(scripts = "classpath:clean-up.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void testIfUserCanCreateNewApplicantSuccessfully(WebDriver webDriver) {
         WebdriverConfigurer.goToAndAwait(webDriver, startingPointURL);
 
