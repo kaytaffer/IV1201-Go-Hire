@@ -5,7 +5,7 @@ import {ApplicationListingView} from "./applicationListingView";
  * Responsible for rendering the list of applications.
  * @param props - props.
  * @param {Array} props.applications - list of application objects.
- * @param {Function} props.t - translation function for internationalization
+ * @param {Function} props.t - translation function for internationalization.
  * @param {function} props.onHandleApplication - Passed to each ApplicationListingView.
  * @returns {JSX.Element} the rendered application list.
  */

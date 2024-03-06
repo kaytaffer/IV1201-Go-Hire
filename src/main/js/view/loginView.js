@@ -4,7 +4,7 @@ import React from "react";
  * Responsible for rendering the login form.
  * @param props props.
  * @param {function} props.onLogin - called when user submits login form.
- * @param {Function} props.t - translation function for internationalization
+ * @param {Function} props.t - translation function for internationalization.
  * @returns {JSX.Element} the rendered login form.
  * @constructor
  */

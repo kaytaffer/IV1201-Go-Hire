@@ -7,6 +7,7 @@ import {UserNoticeView} from "./userNoticeView";
  * @param {Object} props.application The application being handled.
  * @param {function} props.submitForm Called when the form is submitted.
  * @param {String} props.errorMessage Any error message to be displayed in child components.
+ * @param {Function} props.t - translation function for internationalization.
  * @returns {JSX.Element} the rendered application handling component.
  */
 export function HandleApplicationView(props) {

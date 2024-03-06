@@ -61,7 +61,7 @@ export function HomePage(props){
     return (<div>
         {errorMessage && !showSingleApplicant && <UserNoticeView message={t(errorMessage)}
                                                                  error={true}/>}
-        {props.user.role === 'applicant' && <HomePageApplicantView user={props.user}/>}
+        {props.user.role === 'applicant' && <HomePageApplicantView user={props.user} t={t}/>}
         {props.user.role === 'recruiter' && <HomePageRecruiterView user={props.user}
                                                                    applications={applications}
                                                                    onShowApplications={showApplications}

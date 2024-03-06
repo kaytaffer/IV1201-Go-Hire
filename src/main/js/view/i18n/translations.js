@@ -40,6 +40,7 @@ export const translations = {
             "status": "Status",
             "accepted": "Accepted",
             "rejected": "Rejected",
+            "welcome": "Welcome"
         }
     },
     "sv": {
@@ -79,6 +80,7 @@ export const translations = {
             "status": "Status",
             "accepted": "Accepterad",
             "rejected": "Avslagen",
+            "welcome": "Välkommen,"
         }
     }
 }
