@@ -33,6 +33,9 @@ export const translations = {
             "unhandled": "Unhandled",
             "accept-applicant": "Accept applicant",
             "reject-applicant": "Reject applicant",
+            "recruiter": "Recruiter",
+            "applicant": "Applicant",
+            "display-applications": "Display applications",
         }
     },
     "sv": {
@@ -65,6 +68,9 @@ export const translations = {
             "unhandled": "Ohanterad",
             "accept-applicant": "Acceptera ansökande",
             "reject-applicant": "Avslå ansökande",
+            "recruiter": "Rekryterare",
+            "applicant": "Ansökande",
+            "display-applications": "Visa ansökande",
         }
     }
 }

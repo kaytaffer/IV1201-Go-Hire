@@ -65,7 +65,8 @@ export function HomePage(props){
         {props.user.role === 'recruiter' && <HomePageRecruiterView user={props.user}
                                                                    applications={applications}
                                                                    onShowApplications={showApplications}
-                                                                   onHandleApplication={handleApplication}/>}
+                                                                   onHandleApplication={handleApplication}
+                                                                   t={t}/>}
 
         <PopupView open={showSingleApplicant} onClose={() => setShowSingleApplicant(null)}>
             <HandleApplicationView application={showSingleApplicant}
