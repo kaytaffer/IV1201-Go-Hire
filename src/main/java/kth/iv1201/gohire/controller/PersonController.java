@@ -112,11 +112,17 @@ public class PersonController {
     @PostMapping("/changeApplicationStatus")
     public ApplicantDTO changeApplicationStatus(@RequestBody @Valid ChangeApplicationStatusRequestDTO request)
             throws LoggerException, ApplicationHandledException {
-        authenticateRequest(request.getUsername(), request.getPassword());
-        ApplicantDTO changedApplicant = personService.changeApplicantStatus(request);
-        Logger.logEvent("Recruiter " + request.getUsername() + " changed status of applicant " + changedApplicant.getFirstName() + " " +
-                changedApplicant.getLastName() + " to " + changedApplicant.getStatus() + ".");
-        return changedApplicant;
+        Authentication requestCredentialAuth = authenticateRequest(request.getUsername(), request.getPassword());
+        Authentication currentLoggedInRecruiterAuth = SecurityContextHolder.getContext().getAuthentication();
+        if(currentLoggedInRecruiterAuth.equals(requestCredentialAuth)){
+            ApplicantDTO changedApplicant = personService.changeApplicantStatus(request);
+            Logger.logEvent("Recruiter " + request.getUsername() + " changed status of applicant " + changedApplicant.getFirstName() + " " +
+                    changedApplicant.getLastName() + " to " + changedApplicant.getStatus() + ".");
+            return changedApplicant;
+        }
+        else{
+            throw new BadCredentialsException("Credentials does not match logged in user");
+        }
     }
 
 
