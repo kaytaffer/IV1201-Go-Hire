@@ -4,6 +4,7 @@ import React from "react";
  * Responsible for rendering the login form.
  * @param props props.
  * @param {function} props.onLogin - called when user submits login form.
+ * @param {Function} props.t - translation function for internationalization
  * @returns {JSX.Element} the rendered login form.
  * @constructor
  */
@@ -18,13 +19,13 @@ export function LoginView(props) {
 
     return (
         <div>
-            <h1>Login</h1>
+            <h1>{props.t('login')}</h1>
             <form onSubmit={loginACB}>
-                <label>Username</label>
+                <label>{props.t('username')}</label>
                 <input id="login-form-username" type="text"/><br/>
-                <label>Password</label>
+                <label>{props.t('password')}</label>
                 <input id="login-form-password" type="password"/><br/>
-                <input type="submit" value="Submit" />
+                <input type="submit" value={props.t('submit')}/>
             </form>
         </div>
     )

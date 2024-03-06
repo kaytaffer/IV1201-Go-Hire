@@ -16,7 +16,11 @@ export const translations = {
             "something-went-wrong": "Something went wrong, please try again later.",
             "wrong-input": "Please follow the form's required input examples.",
             "username-exists": "The suggested username already exists.",
-            "page-does-not-exist": "The requested page or resource does not exist or is unavailable."
+            "page-does-not-exist": "The requested page or resource does not exist or is unavailable.",
+            "login": "Login",
+            "username": "Username",
+            "password": "Password",
+            "submit": "Submit",
         }
     },
     "sv": {
@@ -32,7 +36,11 @@ export const translations = {
             "something-went-wrong": "Något gick fel, försök igen senare.",
             "wrong-input": "Följ formulärets input-exempel.",
             "username-exists": "Användarnamnet existerar redan.",
-            "page-does-not-exist": "Den efterfrågade sidan eller resursen finns inte, eller är otillgänglig."
+            "page-does-not-exist": "Den efterfrågade sidan eller resursen finns inte, eller är otillgänglig.",
+            "login": "Logga in",
+            "username": "Användarnamn",
+            "password": "Lösenord",
+            "submit": "Skicka",
         }
     }
 }
