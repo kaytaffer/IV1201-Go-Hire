@@ -20,7 +20,7 @@ export function TopBarView(props) {
                 <h1>Go Hire</h1>
             </div>
             <div className={"right"}>
-                {props.username && <p>Logged in as: {props.username}</p>}
+                {props.username && <p>{props.t('logged-in-as')}: {props.username}</p>}
                 <select id="language-picker" name="language-picker" onChange={languageSelected}>
                     {props.languageList.map(language =>
                         <option value={language.key} key={language.key}>
