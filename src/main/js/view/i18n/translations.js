@@ -36,6 +36,8 @@ export const translations = {
             "recruiter": "Recruiter",
             "applicant": "Applicant",
             "display-applications": "Display applications",
+            "applications": "Applications",
+            "status": "Status",
         }
     },
     "sv": {
@@ -71,6 +73,8 @@ export const translations = {
             "recruiter": "Rekryterare",
             "applicant": "Ansökande",
             "display-applications": "Visa ansökande",
+            "applications": "Ansökningar",
+            "status": "Status",
         }
     }
 }

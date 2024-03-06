@@ -16,7 +16,9 @@ export function HomePageRecruiterView(props) {
         <div>
             <h1>{props.t('recruiter')}</h1>
             {props.applications && (
-                <ApplicationListView applications={props.applications} onHandleApplication={props.onHandleApplication}/>
+                <ApplicationListView applications={props.applications}
+                                     onHandleApplication={props.onHandleApplication}
+                                     t={props.t}/>
             )}
             <p><button id={"showApplications"} onClick={props.onShowApplications}>
                 {props.t('display-applications')}
