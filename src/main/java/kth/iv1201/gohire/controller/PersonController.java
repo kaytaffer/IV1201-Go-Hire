@@ -107,6 +107,8 @@ public class PersonController {
      * Changes the status of an application.
      * @param request DTO containing application change request data.
      * @return the changed and saved application.
+     * @throws LoggerException if there is a problem with logging an event.
+     * @throws ApplicationHandledException if the applicant has already been handled.
      */
     @PreAuthorize("hasRole('recruiter')")
     @PostMapping("/changeApplicationStatus")
@@ -124,7 +126,6 @@ public class PersonController {
             throw new BadCredentialsException("Credentials does not match logged in user");
         }
     }
-
 
     private Authentication authenticateRequest(String username, String password) throws BadCredentialsException {
         Authentication authenticationRequest =
