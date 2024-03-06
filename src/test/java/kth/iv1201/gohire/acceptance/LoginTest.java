@@ -1,16 +1,7 @@
 package kth.iv1201.gohire.acceptance;
 
-import kth.iv1201.gohire.DTO.CreateApplicantRequestDTO;
 import kth.iv1201.gohire.acceptance.util.WebdriverConfigurer;
-import kth.iv1201.gohire.entity.PersonEntity;
-import kth.iv1201.gohire.entity.RoleEntity;
-import kth.iv1201.gohire.repository.ApplicationStatusRepository;
-import kth.iv1201.gohire.repository.PersonRepository;
-import kth.iv1201.gohire.repository.RoleRepository;
-import kth.iv1201.gohire.service.PersonService;
-import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.parallel.Execution;
@@ -21,13 +12,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.time.Duration;
 import java.util.LinkedList;
@@ -42,26 +30,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Execution(ExecutionMode.SAME_THREAD)
-@Transactional
-//@Sql(scripts = "classpath:import.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) //Rolls back the test db state.
+@Sql(scripts = "classpath:acceptance-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 public class LoginTest {
     @LocalServerPort
     private int port;
     private static LinkedList<Class<? extends WebDriver>> availableBrowserWebDrivers;
     private String startingPointURL;
-    @Autowired
-    PersonRepository personRepository;
-    @Autowired
-    RoleRepository roleRepository;
-    @Autowired
-    ApplicationStatusRepository applicationStatusRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    PersonService personService;
-    CreateApplicantRequestDTO createApplicantRequestDTO;
-    CreateApplicantRequestDTO createRecruiterRequestDTO;
 
     @BeforeAll
     static void setUpAll() {
@@ -69,30 +43,8 @@ public class LoginTest {
     }
 
     @BeforeEach
-    void setUp() throws UserCreationFailedException {
+    void setUp() {
         startingPointURL = "http://localhost:" + port + "/login";
-        /*
-        PersonEntity loadedUser = personRepository.findByUsername("validApplicantUser");
-        System.out.println("\n\n\n" + loadedUser.getUsername() + ": " + loadedUser.getPassword() + "\n\n\n");
-        */
-        createApplicantRequestDTO = new CreateApplicantRequestDTO("Applicant", "Lastname",
-                "applicant@kth.se", "19909090-9090", "applicant1", "applicantPW");
-        personService.createApplicantAccount(createApplicantRequestDTO);
-        createRecruiterRequestDTO = new CreateApplicantRequestDTO("Recruiter", "Surname",
-                "recruiter@kth.se", "19909090-9090", "recruiter1", "recruiterPW");
-        personService.createApplicantAccount(createRecruiterRequestDTO);
-        RoleEntity role = roleRepository.findRoleById(1);
-        PersonEntity recruiter = personRepository.findByUsername("recruiter1");
-        recruiter.setRole(role);
-        personRepository.save(recruiter);
-    }
-
-    @AfterEach
-    void tearDown() {
-        PersonEntity applicant = personRepository.findByUsername(createApplicantRequestDTO.getUsername());
-        personRepository.delete(applicant);
-        PersonEntity recruiter = personRepository.findByUsername(createRecruiterRequestDTO.getUsername());
-        personRepository.delete(recruiter);
     }
 
     @AfterAll
@@ -113,8 +65,8 @@ public class LoginTest {
         WebElement usernameInput = webDriver.findElement(By.id("login-form-username"));
         WebElement passwordInput = webDriver.findElement(By.id("login-form-password"));
 
-        usernameInput.sendKeys(createApplicantRequestDTO.getUsername());
-        passwordInput.sendKeys(createApplicantRequestDTO.getPassword());
+        usernameInput.sendKeys("validApplicantUser");
+        passwordInput.sendKeys("validApplicantPassword");
         WebElement loginButton = webDriver.findElement(By.id("login-button"));
         loginButton.click();
 
@@ -185,8 +137,9 @@ public class LoginTest {
 
     @ParameterizedTest
     @MethodSource("provideTestWithWebDrivers")
-    void testIfUserIsRedirectedToLoginPageIfNotLoggedIn(WebDriver webDriver) {
+    void testIfUserIsRedirectedToLoginPageIfNotLoggedIn(WebDriver webDriver) throws InterruptedException {
         WebdriverConfigurer.goToAndAwait(webDriver, "http://localhost:" + port + "/");
+        Thread.sleep(500);
         String url = webDriver.getCurrentUrl();
         webDriver.quit();
         assertEquals(startingPointURL, url, "URL doesn't match expectation");
@@ -205,8 +158,8 @@ public class LoginTest {
         passwordInput.sendKeys("validApplicantPassword");
         WebElement loginButton = webDriver.findElement(By.id("login-button"));
         loginButton.click();
-
         webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+
         try {
             webDriver.findElement(By.id("caption")).getText();
         } catch (NoSuchElementException exception) {
