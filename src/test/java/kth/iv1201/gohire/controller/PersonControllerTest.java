@@ -16,6 +16,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,8 +29,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -68,9 +72,9 @@ class PersonControllerTest {
         int mockApplicantID = 1;
         mockChangeApplicationStatusRequestDTO = new ChangeApplicationStatusRequestDTO(mockApplicantID, "anyStatus", "exampleUsername", "examplePassword");
         mockAcceptedApplicantDTO = new ApplicantDTO(mockApplicantID, "exampleFirstName", "exampleLastName", "accepted");
-
         String date = LocalDate.now().toString();
         filePathEventLog = date + "_" + "eventlog.txt";
+        session = new MockHttpSession();
     }
 
     @AfterEach
@@ -79,6 +83,7 @@ class PersonControllerTest {
         mockLoggedInPersonDTO = null;
         mockCreateApplicantRequestDTO = null;
         mockListOfApplicants = null;
+        session = null;
     }
 
     @Test
@@ -176,6 +181,40 @@ class PersonControllerTest {
     }
 
     @Test
+    @WithMockUser(username="exampleUsername")
+    void testIfAuthenticationIsInvalidatedWhenPerformingLogout() throws LoggerException {
+        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(currentAuthentication);
+        personController.performLogout(session);
+        assertFalse(currentAuthentication.isAuthenticated(), "Authentication is not invalidated " +
+                "after logging out.");
+    }
+
+    @Test
+    @WithMockUser(username="exampleUsername")
+    void testIfCorrectResponseEntityIsReturnedAfterSuccessfulLogout() throws LoggerException {
+        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(currentAuthentication);
+        Map<String, String> responseMap = new HashMap<>();
+        responseMap.put("message", "Logout successful");
+        ResponseEntity<Map<String, String>> expectedResponse = ResponseEntity.ok().body(responseMap);
+        assertEquals(personController.performLogout(session), expectedResponse, "Incorrect response entity " +
+                "returned after logging in.");
+    }
+    @Test
+    @WithMockUser(username="exampleUsername")
+    void testIfSessionIsInvalidatedWhenPerformingLogout() throws LoggerException {
+        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(currentAuthentication);
+        personController.performLogout(session);
+        assertThrowsExactly(IllegalStateException.class,
+        () -> session.getCreationTime(), "session was not invalidated after logout");
+    }
+
+    @Test
     @WithMockUser(roles={"recruiter"})
     void testIfSuccessfulChangeApplicantStatusIsLoggedCorrectly() throws ApplicationHandledException, LoggerException, IOException, AuthenticationForLoggedInUserFailed {
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
@@ -189,6 +228,7 @@ class PersonControllerTest {
         boolean match = checkIfCorrectEventMessageWasLogged(messageThatShouldBeLogged);
         assertTrue(match, "Expected event message not written to eventlog");
     }
+
 
     @Test
     void testIfSuccessfulCreateNewApplicantIsLoggedCorrectly() throws UserCreationFailedException, LoggerException, IOException {
@@ -207,6 +247,19 @@ class PersonControllerTest {
                 .thenReturn(mockLoggedInPersonDTO);
         personController.login(mockLoginRequestDTO, session);
         String messageThatShouldBeLogged = "New applicant registered: " + mockLoginRequestDTO.getUsername();
+        boolean match = checkIfCorrectEventMessageWasLogged(messageThatShouldBeLogged);
+        assertTrue(match, "Expected event message not written to eventlog");
+    }
+
+
+    @Test
+    @WithMockUser(username="exampleUsername")
+    void testIfSuccessfulLogoutIsLoggedCorrectly() throws IOException, LoggerException {
+        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(currentAuthentication);
+        personController.performLogout(session);
+        String messageThatShouldBeLogged = "User logged out: " + currentAuthentication.getName();
         boolean match = checkIfCorrectEventMessageWasLogged(messageThatShouldBeLogged);
         assertTrue(match, "Expected event message not written to eventlog");
     }
