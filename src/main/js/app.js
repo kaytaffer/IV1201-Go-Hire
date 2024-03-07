@@ -9,6 +9,7 @@ import {ContainerView} from "./view/containerView";
 import {logout} from "./presenter/api/apiCallHandler";
 import {i182} from "./presenter/i18n/i18nConfig";
 import {TopBar} from "./presenter/topBar";
+import {PAGE_DOES_NOT_EXIST} from "./presenter/api/errorMessages";
 
 /**
  * Root component for the application.
@@ -54,11 +55,16 @@ function App() {
     }, [])
 
     function onLogout() {
-        logout().then(() => {
+        function logoutInBrowser() {
             localStorage.clear()
             navigate('/login')
             setUser(null)
-        });
+        }
+
+        logout().then(logoutInBrowser).catch(error => {
+            if(error.message === PAGE_DOES_NOT_EXIST.errorType)
+                logoutInBrowser()
+        })
     }
 
     return (
