@@ -48,6 +48,10 @@ export function HomePage(props){
     }
 
     function changeStatus(id, newStatus, username, password) {
+        if(!newStatus) {
+            setErrorMessage("choose-new-status")
+            return
+        }
         function updateApplications(changedApplication) {
             setErrorMessage("")
             setShowSingleApplicant(null)
@@ -60,6 +64,11 @@ export function HomePage(props){
         changeApplicationStatus(id, newStatus, username, password).then(updateApplications).then(setApplications).catch(resolveApiErrors)
     }
 
+    function onCloseHandleApplicantPopup() {
+        setShowSingleApplicant(null)
+        setErrorMessage("")
+    }
+
     return (<div>
         {errorMessage && !showSingleApplicant && <UserNoticeView message={t(errorMessage)}
                                                                  error={true}/>}
@@ -70,7 +79,7 @@ export function HomePage(props){
                                                                    onHandleApplication={handleApplication}
                                                                    t={t}/>}
 
-        <PopupView open={showSingleApplicant} onClose={() => setShowSingleApplicant(null)}>
+        <PopupView open={showSingleApplicant} onClose={onCloseHandleApplicantPopup}>
             <HandleApplicationView application={showSingleApplicant}
                                    submitForm={changeStatus}
                                    t={t}
