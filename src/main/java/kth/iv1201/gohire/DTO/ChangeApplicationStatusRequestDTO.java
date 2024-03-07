@@ -6,9 +6,21 @@ import jakarta.validation.constraints.*;
  * DTO containing information about an applicant status change request.
  */
 public class ChangeApplicationStatusRequestDTO {
+
+    @NotNull(message = "Invalid id: Id can not be empty.")
+    @Min(1)
     private final int id;
+
+    @NotBlank(message = "Invalid status: Status must be either 'accepted' or 'rejected'.")
+    @Pattern(regexp = "accepted|rejected")
     private final String newStatus;
+
+    @NotBlank(message = "Invalid username: Username can not be empty")
+    @Size(max = 255, message = "Invalid username: Username must be 1-255 characters long.")
     private final String username;
+
+    @NotBlank(message = "Invalid password: Password can not be empty")
+    @Size(max = 255, message = "Invalid password: Password must be 1-255 characters long.")
     private final String password;
 
     /**
@@ -25,26 +37,18 @@ public class ChangeApplicationStatusRequestDTO {
         this.password = password;
     }
 
-    @NotNull(message = "Invalid id: Id can not be empty.")
-    @Min(1)
     public int getId() {
         return id;
     }
 
-    @NotBlank(message = "Invalid status: Status must be either 'accepted' or 'rejected'.")
-    @Pattern(regexp = "accepted|rejected")
     public String getNewStatus() {
         return newStatus;
     }
 
-    @NotBlank(message = "Invalid username: Username can not be empty")
-    @Size(max = 255, message = "Invalid username: Username must be 1-255 characters long.")
     public String getUsername() {
         return username;
     }
 
-    @NotBlank(message = "Invalid password: Password can not be empty")
-    @Size(max = 255, message = "Invalid password: Password must be 1-255 characters long.")
     public String getPassword() {
         return password;
     }
