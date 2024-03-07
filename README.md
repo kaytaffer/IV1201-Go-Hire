@@ -87,6 +87,8 @@ The server handling HTTP calls.
   - `ErrorHandler` - Class handling exceptions.
   - `PersonController` - Controller responsible for API calls related to a `PersonEntity`.
   - `StartController` - Responsible for returning the whole React App.
+  - **exception**
+    - `AuthenticationFailedException` - Exception thrown when authentication fails for a logged in user.
   - **util**
     - `ErrorType` - ENUM representing error types.
     - `Logger` - Utility class containing static methods to write to error and event logs.
