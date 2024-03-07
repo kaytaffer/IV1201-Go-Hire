@@ -9,4 +9,4 @@ export const SERVER_INTERNAL = {errorType: "SERVER_INTERNAL", message: "somethin
 export const USER_INPUT_ERROR = {errorType: "USER_INPUT_ERROR", message: "wrong-input"}
 export const USERNAME_ALREADY_EXISTS = {errorType: "USERNAME_ALREADY_EXISTS", message: "username-exists"}
 export const PAGE_DOES_NOT_EXIST = {errorType: "PAGE_DOES_NOT_EXIST", message: "page-does-not-exist"}
-export const AUTHENTICATION_FAIL = {errorType: "AUTHENTICATION_FAIL", message: "credentials-do-not-match"}
+export const AUTHENTICATION_FAIL = {errorType: "AUTHENTICATION_FAIL", message: "credentials-wrong-for-logged-in-user"}
