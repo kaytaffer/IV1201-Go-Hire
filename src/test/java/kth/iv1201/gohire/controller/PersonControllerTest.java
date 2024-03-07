@@ -2,6 +2,7 @@ package kth.iv1201.gohire.controller;
 
 import jakarta.servlet.http.HttpSession;
 import kth.iv1201.gohire.DTO.*;
+import kth.iv1201.gohire.controller.exception.AuthenticationForLoggedInUserFailed;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.PersonService;
 import kth.iv1201.gohire.service.exception.ApplicationHandledException;
@@ -19,6 +20,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -48,13 +51,10 @@ class PersonControllerTest {
     CreateApplicantRequestDTO mockCreateApplicantRequestDTO;
     UsernamePasswordAuthenticationToken mockAuthenticatedSuccessfulResponse;
     UsernamePasswordAuthenticationToken mockAuthenticatedFailedResponse;
-    UsernamePasswordAuthenticationToken mockAuthenticationRequest;
     ChangeApplicationStatusRequestDTO mockChangeApplicationStatusRequestDTO;
     ApplicantDTO mockAcceptedApplicantDTO;
     LinkedList<ApplicantDTO> mockListOfApplicants;
-
     String filePathEventLog;
-    String filePathErrorLog;
 
     @BeforeEach
     void setUp() {
@@ -64,7 +64,6 @@ class PersonControllerTest {
         mockCreateApplicantRequestDTO = new CreateApplicantRequestDTO("exampleFirstName", "exampleLastName", "example@example.com", "123456-7890", "exampleUsername", "examplePassword");
         mockAuthenticatedSuccessfulResponse = UsernamePasswordAuthenticationToken.authenticated("exampleUsername2", "examplePassword2", null);
         mockAuthenticatedFailedResponse = UsernamePasswordAuthenticationToken.unauthenticated("exampleUsername", "examplePassword");
-        mockAuthenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated("exampleUsername", "examplePassword");
         mockListOfApplicants = new LinkedList<>();
         int mockApplicantID = 1;
         mockChangeApplicationStatusRequestDTO = new ChangeApplicationStatusRequestDTO(mockApplicantID, "anyStatus", "exampleUsername", "examplePassword");
@@ -72,7 +71,6 @@ class PersonControllerTest {
 
         String date = LocalDate.now().toString();
         filePathEventLog = date + "_" + "eventlog.txt";
-        filePathErrorLog = date + "_" + "errorlog.txt";
     }
 
     @AfterEach
@@ -126,26 +124,24 @@ class PersonControllerTest {
     }
 
     @Test
+    @WithMockUser(roles={"recruiter"})
     void testIfApplicationHandledExceptionIsThrown() throws ApplicationHandledException {
+        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(mockAuthenticatedSuccessfulResponse);
-        when(personService.changeApplicantStatus(mockChangeApplicationStatusRequestDTO)).thenThrow(new ApplicationHandledException("The application has already been handled"));
-        assertThrowsExactly(ApplicationHandledException.class, () -> personController.changeApplicationStatus(mockChangeApplicationStatusRequestDTO),
+                .thenReturn(currentAuthentication);
+        when(personService.changeApplicantStatus(mockChangeApplicationStatusRequestDTO)).thenThrow(
+                new ApplicationHandledException("The application has already been handled"));
+        assertThrowsExactly(ApplicationHandledException.class, () ->
+                        personController.changeApplicationStatus(mockChangeApplicationStatusRequestDTO),
                 "No ApplicationHandledException was thrown when applicant has already been handled.");
     }
 
     @Test
-    void testIfBadCredentials() throws ApplicationHandledException {
+    @WithMockUser(roles={"recruiter"})
+    void testIfChangeApplicantStatusReturnCorrectDTO() throws ApplicationHandledException, LoggerException, AuthenticationForLoggedInUserFailed {
+        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(mockAuthenticatedFailedResponse);
-        assertThrowsExactly(BadCredentialsException.class, () -> personController.changeApplicationStatus(mockChangeApplicationStatusRequestDTO),
-                "No BadCredentialsException was thrown when credentials were incorrect.");
-    }
-
-    @Test
-    void testIfChangeApplicantStatusReturnCorrectDTO() throws ApplicationHandledException, LoggerException {
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(mockAuthenticatedSuccessfulResponse);
+                .thenReturn(currentAuthentication);
         when(personService.changeApplicantStatus(mockChangeApplicationStatusRequestDTO))
                 .thenReturn(mockAcceptedApplicantDTO);
         ApplicantDTO returnedApplicantDTO = personController.changeApplicationStatus(mockChangeApplicationStatusRequestDTO);
@@ -155,9 +151,36 @@ class PersonControllerTest {
     }
 
     @Test
-    void testIfSuccessfulChangeApplicantStatusIsLoggedCorrectly() throws ApplicationHandledException, LoggerException, IOException {
+    @WithMockUser(roles={"recruiter"})
+    void testIfRecruiterIsAllowedToChangeApplicantStatusWhenUsingCorrectCredentials() throws ApplicationHandledException {
+        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(currentAuthentication);
+        when(personService.changeApplicantStatus(any(ChangeApplicationStatusRequestDTO.class)))
+                .thenReturn(mockAcceptedApplicantDTO);
+        assertDoesNotThrow(() -> personController.changeApplicationStatus(mockChangeApplicationStatusRequestDTO),
+                "Logged in recruiter was not allowed to change application status when using correct credentials.");
+    }
+
+    @Test
+    @WithMockUser(roles={"recruiter"})
+    void testIfRecruiterIsAllowedToChangeApplicantStatusWhenUsingOtherAccountCredentials() throws ApplicationHandledException {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(mockAuthenticatedSuccessfulResponse);
+        when(personService.changeApplicantStatus(any(ChangeApplicationStatusRequestDTO.class)))
+                .thenReturn(mockAcceptedApplicantDTO);
+        assertThrowsExactly(AuthenticationForLoggedInUserFailed.class,
+                () -> personController.changeApplicationStatus(mockChangeApplicationStatusRequestDTO),
+                "Correct exception was not thrown when recruiter tried to change applicant status using " +
+                        "credentials for other account.");
+    }
+
+    @Test
+    @WithMockUser(roles={"recruiter"})
+    void testIfSuccessfulChangeApplicantStatusIsLoggedCorrectly() throws ApplicationHandledException, LoggerException, IOException, AuthenticationForLoggedInUserFailed {
+        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(currentAuthentication);
         when(personService.changeApplicantStatus(mockChangeApplicationStatusRequestDTO))
                 .thenReturn(mockAcceptedApplicantDTO);
         ApplicantDTO changedApplicant = personController.changeApplicationStatus(mockChangeApplicationStatusRequestDTO);

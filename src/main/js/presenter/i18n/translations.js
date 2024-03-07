@@ -40,7 +40,8 @@ export const translations = {
             "status": "Status",
             "accepted": "Accepted",
             "rejected": "Rejected",
-            "welcome": "Welcome"
+            "welcome": "Welcome",
+           "credentials-wrong-for-logged-in-user": "Username or password do not match current logged in account"
         }
     },
     "sv": {
@@ -80,7 +81,8 @@ export const translations = {
             "status": "Status",
             "accepted": "Accepterad",
             "rejected": "Avslagen",
-            "welcome": "Välkommen,"
+            "welcome": "Välkommen,",
+            "credentials-wrong-for-logged-in-user": "Användarnamn eller lösenord matchar inte det inloggade kontot"
         }
     }
 }

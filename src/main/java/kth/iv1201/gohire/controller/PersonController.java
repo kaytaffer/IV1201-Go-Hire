@@ -3,6 +3,7 @@ package kth.iv1201.gohire.controller;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kth.iv1201.gohire.DTO.*;
+import kth.iv1201.gohire.controller.exception.AuthenticationForLoggedInUserFailed;
 import kth.iv1201.gohire.controller.util.Logger;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.PersonService;
@@ -107,16 +108,31 @@ public class PersonController {
      * Changes the status of an application.
      * @param request DTO containing application change request data.
      * @return the changed and saved application.
+     * @throws LoggerException if there is a problem with logging an event.
+     * @throws ApplicationHandledException if the applicant has already been handled.
      */
     @PreAuthorize("hasRole('recruiter')")
     @PostMapping("/changeApplicationStatus")
     public ApplicantDTO changeApplicationStatus(@RequestBody @Valid ChangeApplicationStatusRequestDTO request)
-            throws LoggerException, ApplicationHandledException {
-        authenticateRequest(request.getUsername(), request.getPassword());
-        ApplicantDTO changedApplicant = personService.changeApplicantStatus(request);
-        Logger.logEvent("Recruiter " + request.getUsername() + " changed status of applicant " + changedApplicant.getFirstName() + " " +
-                changedApplicant.getLastName() + " to " + changedApplicant.getStatus() + ".");
-        return changedApplicant;
+            throws LoggerException, ApplicationHandledException, AuthenticationForLoggedInUserFailed {
+        Authentication requestCredentialAuth;
+        try {
+            requestCredentialAuth = authenticateRequest(request.getUsername(), request.getPassword());
+        } catch (Exception e) {
+            throw new AuthenticationForLoggedInUserFailed("Logged in user provided username or password that did not " +
+                    "match logged in account.");
+        }
+        Authentication currentLoggedInRecruiterAuth = SecurityContextHolder.getContext().getAuthentication();
+        if (currentLoggedInRecruiterAuth.equals(requestCredentialAuth)) {
+            ApplicantDTO changedApplicant = personService.changeApplicantStatus(request);
+            Logger.logEvent("Recruiter " + request.getUsername() + " changed status of applicant " +
+                    changedApplicant.getFirstName() + " " + changedApplicant.getLastName() + " to " +
+                    changedApplicant.getStatus() + ".");
+            return changedApplicant;
+        } else {
+            throw new AuthenticationForLoggedInUserFailed("Logged in user provided username or password that did not " +
+                    "match logged in account.");
+        }
     }
 
     private Authentication authenticateRequest(String username, String password) throws BadCredentialsException {
