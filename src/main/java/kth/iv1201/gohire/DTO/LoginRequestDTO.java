@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 /**
- * DTO containing information about a login request
+ * DTO containing information about a login request.
  */
 public class LoginRequestDTO {
     @NotBlank(message = "Invalid username: Username can not be empty")
@@ -15,7 +15,7 @@ public class LoginRequestDTO {
     private final String password;
 
     /**
-     * Creates a new <code>LoginRequestDTO</code>
+     * Creates a <code>LoginRequestDTO</code>
      * @param username the username
      * @param password the password
      */

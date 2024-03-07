@@ -7,7 +7,7 @@ public class UserNotFoundException extends Exception{
 
     /**
      * Creates an instance of a throwable <code>UserNotFoundException</code>.
-     * @param message Exception message
+     * @param message Exception message.
      */
     public UserNotFoundException(String message) {super(message);}
 }

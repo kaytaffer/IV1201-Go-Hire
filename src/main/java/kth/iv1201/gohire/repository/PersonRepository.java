@@ -15,6 +15,7 @@ import java.util.List;
 @Repository
 @Transactional(propagation = Propagation.MANDATORY)
 public interface PersonRepository extends JpaRepository<PersonEntity, Integer> {
+    PersonEntity findPersonById(Integer id);
     PersonEntity findByUsername(String username);
     boolean existsByUsername(String username);
     List<PersonEntity> findPersonEntitiesByRoleIs(RoleEntity role);

@@ -1,17 +1,18 @@
 import React from "react";
 
 /**
- * Responsible for rendering the home page for applicants
- * @param props - props
- * @param {Object} props.user - the current logged-in user
- * @returns {JSX.Element} the rendered applicant home page
+ * Responsible for rendering the home page for applicants.
+ * @param props - props.
+ * @param {Function} props.t - translation function for internationalization.
+ * @param {Object} props.user - the current logged-in user.
+ * @returns {JSX.Element} the rendered applicant home page.
  * @constructor
  */
 export function HomePageApplicantView(props) {
     return (
         <div>
-            <h1>Applicant</h1>
-            <p>Welcome {props.user.username}</p>
+            <h1 id="caption">{props.t('applicant')}</h1>
+            <p>{props.t('welcome')} {props.user.username}</p>
         </div>
     )
 }

@@ -11,9 +11,9 @@ public class ErrorDTO {
     private final String specification;
 
     /**
-     * Creates an instance of <code>ErrorDTO</code>
-     * @param errorType Type of error
-     * @param specification optional information about the error
+     * Creates a <code>ErrorDTO</code>.
+     * @param errorType Type of error.
+     * @param specification optional information about the error.
      */
     public ErrorDTO(ErrorType errorType, String specification){
         this.errorType = errorType;

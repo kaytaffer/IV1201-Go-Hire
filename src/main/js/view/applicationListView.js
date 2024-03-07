@@ -3,24 +3,31 @@ import {ApplicationListingView} from "./applicationListingView";
 
 /**
  * Responsible for rendering the list of applications.
- * @param props - props
- * @param {Array} props.applications - list of application objects
- * @returns {JSX.Element} the rendered recruiter home page
+ * @param props - props.
+ * @param {Array} props.applications - list of application objects.
+ * @param {Function} props.t - translation function for internationalization.
+ * @param {function} props.onHandleApplication - Passed to each ApplicationListingView.
+ * @returns {JSX.Element} the rendered application list.
  */
 export function ApplicationListView(props) {
     return (
-        <table>
-            <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-            <tbody>
-            {props.applications.map((application, index) => (
-                <ApplicationListingView key={index} application={application} />
-            ))}
-            </tbody>
-        </table>
-)}
+        <div>
+            <h3>{props.t('applications')}</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>{props.t('first-name')}</th>
+                    <th>{props.t('last-name')}</th>
+                    <th>{props.t('status')}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {props.applications.map((application, index) => (
+                    <ApplicationListingView id={"application-listing-" + index} key={"application-listing-" + index} application={application}
+                                            onHandleApplication={props.onHandleApplication} t={props.t}/>
+                ))}
+                </tbody>
+            </table>
+        </div>
+    )
+}

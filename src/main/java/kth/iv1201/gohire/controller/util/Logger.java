@@ -15,13 +15,13 @@ public class Logger {
     private final static String EVENT_LOG_NAME = "eventlog.txt";
 
     /**
-     * Logs the supplied exception to the errorlog, prepending the current time.
+     * Logs the supplied exception to the error log, prepending the current time.
      * @param exceptionToLog The error to write to the log.
      * @throws LoggerException if there is a problem with logging an event.
      */
     public static void logError(Exception exceptionToLog) throws LoggerException {
         FileWriter exceptionLogger = makeWriter(ERROR_LOG_NAME);
-        StringBuilder message = new StringBuilder("\n\n" + exceptionToLog.getMessage() + "\n");
+        StringBuilder message = new StringBuilder("\n\n" + exceptionToLog.getClass() + ": " + exceptionToLog.getMessage() + "\n");
         StackTraceElement[] stackTrace = exceptionToLog.getStackTrace();
         for (StackTraceElement element : stackTrace)
             message.append(element.toString()).append("\n");
@@ -38,7 +38,6 @@ public class Logger {
         makeLogEntry(eventLogger, message);
     }
 
-    //Creates a named FileWriter
     private static FileWriter makeWriter(String logName) throws LoggerException {
         try {
             String date = LocalDate.now().toString();
@@ -48,7 +47,6 @@ public class Logger {
         }
     }
 
-    //Writes the supplied message to the supplied FileWriter and closes it
     private static void makeLogEntry(FileWriter fileWriter, String message) throws LoggerException {
         String time = LocalDateTime.now().toString();
         message = time + ": " + message + "\n";
@@ -59,5 +57,4 @@ public class Logger {
             throw new LoggerException("Logger failed connect to log file. Caused by: \n" + Arrays.toString(e.getStackTrace()));
         }
     }
-
 }

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 /**
- * JPA Entity representing a Person's role
+ * JPA Entity representing a Person's role.
  */
 @Entity
 @Table(name="role")
@@ -20,12 +20,15 @@ public class RoleEntity {
     public Integer getId(){
         return this.id;
     }
+
     public void setId(Integer id){
         this.id = id;
     }
+
     public String getName(){
         return this.name;
     }
+
     public void setName(String name){
         this.name = name;
     }

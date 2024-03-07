@@ -1,19 +1,24 @@
 package kth.iv1201.gohire.controller;
 
 import kth.iv1201.gohire.DTO.ErrorDTO;
+import kth.iv1201.gohire.controller.exception.AuthenticationForLoggedInUserFailed;
 import kth.iv1201.gohire.controller.util.ErrorType;
 import kth.iv1201.gohire.controller.util.LoggerException;
+import kth.iv1201.gohire.service.exception.ApplicationHandledException;
 import kth.iv1201.gohire.service.exception.UserCreationFailedException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.Objects;
 
@@ -35,13 +40,13 @@ public class ErrorHandlerTest {
 
     @Test
     void testIfHandleUserCreationFailedExceptionReturnsValidErrorType() throws LoggerException {
-        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new UserCreationFailedException("error message"));
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new UserCreationFailedException("THIS IS A TEST"));
         assertEquals(ErrorType.USERNAME_ALREADY_EXISTS, Objects.requireNonNull(error.getBody()).getErrorType(), "Method didn't return correct ErrorType");
     }
 
     @Test
     void testIfHandleUserCreationFailedExceptionReturnsRightStatusCode() throws LoggerException {
-        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new UserCreationFailedException("error message"));
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new UserCreationFailedException("THIS IS A TEST"));
         assertEquals(HttpStatus.CONFLICT, error.getStatusCode(), "Method didn't return correct Status Code");
     }
 
@@ -61,30 +66,54 @@ public class ErrorHandlerTest {
 
     @Test
     void testIfHandleBadCredentialsExceptionReturnsValidErrorType() throws LoggerException {
-        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new BadCredentialsException("error message"));
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new BadCredentialsException("THIS IS A TEST"));
         assertEquals(ErrorType.LOGIN_FAIL, Objects.requireNonNull(error.getBody()).getErrorType(), "Method didn't return correct ErrorType");
     }
 
     @Test
     void testIfHandleBadCredentialsExceptionReturnsRightStatusCode() throws LoggerException {
-        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new BadCredentialsException("error message"));
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new BadCredentialsException("THIS IS A TEST"));
+        assertEquals(HttpStatus.UNAUTHORIZED, error.getStatusCode(), "Method didn't return correct Status Code");
+    }
+
+    @Test
+    void testIfHandleNoResourceFoundExceptionReturnsRightStatusCode() throws LoggerException {
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new NoResourceFoundException(HttpMethod.PUT, ""));
+        assertEquals(HttpStatus.NOT_FOUND, error.getStatusCode(), "Method didn't return correct Status Code");
+    }
+
+    @Test
+    void testIfHandleInsufficientAuthenticationExceptionReturnsRightStatusCode() throws LoggerException {
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new InsufficientAuthenticationException("THIS IS A TEST"));
         assertEquals(HttpStatus.UNAUTHORIZED, error.getStatusCode(), "Method didn't return correct Status Code");
     }
 
     @Test
     void testIfHandleExceptionReturnsNullIfLoggerExceptionIsSupplied() throws LoggerException {
-        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new LoggerException("error message"));
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new LoggerException("THIS IS A TEST"));
         assertNull(error, "Method didn't return a valid instance");
     }
 
     @Test
     void testIfHandleExceptionReturnsValidErrorTypeIfGenericExceptionIsSupplied() throws LoggerException {
-        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new Exception("error message"));
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new Exception("THIS IS A TEST"));
         assertEquals(ErrorType.SERVER_INTERNAL, Objects.requireNonNull(error.getBody()).getErrorType(), "Method didn't return correct ErrorType");
     }
     @Test
     void testIfHandleExceptionReturnsRightStatusCodeIfGenericExceptionIsSupplied() throws LoggerException{
-        ResponseEntity<ErrorDTO>  error = errorHandler.handleException(new Exception("error message"));
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new Exception("THIS IS A TEST"));
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, error.getStatusCode(), "Method didn't return correct Status Code");
+    }
+
+    @Test
+    void testIfHandleApplicationHandledExceptionReturnsRightStatusCode() throws LoggerException{
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new ApplicationHandledException("THIS IS A TEST"));
+        assertEquals(HttpStatus.FORBIDDEN, error.getStatusCode(), "Method didn't return correct Status Code");
+    }
+
+    @Test
+    void testIfAuthenticationFailedExceptionReturnsRightStatusCode() throws LoggerException{
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new AuthenticationForLoggedInUserFailed("error message"));
+        assertEquals(HttpStatus.UNAUTHORIZED, error.getStatusCode(), "Method didn't return correct Status Code");
     }
 }

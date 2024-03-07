@@ -9,18 +9,19 @@ import {
     USERNAME_ALREADY_EXISTS
 } from "./api/errorMessages";
 import {UserNoticeView} from "../view/userNoticeView";
+import {useTranslation} from "react-i18next";
 
 /**
- * Responsible for the logic of the login page
+ * Responsible for the logic of the login form.
  * @param props props
- * @param {function} props.onLoggedIn - called when user successfully logs in
- * @returns {JSX.Element} the rendered login view
- * @constructor
+ * @param {function} props.onLoggedIn - called when user successfully logs in.
+ * @returns {JSX.Element} the rendered login component.
  */
 export function Login(props){
+    const { t } = useTranslation();
 
     const [newUserIsCreated, setNewUserIsCreated] = useState(false)
-    const [errorMessage, setErrorMessage] = useState("")
+    const [displayMessage, setDisplayMessage] = useState("")
 
     const POSSIBLE_LOGIN_ERRORS = [LOGIN_FAIL, USER_INPUT_ERROR, USERNAME_ALREADY_EXISTS, SERVER_INTERNAL]
 
@@ -28,7 +29,7 @@ export function Login(props){
         function checkErrorType(possibleError) {
             return error.message === possibleError.errorType
         }
-        setErrorMessage(POSSIBLE_LOGIN_ERRORS.find(checkErrorType).message)
+        setDisplayMessage(POSSIBLE_LOGIN_ERRORS.find(checkErrorType).message)
     }
 
     function login(username, password) {
@@ -38,15 +39,18 @@ export function Login(props){
 
     function newApplicant(firstName, lastName, email, personNumber, username, password) {
         createNewApplicant(firstName, lastName, email, personNumber, username, password)
-            .then(user => {if(user) setNewUserIsCreated(true)}).catch(catchPromiseError)
+            .then(user => {if(user) {
+                setDisplayMessage('account-successfully-created');
+                setNewUserIsCreated(true);
+            }
+            }).catch(catchPromiseError)
     }
 
     return (
         <div>
-            <LoginView onLogin={login}/>
-            {newUserIsCreated ? <UserNoticeView message={"Account successfully created"} error={false}/> :
-                            <CreateNewApplicantView onCreate={newApplicant}/>}
-            {errorMessage && <UserNoticeView message={errorMessage} error={true}/>}
+            {displayMessage && <UserNoticeView message={t(displayMessage)}/>}
+            <LoginView onLogin={login} t={t}/>
+            {!newUserIsCreated && <CreateNewApplicantView onCreate={newApplicant} t={t}/>}
         </div>
     )
 }

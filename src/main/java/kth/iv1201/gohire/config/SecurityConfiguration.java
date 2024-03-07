@@ -9,6 +9,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
@@ -28,9 +31,15 @@ public class SecurityConfiguration {
      */
     final String[] whitelist = { "/api/login", "/api/who", "/api/createApplicant"};
 
+    private final AuthenticationEntryPoint authEntryPoint;
+
+    public SecurityConfiguration(AuthenticationEntryPoint authEntryPoint) {
+        this.authEntryPoint = authEntryPoint;
+    }
+
     /**
-     * Configures security filters, which URLs are open and authorization only
-     * @param http needed to configure websecurity
+     * Configures security filters.
+     * @param http needed to configure websecurity.
      * @return security filter chain to use for securing requests.
      * @throws Exception if SecurityFilterChain creation fails.
      */
@@ -42,27 +51,32 @@ public class SecurityConfiguration {
                         .requestMatchers(whitelist).permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
-                ).csrf(csrf -> csrf // TODO unsafe
-                        .ignoringRequestMatchers("/**") )
+                ).csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/**").disable())
                 .securityContext((securityContext) -> securityContext
                         .securityContextRepository(new HttpSessionSecurityContextRepository())
                 );
-
         return http.build();
     }
 
     /**
-     * Creates an <code>AuthenticationManager</code> which manages the authentication of a user
-     * @param userDetailsService <code>UserDetailsService</code> for specifying how to access users
-     * @return the <code>AuthenticationManager</code>
+     * Creates a configured <code>PasswordEncoder</code> that uses the BCrypt hashing algorithm.
+     * @return the configured <code>BCryptPasswordEncoder</code>.
      */
     @Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
+    public PasswordEncoder passwordEncoder(){return new BCryptPasswordEncoder();}
+
+    /**
+     * Creates an <code>AuthenticationManager</code> which manages the authentication of a user.
+     * @param userDetailsService <code>UserDetailsService</code> for specifying how to access users.
+     * @param passwordEncoder the <code>PasswordEncoder</code> implementation to use for encoding passwords.
+     * @return the <code>AuthenticationManager</code>.
+     */
+    @Bean
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
-
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(authenticationProvider);
     }
-
-
 }

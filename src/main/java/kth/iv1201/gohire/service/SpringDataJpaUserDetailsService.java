@@ -21,7 +21,7 @@ public class SpringDataJpaUserDetailsService implements UserDetailsService {
     private final PersonRepository repository;
 
     /**
-     * Creates a new instance
+     * Creates a new instance.
      * @param repository the personRepository for fetching users.
      */
     @Autowired
@@ -30,9 +30,9 @@ public class SpringDataJpaUserDetailsService implements UserDetailsService {
     }
 
     /**
-     * Tells spring how to find a user
-     * @param name name of user
-     * @return User details
+     * Tells spring how to find a user.
+     * @param name name of user.
+     * @return User details.
      * @throws UsernameNotFoundException is thrown when fetching a user that does not exist.
      */
     @Override
@@ -41,8 +41,7 @@ public class SpringDataJpaUserDetailsService implements UserDetailsService {
         if (person == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        return User.withDefaultPasswordEncoder()
-                .username(person.getUsername())
+        return User.withUsername(person.getUsername())
                 .password(person.getPassword())
                 .roles(person.getRole().getName())
                 .build();
