@@ -60,7 +60,7 @@ export function HomePage(props){
         {props.user.role === 'applicant' && <HomePageApplicantView user={props.user}/>}
         {props.user.role === 'recruiter' && <HomePageRecruiterView user={props.user} applications={applications} onShowApplications={showApplications} onHandleApplication={handleApplication}/>}
         <PopupView open={showSingleApplicant} onClose={() => setShowSingleApplicant(null)}>
-        <HandleApplicationView application={showSingleApplicant} submitForm={changeStatus} errorMessage={errorMessage}/>
+            <HandleApplicationView application={showSingleApplicant} submitForm={changeStatus} errorMessage={errorMessage}/>
         </PopupView>
     </div>)
 }

@@ -20,7 +20,7 @@ export function HandleApplicationView(props) {
     }
 
     return (
-        <div>
+        <div id="single-application">
             <h4>Handle application for '{props.application.firstName} {props.application.lastName}'</h4>
             <p>Select the new status and verify your identity by entering username and password</p>
 
@@ -37,7 +37,7 @@ export function HandleApplicationView(props) {
                 <label>Password</label>
                 <input id="handle-application-form-password" type="password"/><br/>
 
-                <input type="submit" value="Submit"/>
+                <input id="handle-application-form-submit" type="submit" value="Submit"/>
             </form>
 
             {props.errorMessage && <UserNoticeView message={props.errorMessage} error={true}/>}
