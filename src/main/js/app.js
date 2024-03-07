@@ -1,4 +1,4 @@
-import React, {StrictMode, useState} from "react";
+import React, {StrictMode, Suspense, useState} from "react";
 const ReactDOM= require('react-dom');
 import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
 import {HomePage} from "./presenter/homePage";
@@ -7,7 +7,8 @@ import {MainContentView} from "./view/mainContentView";
 import {FooterView} from "./view/footerView";
 import {ContainerView} from "./view/containerView";
 import {logout} from "./presenter/api/apiCallHandler";
-import {TopBarView} from "./view/topBarView";
+import {i182} from "./presenter/i18n/i18nConfig";
+import {TopBar} from "./presenter/topBar";
 
 /**
  * Root component for the application.
@@ -62,19 +63,21 @@ function App() {
 
     return (
         <div>
-            <ContainerView>
-                <TopBarView username={user && user.username}
+            <Suspense fallback={<div>loading...</div>}>
+                <ContainerView>
+                    <TopBar user={user}
                             onLogout={onLogout}/>
-                <MainContentView>
-                    {!isLoading &&
-                        <Routes>
-                            <Route path='/' element={<HomePage user={user}/>}/>
-                            <Route path='/login' element={<Login onLoggedIn={onLoggedIn}/>}/>
-                        </Routes>
-                    }
-                </MainContentView>
-                <FooterView/>
-            </ContainerView>
+                    <MainContentView>
+                        {!isLoading &&
+                            <Routes>
+                                <Route path='/' element={<HomePage user={user}/>}/>
+                                <Route path='/login' element={<Login onLoggedIn={onLoggedIn}/>}/>
+                            </Routes>
+                        }
+                    </MainContentView>
+                    <FooterView/>
+                </ContainerView>
+            </Suspense>
         </div>
     )
 }

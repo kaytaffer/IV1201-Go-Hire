@@ -58,23 +58,29 @@ View-Presenter React powered web application.
 - `app` - Root component for the application.
 - #### presenter/
   - `homepage` - Responsible for the logic of the homepage.
+  - `languageSelector` - Responsible for the logic of the language selector.
   - `login` - Responsible for the logic of the login page.
+  - `topBar` - Responsible for the logic of the top bar.
   - **api/**
     - `apiCallHandler` - Authenticates login credentials with the API.
     - `errorMessages` - Pre-defined error objects with their error type matched with the message to be displayed to user.
+  - **i18n/**
+    - `i18nConfig` - Contains configuration for i18n, and language list.
+    - `translations` - All translations for the languages supported by i18n.
 - #### view/
   - `applicationListingView` - Responsible for rendering an application.
   - `applicationListView` - Responsible for rendering the list of applications.
   - `createNewApplicantView` - Responsible for rendering the create new applicant form.
-  - `containerView` - Responsible for rendering the container around the entire page content
-  - `footerView` - Responsible for rendering the page footer
+  - `containerView` - Responsible for rendering the container around the entire page content.
+  - `footerView` - Responsible for rendering the page footer.
   - `handleApplicationView` - Responsible for rendering a view in which to handle application status.
   - `homePageApplicantView` - Responsible for rendering the home page for applicants.
   - `homePageRecruiterView` - Responsible for rendering the home page for recruiters.
+  - `languageSelectorView` - Responsible for rendering the language selector dropdown.
   - `loginView` - Responsible for rendering the login page.
-  - `mainContentView` - Responsible for rendering the container around the main page content
+  - `mainContentView` - Responsible for rendering the container around the main page content.
   - `popupView` - Popup container meant to wrap child components as a popup view.
-  - `topBarView` - Responsible for rendering the top bar
+  - `topBarView` - Responsible for rendering the top bar.
   - `userNoticeView` - Responsible for rendering user notice messages.
 
 ## Server
