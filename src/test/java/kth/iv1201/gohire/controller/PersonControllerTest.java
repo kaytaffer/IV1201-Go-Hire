@@ -187,7 +187,8 @@ class PersonControllerTest {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(currentAuthentication);
         personController.performLogout(session);
-        assertFalse(currentAuthentication.isAuthenticated());
+        assertFalse(currentAuthentication.isAuthenticated(), "Authentication is not invalidated " +
+                "after logging out.");
     }
 
     @Test
@@ -199,7 +200,8 @@ class PersonControllerTest {
         Map<String, String> responseMap = new HashMap<>();
         responseMap.put("message", "Logout successful");
         ResponseEntity<Map<String, String>> expectedResponse = ResponseEntity.ok().body(responseMap);
-        assertEquals(personController.performLogout(session), expectedResponse);
+        assertEquals(personController.performLogout(session), expectedResponse, "Incorrect response entity " +
+                "returned after logging in.");
     }
     @Test
     @WithMockUser(username="exampleUsername")
