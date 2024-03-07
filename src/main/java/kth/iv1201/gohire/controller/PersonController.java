@@ -3,6 +3,7 @@ package kth.iv1201.gohire.controller;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kth.iv1201.gohire.DTO.*;
+import kth.iv1201.gohire.controller.exception.AuthenticationFailedException;
 import kth.iv1201.gohire.controller.util.Logger;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.PersonService;
@@ -113,17 +114,21 @@ public class PersonController {
     @PreAuthorize("hasRole('recruiter')")
     @PostMapping("/changeApplicationStatus")
     public ApplicantDTO changeApplicationStatus(@RequestBody @Valid ChangeApplicationStatusRequestDTO request)
-            throws LoggerException, ApplicationHandledException {
-        Authentication requestCredentialAuth = authenticateRequest(request.getUsername(), request.getPassword());
+            throws LoggerException, ApplicationHandledException, AuthenticationFailedException {
+        Authentication requestCredentialAuth;
+        try {
+            requestCredentialAuth = authenticateRequest(request.getUsername(), request.getPassword());
+        } catch (Exception e) {
+            throw new AuthenticationFailedException("Incorrect username or password.");
+        }
         Authentication currentLoggedInRecruiterAuth = SecurityContextHolder.getContext().getAuthentication();
-        if(currentLoggedInRecruiterAuth.equals(requestCredentialAuth)){
+        if (currentLoggedInRecruiterAuth.equals(requestCredentialAuth)) {
             ApplicantDTO changedApplicant = personService.changeApplicantStatus(request);
             Logger.logEvent("Recruiter " + request.getUsername() + " changed status of applicant " + changedApplicant.getFirstName() + " " +
                     changedApplicant.getLastName() + " to " + changedApplicant.getStatus() + ".");
             return changedApplicant;
-        }
-        else{
-            throw new BadCredentialsException("Credentials does not match logged in user");
+        } else {
+            throw new AuthenticationFailedException("Incorrect username or password.");
         }
     }
 

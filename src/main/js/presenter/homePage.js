@@ -7,6 +7,7 @@ import {
     INSUFFICIENT_CREDENTIALS, LOGIN_FAIL,
     PAGE_DOES_NOT_EXIST,
     SERVER_INTERNAL,
+    AUTHENTICATION_FAIL,
 } from "./api/errorMessages";
 import {UserNoticeView} from "../view/userNoticeView";
 import {PopupView} from "../view/popupView";
@@ -25,7 +26,7 @@ export function HomePage(props){
     const [errorMessage, setErrorMessage] = useState("")
     const [showSingleApplicant, setShowSingleApplicant] = useState(null)
 
-    const POSSIBLE_FETCH_APPLICATION_ERRORS = [LOGIN_FAIL, APPLICATION_ALREADY_HANDLED, PAGE_DOES_NOT_EXIST, SERVER_INTERNAL, INSUFFICIENT_CREDENTIALS]
+    const POSSIBLE_FETCH_APPLICATION_ERRORS = [LOGIN_FAIL, APPLICATION_ALREADY_HANDLED, PAGE_DOES_NOT_EXIST, SERVER_INTERNAL, INSUFFICIENT_CREDENTIALS, AUTHENTICATION_FAIL]
 
     function resolveApiErrors(error) {
         function checkErrorType(possibleError) {
