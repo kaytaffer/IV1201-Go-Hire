@@ -10,7 +10,7 @@ public class ApplicantDTO {
     private final String status;
 
     /**
-     * Creates a new <code>ApplicantDTO</code>
+     * Creates a <code>ApplicantDTO</code>.
      * @param id the unique identifier of the applicant.
      * @param firstName the first name of the applicant.
      * @param lastName the last name of the applicant.

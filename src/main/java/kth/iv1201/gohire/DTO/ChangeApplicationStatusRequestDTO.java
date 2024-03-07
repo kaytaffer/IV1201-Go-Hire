@@ -12,9 +12,9 @@ public class ChangeApplicationStatusRequestDTO {
     private final String password;
 
     /**
-     * Creates a <code>ChangeApplicationStatusRequestDTO</code>
+     * Creates a <code>ChangeApplicationStatusRequestDTO</code>.
      * @param id the identifier of the applicant for which to change the status.
-     * @param newStatus The new status of the application: 'accepted' or 'rejected'
+     * @param newStatus The new status of the application: 'accepted' or 'rejected'.
      * @param username The username of the recruiter changing the status.
      * @param password The username of the recruiter changing the status.
      */

@@ -32,12 +32,12 @@ public class CreateApplicantRequestDTO {
 
     /**
      * Creates a <code>CreateApplicantRequestDTO</code> object with the provided information.
-     * @param firstName the first name of the user
-     * @param lastName the last name of the user
-     * @param email the email of the user
-     * @param personNumber the person number of the user
-     * @param username the username of the user
-     * @param password the password of the user
+     * @param firstName the first name of the user.
+     * @param lastName the last name of the user.
+     * @param email the email of the user.
+     * @param personNumber the person number of the user.
+     * @param username the username of the user.
+     * @param password the password of the user.
      */
     public CreateApplicantRequestDTO(String firstName, String lastName, String email, String personNumber, String username, String password) {
         this.firstName = firstName;

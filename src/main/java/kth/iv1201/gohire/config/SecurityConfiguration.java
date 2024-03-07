@@ -38,8 +38,8 @@ public class SecurityConfiguration {
     }
 
     /**
-     * Configures security filters, which URLs are open and authorization only
-     * @param http needed to configure websecurity
+     * Configures security filters.
+     * @param http needed to configure websecurity.
      * @return security filter chain to use for securing requests.
      * @throws Exception if SecurityFilterChain creation fails.
      */
@@ -51,25 +51,26 @@ public class SecurityConfiguration {
                         .requestMatchers(whitelist).permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
-                ).csrf(csrf -> csrf // TODO unsafe
+                ).csrf(csrf -> csrf
                         .ignoringRequestMatchers("/**").disable())
                 .securityContext((securityContext) -> securityContext
                         .securityContextRepository(new HttpSessionSecurityContextRepository())
                 );
         return http.build();
     }
+
     /**
      * Creates a configured <code>PasswordEncoder</code> that uses the BCrypt hashing algorithm.
-     * @return the configured <code>BCryptPasswordEncoder</code>
+     * @return the configured <code>BCryptPasswordEncoder</code>.
      */
     @Bean
     public PasswordEncoder passwordEncoder(){return new BCryptPasswordEncoder();}
 
     /**
-     * Creates an <code>AuthenticationManager</code> which manages the authentication of a user
-     * @param userDetailsService <code>UserDetailsService</code> for specifying how to access users
-     * @param passwordEncoder the <code>PasswordEncoder</code> implementation to use for encoding passwords
-     * @return the <code>AuthenticationManager</code>
+     * Creates an <code>AuthenticationManager</code> which manages the authentication of a user.
+     * @param userDetailsService <code>UserDetailsService</code> for specifying how to access users.
+     * @param passwordEncoder the <code>PasswordEncoder</code> implementation to use for encoding passwords.
+     * @return the <code>AuthenticationManager</code>.
      */
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
@@ -78,5 +79,4 @@ public class SecurityConfiguration {
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(authenticationProvider);
     }
-
 }
