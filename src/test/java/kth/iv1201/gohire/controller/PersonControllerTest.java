@@ -152,7 +152,7 @@ class PersonControllerTest {
 
     @Test
     @WithMockUser(roles={"recruiter"})
-    void testIfRecruiterIsAllowedToChangeApplicantStatusWhenUsingCorrectCredentials() throws ApplicationHandledException, LoggerException {
+    void testIfRecruiterIsAllowedToChangeApplicantStatusWhenUsingCorrectCredentials() throws ApplicationHandledException {
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(currentAuthentication);
