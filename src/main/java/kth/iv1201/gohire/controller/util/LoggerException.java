@@ -7,7 +7,7 @@ public class LoggerException extends Exception{
 
     /**
      * Creates an instance of a throwable <code>LoggerException</code>.
-     * @param message Exception message
+     * @param message Exception message.
      */
     public LoggerException(String message) {super(message);}
 }

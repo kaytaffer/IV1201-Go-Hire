@@ -9,6 +9,7 @@ import {
     USERNAME_ALREADY_EXISTS
 } from "./api/errorMessages";
 import {UserNoticeView} from "../view/userNoticeView";
+import {useTranslation} from "react-i18next";
 
 /**
  * Responsible for the logic of the login form.
@@ -17,6 +18,7 @@ import {UserNoticeView} from "../view/userNoticeView";
  * @returns {JSX.Element} the rendered login component.
  */
 export function Login(props){
+    const { t } = useTranslation();
 
     const [newUserIsCreated, setNewUserIsCreated] = useState(false)
     const [displayMessage, setDisplayMessage] = useState("")
@@ -38,7 +40,7 @@ export function Login(props){
     function newApplicant(firstName, lastName, email, personNumber, username, password) {
         createNewApplicant(firstName, lastName, email, personNumber, username, password)
             .then(user => {if(user) {
-                setDisplayMessage("Account successfully created");
+                setDisplayMessage('account-successfully-created');
                 setNewUserIsCreated(true);
             }
             }).catch(catchPromiseError)
@@ -46,9 +48,9 @@ export function Login(props){
 
     return (
         <div>
-            {displayMessage && <UserNoticeView message={displayMessage}/>}
-            <LoginView onLogin={login}/>
-            {!newUserIsCreated && <CreateNewApplicantView onCreate={newApplicant}/>}
+            {displayMessage && <UserNoticeView message={t(displayMessage)}/>}
+            <LoginView onLogin={login} t={t}/>
+            {!newUserIsCreated && <CreateNewApplicantView onCreate={newApplicant} t={t}/>}
         </div>
     )
 }

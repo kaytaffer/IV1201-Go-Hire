@@ -6,11 +6,13 @@ import {
     APPLICATION_ALREADY_HANDLED,
     INSUFFICIENT_CREDENTIALS, LOGIN_FAIL,
     PAGE_DOES_NOT_EXIST,
-    SERVER_INTERNAL,
+    SERVER_INTERNAL, AUTHENTICATION_FAIL,
+    USER_INPUT_ERROR,
 } from "./api/errorMessages";
 import {UserNoticeView} from "../view/userNoticeView";
 import {PopupView} from "../view/popupView";
 import {HandleApplicationView} from "../view/handleApplicationView";
+import {useTranslation} from "react-i18next";
 
 /**
  * Responsible for the logic of the home page.
@@ -20,12 +22,15 @@ import {HandleApplicationView} from "../view/handleApplicationView";
  * @constructor
  */
 export function HomePage(props){
+    const { t } = useTranslation();
 
     const [applications, setApplications] = useState(null)
     const [errorMessage, setErrorMessage] = useState("")
     const [showSingleApplicant, setShowSingleApplicant] = useState(null)
 
-    const POSSIBLE_FETCH_APPLICATION_ERRORS = [LOGIN_FAIL, APPLICATION_ALREADY_HANDLED, PAGE_DOES_NOT_EXIST, SERVER_INTERNAL, INSUFFICIENT_CREDENTIALS]
+    const POSSIBLE_FETCH_APPLICATION_ERRORS = [LOGIN_FAIL, APPLICATION_ALREADY_HANDLED,
+        PAGE_DOES_NOT_EXIST, SERVER_INTERNAL, INSUFFICIENT_CREDENTIALS, USER_INPUT_ERROR, AUTHENTICATION_FAIL]
+
 
     function resolveApiErrors(error) {
         function checkErrorType(possibleError) {
@@ -43,6 +48,10 @@ export function HomePage(props){
     }
 
     function changeStatus(id, newStatus, username, password) {
+        if(!newStatus) {
+            setErrorMessage("choose-new-status")
+            return
+        }
         function updateApplications(changedApplication) {
             setErrorMessage("")
             setShowSingleApplicant(null)
@@ -55,12 +64,26 @@ export function HomePage(props){
         changeApplicationStatus(id, newStatus, username, password).then(updateApplications).then(setApplications).catch(resolveApiErrors)
     }
 
+    function onCloseHandleApplicantPopup() {
+        setShowSingleApplicant(null)
+        setErrorMessage("")
+    }
+
     return (<div>
-        {errorMessage && !showSingleApplicant && <UserNoticeView message={errorMessage} error={true}/>}
-        {props.user.role === 'applicant' && <HomePageApplicantView user={props.user}/>}
-        {props.user.role === 'recruiter' && <HomePageRecruiterView user={props.user} applications={applications} onShowApplications={showApplications} onHandleApplication={handleApplication}/>}
-        <PopupView open={showSingleApplicant} onClose={() => setShowSingleApplicant(null)}>
-            <HandleApplicationView application={showSingleApplicant} submitForm={changeStatus} errorMessage={errorMessage}/>
+        {errorMessage && !showSingleApplicant && <UserNoticeView message={t(errorMessage)}
+                                                                 error={true}/>}
+        {props.user.role === 'applicant' && <HomePageApplicantView user={props.user} t={t}/>}
+        {props.user.role === 'recruiter' && <HomePageRecruiterView user={props.user}
+                                                                   applications={applications}
+                                                                   onShowApplications={showApplications}
+                                                                   onHandleApplication={handleApplication}
+                                                                   t={t}/>}
+
+        <PopupView open={showSingleApplicant} onClose={onCloseHandleApplicantPopup}>
+            <HandleApplicationView application={showSingleApplicant}
+                                   submitForm={changeStatus}
+                                   t={t}
+                                   errorMessage={t(errorMessage)}/>
         </PopupView>
     </div>)
 }

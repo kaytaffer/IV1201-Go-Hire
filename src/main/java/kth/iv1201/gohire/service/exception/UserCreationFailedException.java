@@ -7,7 +7,7 @@ public class UserCreationFailedException extends Exception{
 
     /**
      * Creates an instance of a throwable <code>UserCreationFailedException</code>.
-     * @param message Exception message
+     * @param message Exception message.
      */
     public UserCreationFailedException(String message) {super(message);}
 }

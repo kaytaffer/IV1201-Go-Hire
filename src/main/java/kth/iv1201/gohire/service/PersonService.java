@@ -42,7 +42,7 @@ public class PersonService {
     * Creates an instance of the <code>PersonService</code>.
     * @param personRepository The <code>PersonRepository</code> to use.
     * @param roleRepository The <code>RoleRepository</code> to use.
-     * @param passwordEncoder the <code>PasswordEncoder</code> implementation to use for encoding passwords
+     * @param passwordEncoder the <code>PasswordEncoder</code> implementation to use for encoding passwords.
     */
     @Autowired
     public PersonService(PersonRepository personRepository, RoleRepository roleRepository,
@@ -54,10 +54,10 @@ public class PersonService {
     }
 
     /**
-     * Fetches a user as a <code>LoggedInPersonDTO</code> by username
-     * @param username the username
-     * @return The <code>LoggedInPersonDTO</code>
-     * @throws UserNotFoundException Thrown if no user with that name is found
+     * Fetches a user as a <code>LoggedInPersonDTO</code> by username.
+     * @param username the username.
+     * @return The <code>LoggedInPersonDTO</code>.
+     * @throws UserNotFoundException Thrown if no user with that name is found.
      */
     public LoggedInPersonDTO fetchLoggedInPersonByUsername(String username) throws UserNotFoundException {
         PersonEntity personEntity = personRepository.findByUsername(username);
@@ -71,7 +71,7 @@ public class PersonService {
     /**
      * Creates an account for a new user.
      * @param createUserRequestDTO The DTO containing information about the user to be created.
-     * @throws UserCreationFailedException if creation of user fails
+     * @throws UserCreationFailedException if creation of user fails.
      * @return A LoggedInPersonDTO representing the newly created user account.
      */
     public LoggedInPersonDTO createApplicantAccount(CreateApplicantRequestDTO createUserRequestDTO) throws UserCreationFailedException{
@@ -98,7 +98,7 @@ public class PersonService {
 
     /**
      * Fetches all applicants from the database.
-     * @return A list of all applicants
+     * @return A list of all applicants.
      */
     public List<ApplicantDTO> fetchApplicants() {
         RoleEntity roleEntity = roleRepository.findRoleById(APPLICANT_ROLE_ID);
@@ -132,5 +132,4 @@ public class PersonService {
         else
             throw new ApplicationHandledException("The application has already been handled.");
     }
-
 }

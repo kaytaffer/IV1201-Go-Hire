@@ -3,6 +3,7 @@ package kth.iv1201.gohire.controller;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kth.iv1201.gohire.DTO.*;
+import kth.iv1201.gohire.controller.exception.AuthenticationForLoggedInUserFailed;
 import kth.iv1201.gohire.controller.util.Logger;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.PersonService;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Controller responsible for API calls related to a <code>PersonEntity</code>
+ * Controller responsible for API calls related to a <code>PersonEntity</code>.
  */
 @RestController
 @RequestMapping("/api")
@@ -35,8 +36,8 @@ public class PersonController {
     private final AuthenticationManager authenticationManager;
 
     /**
-     * Creates a new <code>PersonController</code>
-     * @param personService The <code>PersonService</code> to use
+     * Creates a new <code>PersonController</code>.
+     * @param personService The <code>PersonService</code> to use.
      */
     @Autowired
     public PersonController(PersonService personService, AuthenticationManager authenticationManager) {
@@ -45,11 +46,11 @@ public class PersonController {
     }
 
     /**
-     * Handles the login API-request
-     * @param loginRequest DTO containing login request data
+     * Handles the login API-request.
+     * @param loginRequest DTO containing login request data.
      * @throws LoggerException if there is a problem with logging an event.
      * @throws UserNotFoundException If the user is authenticated but can not be fetched from the database.
-     * @return <code>LoggedInPersonDTO</code> representing the logged-in user
+     * @return <code>LoggedInPersonDTO</code> representing the logged-in user.
      */
     @PostMapping("/login")
     public LoggedInPersonDTO login(@RequestBody @Valid LoginRequestDTO loginRequest, HttpSession session)
@@ -61,9 +62,9 @@ public class PersonController {
     }
 
     /**
-     * Handles the logout API-request
-     * @param session The HttpSession associated with the logged in user's session
-     * @return ResponseEntity with an ok status and logout successful message
+     * Handles the logout API-request.
+     * @param session The HttpSession associated with the logged-in user's session.
+     * @return ResponseEntity with an ok status and logout successful message.
      * @throws LoggerException if there is a problem with logging an event.
      */
     @GetMapping("/logout")
@@ -81,7 +82,7 @@ public class PersonController {
     /**
      * Handles the create applicant API-request.
      * @param createApplicantRequest DTO containing applicant request data.
-     * @return <code>LoggedInPersonDTO</code> representing the newly created and logged-in user
+     * @return <code>LoggedInPersonDTO</code> representing the newly created and logged-in user.
      * @throws UserCreationFailedException If the requested username already exists.
      * @throws LoggerException if there is a problem with logging an event.
      */
@@ -94,8 +95,8 @@ public class PersonController {
     }
 
     /**
-     * Fetches all applications
-     * @return All applications
+     * Fetches all applications.
+     * @return All applications.
      */
     @PreAuthorize("hasRole('recruiter')")
     @GetMapping("/applications")
@@ -107,18 +108,32 @@ public class PersonController {
      * Changes the status of an application.
      * @param request DTO containing application change request data.
      * @return the changed and saved application.
+     * @throws LoggerException if there is a problem with logging an event.
+     * @throws ApplicationHandledException if the applicant has already been handled.
      */
     @PreAuthorize("hasRole('recruiter')")
     @PostMapping("/changeApplicationStatus")
     public ApplicantDTO changeApplicationStatus(@RequestBody @Valid ChangeApplicationStatusRequestDTO request)
-            throws LoggerException, ApplicationHandledException {
-        authenticateRequest(request.getUsername(), request.getPassword());
-        ApplicantDTO changedApplicant = personService.changeApplicantStatus(request);
-        Logger.logEvent("Recruiter " + request.getUsername() + " changed status of applicant " + changedApplicant.getFirstName() + " " +
-                changedApplicant.getLastName() + " to " + changedApplicant.getStatus() + ".");
-        return changedApplicant;
+            throws LoggerException, ApplicationHandledException, AuthenticationForLoggedInUserFailed {
+        Authentication requestCredentialAuth;
+        try {
+            requestCredentialAuth = authenticateRequest(request.getUsername(), request.getPassword());
+        } catch (Exception e) {
+            throw new AuthenticationForLoggedInUserFailed("Logged in user provided username or password that did not " +
+                    "match logged in account.");
+        }
+        Authentication currentLoggedInRecruiterAuth = SecurityContextHolder.getContext().getAuthentication();
+        if (currentLoggedInRecruiterAuth.equals(requestCredentialAuth)) {
+            ApplicantDTO changedApplicant = personService.changeApplicantStatus(request);
+            Logger.logEvent("Recruiter " + request.getUsername() + " changed status of applicant " +
+                    changedApplicant.getFirstName() + " " + changedApplicant.getLastName() + " to " +
+                    changedApplicant.getStatus() + ".");
+            return changedApplicant;
+        } else {
+            throw new AuthenticationForLoggedInUserFailed("Logged in user provided username or password that did not " +
+                    "match logged in account.");
+        }
     }
-
 
     private Authentication authenticateRequest(String username, String password) throws BadCredentialsException {
         Authentication authenticationRequest =

@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class StartController {
 
     /**
-     * Maps the urls: "/login" and "/"
+     * Maps the urls: "/login" and "/".
      * TODO Map all url excepts those starting with "/api"
-     * @return the whole React App
+     * @return the whole React App.
      */
     @RequestMapping({"/login", "/"})
     public String index() {
