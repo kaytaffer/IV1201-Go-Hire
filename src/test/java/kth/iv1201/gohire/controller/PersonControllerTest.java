@@ -182,7 +182,7 @@ class PersonControllerTest {
 
     @Test
     @WithMockUser(username="exampleUsername")
-    void testIfAuthenticationIsInvalidatedWhenPerformingLogout() throws LoggerException, UserNotFoundException {
+    void testIfAuthenticationIsInvalidatedWhenPerformingLogout() throws LoggerException {
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(currentAuthentication);
@@ -192,7 +192,7 @@ class PersonControllerTest {
 
     @Test
     @WithMockUser(username="exampleUsername")
-    void testIfCorrectResponseEntityIsReturnedAfterSuccessfulLogout() throws LoggerException, UserNotFoundException {
+    void testIfCorrectResponseEntityIsReturnedAfterSuccessfulLogout() throws LoggerException {
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(currentAuthentication);
@@ -203,7 +203,7 @@ class PersonControllerTest {
     }
     @Test
     @WithMockUser(username="exampleUsername")
-    void testIfSessionIsInvalidatedWhenPerformingLogout() throws LoggerException, UserNotFoundException {
+    void testIfSessionIsInvalidatedWhenPerformingLogout() throws LoggerException {
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(currentAuthentication);
