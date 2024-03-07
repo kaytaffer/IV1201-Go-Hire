@@ -98,11 +98,11 @@ public class ListAllApplicationsTest {
         for(int i = 0; i < 4; i++) {
             try {
                 status = webDriver.findElement(By.id("application-listing-" + i + "-status")).getText();
-                if(status.contains("unhandled"))
+                if(status.contains("Unhandled"))
                     unhandledExists = true;
-                if(status.contains("accepted"))
+                if(status.contains("Accepted"))
                     acceptecExists = true;
-                if(status.contains("rejected"))
+                if(status.contains("Rejected"))
                     rejectedExists = true;
             } catch (Exception exception) {
                 System.out.println("Applicant list fully checked.");

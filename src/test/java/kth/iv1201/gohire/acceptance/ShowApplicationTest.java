@@ -116,6 +116,7 @@ public class ShowApplicationTest {
             assertNotNull(popup, "Could not find full view of job application");
         }
         else fail("Could not find button to handle applications.");
+        webDriver.quit();
     }
 
     @ParameterizedTest
@@ -142,7 +143,7 @@ public class ShowApplicationTest {
 
                 String status = webDriver.findElement(By.id("application-listing-" + i + "-status")).getText();
                 webDriver.quit();
-                assertEquals("accepted", status, "Wrong status after change made");
+                assertEquals("Accepted", status, "Wrong status after change made");
             } catch (Exception exception) {
                 System.out.println("Attempting to find button.");
             }
@@ -173,7 +174,7 @@ public class ShowApplicationTest {
 
                 String status = webDriver.findElement(By.id("application-listing-" + i + "-status")).getText();
                 webDriver.quit();
-                assertEquals("rejected", status, "Wrong status after change made");
+                assertEquals("Rejected", status, "Wrong status after change made");
             } catch (Exception exception) {
                 System.out.println("Attempting to find button.");
             }
