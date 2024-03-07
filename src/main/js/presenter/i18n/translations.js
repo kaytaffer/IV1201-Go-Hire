@@ -41,7 +41,8 @@ export const translations = {
             "accepted": "Accepted",
             "rejected": "Rejected",
             "welcome": "Welcome",
-           "credentials-wrong-for-logged-in-user": "Username or password do not match current logged in account"
+           "credentials-wrong-for-logged-in-user": "Username or password do not match current logged in account",
+            "choose-new-status": "Choose to accept or reject the applicant."
         }
     },
     "sv": {
@@ -73,16 +74,17 @@ export const translations = {
                 "användarnamn och lösenord.",
             "unhandled": "Ohanterad",
             "accept-applicant": "Acceptera ansökande",
-            "reject-applicant": "Avslå ansökande",
+            "reject-applicant": "Neka ansökande",
             "recruiter": "Rekryterare",
             "applicant": "Ansökande",
             "display-applications": "Visa ansökande",
             "applications": "Ansökningar",
             "status": "Status",
             "accepted": "Accepterad",
-            "rejected": "Avslagen",
+            "rejected": "Nekad",
             "welcome": "Välkommen,",
-            "credentials-wrong-for-logged-in-user": "Användarnamn eller lösenord matchar inte det inloggade kontot"
+            "credentials-wrong-for-logged-in-user": "Användarnamn eller lösenord matchar inte det inloggade kontot",
+            "choose-new-status": "Välj att acceptera eller neka ansökan."
         }
     }
 }

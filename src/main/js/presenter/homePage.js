@@ -48,6 +48,10 @@ export function HomePage(props){
     }
 
     function changeStatus(id, newStatus, username, password) {
+        if(!newStatus) {
+            setErrorMessage("choose-new-status")
+            return
+        }
         function updateApplications(changedApplication) {
             setErrorMessage("")
             setShowSingleApplicant(null)
