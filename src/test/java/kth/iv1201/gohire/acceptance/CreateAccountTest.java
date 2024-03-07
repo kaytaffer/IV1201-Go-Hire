@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import static kth.iv1201.gohire.acceptance.util.WebdriverConfigurer.determineAvailableBrowserWebDrivers;
 import static kth.iv1201.gohire.acceptance.util.WebdriverConfigurer.fetchWebDrivers;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -76,12 +77,82 @@ public class CreateAccountTest {
         username.sendKeys("newApplicant");
         password.sendKeys("newPassword");
         submitButton.click();
-
         webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+
         String userNotice = webDriver.findElement(By.id("user-notice")).getText();
         webDriver.quit();
-
         Assertions.assertTrue(userNotice.contains("Account successfully created"), "The expected message does not appear.");
     }
+
+    @ParameterizedTest
+    @Execution(ExecutionMode.SAME_THREAD)
+    @MethodSource("provideTestWithWebDrivers")
+    void testIfThereIsErrorMessageIfFieldsAreLeftEmpty(WebDriver webDriver) {
+        WebdriverConfigurer.goToAndAwait(webDriver, startingPointURL);
+        WebElement submitButton = webDriver.findElement(By.id("create-applicant-form-submit"));
+        submitButton.click();
+        String userNotice = webDriver.findElement(By.id("user-notice")).getText();
+        webDriver.quit();
+        assertTrue(userNotice.contains("Please follow the form's required input examples."), "The expected message does not appear.");
+    }
+
+    @ParameterizedTest
+    @Execution(ExecutionMode.SAME_THREAD)
+    @MethodSource("provideTestWithWebDrivers")
+    @Sql(scripts = "classpath:clean-up.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void testIfValidationSuppliesErrorMessageIfPoorlyFormattedInputIsSupplied(WebDriver webDriver) {
+        WebdriverConfigurer.goToAndAwait(webDriver, startingPointURL);
+
+        WebElement firstName = webDriver.findElement(By.id("create-applicant-form-first-name"));
+        WebElement lastName = webDriver.findElement(By.id("create-applicant-form-last-name"));
+        WebElement email = webDriver.findElement(By.id("create-applicant-form-email"));
+        WebElement personNumber = webDriver.findElement(By.id("create-applicant-form-person-number"));
+        WebElement username = webDriver.findElement(By.id("create-applicant-form-username"));
+        WebElement password = webDriver.findElement(By.id("create-applicant-form-password"));
+        WebElement submitButton = webDriver.findElement(By.id("create-applicant-form-submit"));
+
+        firstName.sendKeys("newApplicant");
+        lastName.sendKeys("newApplicant");
+        email.sendKeys("newApplicant@kth.se");
+        personNumber.sendKeys("this field is poorly formatted");
+        username.sendKeys("newApplicant");
+        password.sendKeys("newPassword");
+        submitButton.click();
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+
+        String userNotice = webDriver.findElement(By.id("user-notice")).getText();
+        webDriver.quit();
+        assertTrue(userNotice.contains("Please follow the form's required input examples."), "The expected message does not appear.");
+    }
+
+    @ParameterizedTest
+    @Execution(ExecutionMode.SAME_THREAD)
+    @MethodSource("provideTestWithWebDrivers")
+    @Sql(scripts = "classpath:clean-up.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void testIfAccountCreationIsDeniedIfUsernameAlreadyExists(WebDriver webDriver) {
+        WebdriverConfigurer.goToAndAwait(webDriver, startingPointURL);
+
+        WebElement firstName = webDriver.findElement(By.id("create-applicant-form-first-name"));
+        WebElement lastName = webDriver.findElement(By.id("create-applicant-form-last-name"));
+        WebElement email = webDriver.findElement(By.id("create-applicant-form-email"));
+        WebElement personNumber = webDriver.findElement(By.id("create-applicant-form-person-number"));
+        WebElement username = webDriver.findElement(By.id("create-applicant-form-username"));
+        WebElement password = webDriver.findElement(By.id("create-applicant-form-password"));
+        WebElement submitButton = webDriver.findElement(By.id("create-applicant-form-submit"));
+
+        firstName.sendKeys("newApplicant");
+        lastName.sendKeys("newApplicant");
+        email.sendKeys("newApplicant@kth.se");
+        personNumber.sendKeys("19909090-9090");
+        username.sendKeys("validApplicantUser");
+        password.sendKeys("newPassword");
+        submitButton.click();
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+
+        String userNotice = webDriver.findElement(By.id("user-notice")).getText();
+        webDriver.quit();
+        assertTrue(userNotice.contains("already exists"), "The expected message does not appear.");
+    }
+
 }
 
