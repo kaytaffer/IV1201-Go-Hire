@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -38,6 +39,8 @@ public class ShowApplicationTest {
     private int port;
     private static LinkedList<Class<? extends WebDriver>> availableBrowserWebDrivers;
     private String startingPointURL;
+    private static final int IMPLICIT_WAIT_SECONDS = WebdriverConfigurer.IMPLICIT_WAIT_SECONDS;
+    private static final int THREAD_SLEEP_MILLISECONDS = 500;
 
     @BeforeAll
     static void setUpAll() {
@@ -67,11 +70,11 @@ public class ShowApplicationTest {
         passwordInput.sendKeys("validRecruiterPassword");
         WebElement loginButton = webDriver.findElement(By.id("login-button"));
         loginButton.click();
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
 
         WebElement showApplicantsButton = webDriver.findElement(By.id("showApplications"));
         showApplicantsButton.click();
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
     }
 
     @ParameterizedTest
@@ -111,7 +114,7 @@ public class ShowApplicationTest {
         }
         if(button != null) {
             button.click();
-            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
             WebElement popup = webDriver.findElement(By.id("single-application"));
             assertNotNull(popup, "Could not find full view of job application");
         }
@@ -123,13 +126,13 @@ public class ShowApplicationTest {
     @Execution(ExecutionMode.SAME_THREAD)
     @MethodSource("provideTestWithWebDrivers")
     @Sql(scripts = "classpath:clean-up.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void testIfRecruiterCanAcceptApplicationStatus(WebDriver webDriver) {
+    void testIfRecruiterCanAcceptApplication(WebDriver webDriver) {
         doShowApplicants(webDriver);
 
         for(int i = 0; i < 3; i++) {
             try {
                 webDriver.findElement(By.id("application-listing-" + i + "-button")).click();
-                webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+                webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
 
                 Select dropdown = new Select(webDriver.findElement(By.id("handle-application-form-new-status")));
                 WebElement username = webDriver.findElement(By.id("handle-application-form-username"));
@@ -139,7 +142,7 @@ public class ShowApplicationTest {
                 username.sendKeys("validRecruiterUser");
                 password.sendKeys("validRecruiterPassword");
                 submit.click();
-                Thread.sleep(500);
+                Thread.sleep(THREAD_SLEEP_MILLISECONDS);
 
                 String status = webDriver.findElement(By.id("application-listing-" + i + "-status")).getText();
                 webDriver.quit();
@@ -154,13 +157,13 @@ public class ShowApplicationTest {
     @Execution(ExecutionMode.SAME_THREAD)
     @MethodSource("provideTestWithWebDrivers")
     @Sql(scripts = "classpath:clean-up.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void testIfRecruiterCanRejectApplicationStatus(WebDriver webDriver) {
+    void testIfRecruiterCanRejectApplication(WebDriver webDriver) {
         doShowApplicants(webDriver);
 
         for(int i = 0; i < 3; i++) {
             try {
                 webDriver.findElement(By.id("application-listing-" + i + "-button")).click();
-                webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+                webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
 
                 Select dropdown = new Select(webDriver.findElement(By.id("handle-application-form-new-status")));
                 WebElement username = webDriver.findElement(By.id("handle-application-form-username"));
@@ -170,7 +173,7 @@ public class ShowApplicationTest {
                 username.sendKeys("validRecruiterUser");
                 password.sendKeys("validRecruiterPassword");
                 submit.click();
-                Thread.sleep(500);
+                Thread.sleep(THREAD_SLEEP_MILLISECONDS);
 
                 String status = webDriver.findElement(By.id("application-listing-" + i + "-status")).getText();
                 webDriver.quit();
@@ -191,7 +194,7 @@ public class ShowApplicationTest {
         for(int i = 0; i < 3; i++) {
             try {
                 webDriver.findElement(By.id("application-listing-" + i + "-button")).click();
-                webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+                webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
 
                 Select dropdown = new Select(webDriver.findElement(By.id("handle-application-form-new-status")));
                 WebElement username = webDriver.findElement(By.id("handle-application-form-username"));
@@ -201,7 +204,7 @@ public class ShowApplicationTest {
                 username.sendKeys("validRecruiterUser");
                 password.sendKeys("invalidPassword");
                 submit.click();
-                Thread.sleep(500);
+                Thread.sleep(THREAD_SLEEP_MILLISECONDS);
 
                 try {
                     String userNotice = webDriver.findElement(By.id("user-notice")).getText();
@@ -221,16 +224,20 @@ public class ShowApplicationTest {
     @MethodSource("provideTestWithWebDrivers")
     @Sql(scripts = "classpath:clean-up.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void testIfSystemAbortsAlreadyHandledApplication(WebDriver slowRecruiterDriver) {
-        WebDriver quickRecruiterDriver = WebDriverManager.getInstance(slowRecruiterDriver.getClass()).create();
+        WebDriver quickRecruiterDriver;
+        if (slowRecruiterDriver.getClass() == SafariDriver.class)
+            quickRecruiterDriver = new SafariDriver();
+        else
+            quickRecruiterDriver = WebDriverManager.getInstance(slowRecruiterDriver.getClass()).create();
         doShowApplicants(slowRecruiterDriver);
         doShowApplicants(quickRecruiterDriver);
 
         for(int i = 0; i < 3; i++) {
             try {
                 slowRecruiterDriver.findElement(By.id("application-listing-" + i + "-button")).click();
-                slowRecruiterDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+                slowRecruiterDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
                 quickRecruiterDriver.findElement(By.id("application-listing-" + i + "-button")).click();
-                quickRecruiterDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+                quickRecruiterDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
 
                 Select dropdown = new Select(quickRecruiterDriver.findElement(By.id("handle-application-form-new-status")));
                 WebElement username = quickRecruiterDriver.findElement(By.id("handle-application-form-username"));
@@ -240,7 +247,7 @@ public class ShowApplicationTest {
                 username.sendKeys("validRecruiterUser");
                 password.sendKeys("validRecruiterPassword");
                 submit.click();
-                Thread.sleep(500);
+                Thread.sleep(THREAD_SLEEP_MILLISECONDS);
                 quickRecruiterDriver.quit();
 
                 dropdown = new Select(slowRecruiterDriver.findElement(By.id("handle-application-form-new-status")));
@@ -251,7 +258,7 @@ public class ShowApplicationTest {
                 username.sendKeys("validRecruiterUser");
                 password.sendKeys("validRecruiterPassword");
                 submit.click();
-                Thread.sleep(500);
+                Thread.sleep(THREAD_SLEEP_MILLISECONDS);
 
                 try {
                     String userNotice = slowRecruiterDriver.findElement(By.id("user-notice")).getText();
@@ -282,10 +289,10 @@ public class ShowApplicationTest {
         }
         if(button != null) {
             button.click();
-            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
             WebElement close = webDriver.findElement(By.className("close-popup"));
             close.click();
-            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
+            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
             try {
                 webDriver.findElement(By.id("single-application"));
                 fail("Single application still visible");

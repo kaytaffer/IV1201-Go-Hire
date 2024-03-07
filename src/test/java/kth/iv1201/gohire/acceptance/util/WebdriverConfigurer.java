@@ -18,6 +18,8 @@ import java.util.stream.Stream;
  */
 public class WebdriverConfigurer {
 
+    public static final int IMPLICIT_WAIT_SECONDS = 5;
+
     //This method contains a list of all classes of WebDrivers considered possible and relevant to run.
     private static LinkedList<Class<? extends WebDriver>> possibleBrowsersToUseForTest() {
         LinkedList<Class<? extends WebDriver>> possibleBrowsersToUseForTests = new LinkedList<>();
@@ -71,7 +73,7 @@ public class WebdriverConfigurer {
      */
     public static void goToAndAwait(WebDriver driver, String path) {
         driver.get(path);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
     }
 
 

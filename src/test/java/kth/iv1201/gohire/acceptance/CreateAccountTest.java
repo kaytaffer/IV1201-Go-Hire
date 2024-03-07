@@ -35,6 +35,7 @@ public class CreateAccountTest {
     private int port;
     private static LinkedList<Class<? extends WebDriver>> availableBrowserWebDrivers;
     private static String startingPointURL;
+    private static final int IMPLICIT_WAIT_SECONDS = WebdriverConfigurer.IMPLICIT_WAIT_SECONDS;
 
     @BeforeAll
     static void setUpAll() {
@@ -77,7 +78,7 @@ public class CreateAccountTest {
         username.sendKeys("newApplicant");
         password.sendKeys("newPassword");
         submitButton.click();
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
 
         String userNotice = webDriver.findElement(By.id("user-notice")).getText();
         webDriver.quit();
@@ -118,7 +119,7 @@ public class CreateAccountTest {
         username.sendKeys("newApplicant");
         password.sendKeys("newPassword");
         submitButton.click();
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
 
         String userNotice = webDriver.findElement(By.id("user-notice")).getText();
         webDriver.quit();
@@ -147,7 +148,7 @@ public class CreateAccountTest {
         username.sendKeys("validApplicantUser");
         password.sendKeys("newPassword");
         submitButton.click();
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
 
         String userNotice = webDriver.findElement(By.id("user-notice")).getText();
         webDriver.quit();

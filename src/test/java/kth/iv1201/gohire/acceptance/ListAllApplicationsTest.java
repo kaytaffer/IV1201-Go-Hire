@@ -37,6 +37,7 @@ public class ListAllApplicationsTest {
     private int port;
     private static LinkedList<Class<? extends WebDriver>> availableBrowserWebDrivers;
     private String startingPointURL;
+    private static final int IMPLICIT_WAIT_SECONDS = WebdriverConfigurer.IMPLICIT_WAIT_SECONDS;
 
     @BeforeAll
     static void setUpAll() {
@@ -66,7 +67,7 @@ public class ListAllApplicationsTest {
         passwordInput.sendKeys("validRecruiterPassword");
         WebElement loginButton = webDriver.findElement(By.id("login-button"));
         loginButton.click();
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
     }
 
     @ParameterizedTest
@@ -88,7 +89,7 @@ public class ListAllApplicationsTest {
 
         WebElement showApplicantsButton = webDriver.findElement(By.id("showApplications"));
         showApplicantsButton.click();
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
 
         boolean unhandledExists = false;
         boolean acceptecExists = false;

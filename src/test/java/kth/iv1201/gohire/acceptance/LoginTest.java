@@ -36,6 +36,8 @@ public class LoginTest {
     private int port;
     private static LinkedList<Class<? extends WebDriver>> availableBrowserWebDrivers;
     private String startingPointURL;
+    private static final int IMPLICIT_WAIT_SECONDS = WebdriverConfigurer.IMPLICIT_WAIT_SECONDS;
+    private static final int THREAD_SLEEP_MILLISECONDS = 500;
 
     @BeforeAll
     static void setUpAll() {
@@ -70,7 +72,7 @@ public class LoginTest {
         WebElement loginButton = webDriver.findElement(By.id("login-button"));
         loginButton.click();
 
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
         String loggedInUser = "";
         try {
             loggedInUser = webDriver.findElement(By.id("caption")).getText();
@@ -92,7 +94,7 @@ public class LoginTest {
         passwordInput.sendKeys("validRecruiterPassword");
         WebElement loginButton = webDriver.findElement(By.id("login-button"));
         loginButton.click();
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
 
         String loggedInUser = "";
         try {
@@ -116,7 +118,7 @@ public class LoginTest {
         WebElement loginButton = webDriver.findElement(By.id("login-button"));
         loginButton.click();
 
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
         String userNotice = webDriver.findElement(By.id("user-notice")).getText();
         webDriver.quit();
         assertTrue(userNotice.contains("Username and password do not match."), "The expected message does not appear.");
@@ -129,7 +131,7 @@ public class LoginTest {
         WebElement loginButton = webDriver.findElement(By.id("login-button"));
         loginButton.click();
 
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
         String userNotice = webDriver.findElement(By.id("user-notice")).getText();
         webDriver.quit();
         assertTrue(userNotice.contains("Please follow the form's required input examples."), "The expected message does not appear.");
@@ -139,7 +141,7 @@ public class LoginTest {
     @MethodSource("provideTestWithWebDrivers")
     void testIfUserIsRedirectedToLoginPageIfNotLoggedIn(WebDriver webDriver) throws InterruptedException {
         WebdriverConfigurer.goToAndAwait(webDriver, "http://localhost:" + port + "/");
-        Thread.sleep(500);
+        Thread.sleep(THREAD_SLEEP_MILLISECONDS);
         String url = webDriver.getCurrentUrl();
         webDriver.quit();
         assertEquals(startingPointURL, url, "URL doesn't match expectation");
@@ -158,7 +160,7 @@ public class LoginTest {
         passwordInput.sendKeys("validApplicantPassword");
         WebElement loginButton = webDriver.findElement(By.id("login-button"));
         loginButton.click();
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
 
         try {
             webDriver.findElement(By.id("caption")).getText();
