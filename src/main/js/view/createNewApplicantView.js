@@ -42,7 +42,7 @@ export function CreateNewApplicantView(props) {
                 <label>{props.t('password')}</label>
                 <input id="create-applicant-form-password" type="password" placeholder={props.t('max-255-chars')}/><br/>
 
-                <input type="submit" value={props.t('submit')}/>
+                <input id="create-applicant-form-submit" type="submit" value={props.t('submit')}/>
             </form>
         </div>
     )

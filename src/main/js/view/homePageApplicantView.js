@@ -11,7 +11,7 @@ import React from "react";
 export function HomePageApplicantView(props) {
     return (
         <div>
-            <h1>{props.t('applicant')}</h1>
+            <h1 id="caption">{props.t('applicant')}</h1>
             <p>{props.t('welcome')} {props.user.username}</p>
         </div>
     )

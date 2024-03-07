@@ -21,7 +21,7 @@ export function HandleApplicationView(props) {
     }
 
     return (
-        <div>
+        <div id="single-application">
             <h4>{props.t('handle-application-for')} '{props.application.firstName} {props.application.lastName}'</h4>
             <p>{props.t('handle-application-description')}</p>
 
@@ -38,7 +38,7 @@ export function HandleApplicationView(props) {
                 <label>{props.t('password')}</label>
                 <input id="handle-application-form-password" type="password"/><br/>
 
-                <input type="submit" value={props.t('submit')}/>
+                <input id="handle-application-form-submit" type="submit" value={props.t('submit')}/>
             </form>
 
             {props.errorMessage && <UserNoticeView message={props.errorMessage} error={true}/>}

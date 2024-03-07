@@ -16,7 +16,6 @@ import {useTranslation} from "react-i18next";
  * @param props props
  * @param {function} props.onLoggedIn - called when user successfully logs in.
  * @returns {JSX.Element} the rendered login component.
- * @constructor
  */
 export function Login(props){
     const { t } = useTranslation();

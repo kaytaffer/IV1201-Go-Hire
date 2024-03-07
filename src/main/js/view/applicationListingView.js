@@ -12,10 +12,10 @@ export function ApplicationListingView(props) {
         <tr>
             <td>{props.t(props.application.firstName)}</td>
             <td>{props.t(props.application.lastName)}</td>
-            <td>{props.t(props.application.status)}</td>
+            <td id={props.id + "-status"}>{props.t(props.application.status)}</td>
             {props.application.status === "unhandled" && (
                 <td>
-                    <button onClick={() => props.onHandleApplication(props.application)}>
+                    <button id={props.id + "-button"} onClick={() => props.onHandleApplication(props.application)}>
                         {props.t('handle')}
                     </button>
                 </td>

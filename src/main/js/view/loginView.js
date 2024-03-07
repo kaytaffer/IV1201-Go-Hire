@@ -25,7 +25,7 @@ export function LoginView(props) {
                 <input id="login-form-username" type="text"/><br/>
                 <label>{props.t('password')}</label>
                 <input id="login-form-password" type="password"/><br/>
-                <input type="submit" value={props.t('submit')}/>
+                <input id="login-button" type="submit" value={props.t('submit')}/>
             </form>
         </div>
     )
