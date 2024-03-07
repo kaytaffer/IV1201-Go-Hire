@@ -6,11 +6,12 @@ import {
     APPLICATION_ALREADY_HANDLED,
     INSUFFICIENT_CREDENTIALS, LOGIN_FAIL,
     PAGE_DOES_NOT_EXIST,
-    SERVER_INTERNAL,
+    SERVER_INTERNAL, USER_INPUT_ERROR,
 } from "./api/errorMessages";
 import {UserNoticeView} from "../view/userNoticeView";
 import {PopupView} from "../view/popupView";
 import {HandleApplicationView} from "../view/handleApplicationView";
+import {useTranslation} from "react-i18next";
 
 /**
  * Responsible for the logic of the home page.
@@ -20,12 +21,14 @@ import {HandleApplicationView} from "../view/handleApplicationView";
  * @constructor
  */
 export function HomePage(props){
+    const { t } = useTranslation();
 
     const [applications, setApplications] = useState(null)
     const [errorMessage, setErrorMessage] = useState("")
     const [showSingleApplicant, setShowSingleApplicant] = useState(null)
 
-    const POSSIBLE_FETCH_APPLICATION_ERRORS = [LOGIN_FAIL, APPLICATION_ALREADY_HANDLED, PAGE_DOES_NOT_EXIST, SERVER_INTERNAL, INSUFFICIENT_CREDENTIALS]
+    const POSSIBLE_FETCH_APPLICATION_ERRORS = [LOGIN_FAIL, APPLICATION_ALREADY_HANDLED,
+        PAGE_DOES_NOT_EXIST, SERVER_INTERNAL, INSUFFICIENT_CREDENTIALS, USER_INPUT_ERROR]
 
     function resolveApiErrors(error) {
         function checkErrorType(possibleError) {
@@ -56,11 +59,20 @@ export function HomePage(props){
     }
 
     return (<div>
-        {errorMessage && !showSingleApplicant && <UserNoticeView message={errorMessage} error={true}/>}
-        {props.user.role === 'applicant' && <HomePageApplicantView user={props.user}/>}
-        {props.user.role === 'recruiter' && <HomePageRecruiterView user={props.user} applications={applications} onShowApplications={showApplications} onHandleApplication={handleApplication}/>}
+        {errorMessage && !showSingleApplicant && <UserNoticeView message={t(errorMessage)}
+                                                                 error={true}/>}
+        {props.user.role === 'applicant' && <HomePageApplicantView user={props.user} t={t}/>}
+        {props.user.role === 'recruiter' && <HomePageRecruiterView user={props.user}
+                                                                   applications={applications}
+                                                                   onShowApplications={showApplications}
+                                                                   onHandleApplication={handleApplication}
+                                                                   t={t}/>}
+
         <PopupView open={showSingleApplicant} onClose={() => setShowSingleApplicant(null)}>
-        <HandleApplicationView application={showSingleApplicant} submitForm={changeStatus} errorMessage={errorMessage}/>
+            <HandleApplicationView application={showSingleApplicant}
+                                   submitForm={changeStatus}
+                                   t={t}
+                                   errorMessage={t(errorMessage)}/>
         </PopupView>
     </div>)
 }
