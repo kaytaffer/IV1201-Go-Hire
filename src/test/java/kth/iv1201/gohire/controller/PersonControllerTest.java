@@ -2,7 +2,7 @@ package kth.iv1201.gohire.controller;
 
 import jakarta.servlet.http.HttpSession;
 import kth.iv1201.gohire.DTO.*;
-import kth.iv1201.gohire.controller.exception.AuthenticationFailedException;
+import kth.iv1201.gohire.controller.exception.AuthenticationForLoggedInUserFailed;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.PersonService;
 import kth.iv1201.gohire.service.exception.ApplicationHandledException;
@@ -138,7 +138,7 @@ class PersonControllerTest {
 
     @Test
     @WithMockUser(roles={"recruiter"})
-    void testIfChangeApplicantStatusReturnCorrectDTO() throws ApplicationHandledException, LoggerException, AuthenticationFailedException {
+    void testIfChangeApplicantStatusReturnCorrectDTO() throws ApplicationHandledException, LoggerException, AuthenticationForLoggedInUserFailed {
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(currentAuthentication);
@@ -169,7 +169,7 @@ class PersonControllerTest {
                 .thenReturn(mockAuthenticatedSuccessfulResponse);
         when(personService.changeApplicantStatus(any(ChangeApplicationStatusRequestDTO.class)))
                 .thenReturn(mockAcceptedApplicantDTO);
-        assertThrowsExactly(AuthenticationFailedException.class,
+        assertThrowsExactly(AuthenticationForLoggedInUserFailed.class,
                 () -> personController.changeApplicationStatus(mockChangeApplicationStatusRequestDTO),
                 "Correct exception was not thrown when recruiter tried to change applicant status using " +
                         "credentials for other account.");
@@ -177,7 +177,7 @@ class PersonControllerTest {
 
     @Test
     @WithMockUser(roles={"recruiter"})
-    void testIfSuccessfulChangeApplicantStatusIsLoggedCorrectly() throws ApplicationHandledException, LoggerException, IOException, AuthenticationFailedException {
+    void testIfSuccessfulChangeApplicantStatusIsLoggedCorrectly() throws ApplicationHandledException, LoggerException, IOException, AuthenticationForLoggedInUserFailed {
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(currentAuthentication);

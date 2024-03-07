@@ -1,7 +1,7 @@
 package kth.iv1201.gohire.controller;
 
 import kth.iv1201.gohire.DTO.ErrorDTO;
-import kth.iv1201.gohire.controller.exception.AuthenticationFailedException;
+import kth.iv1201.gohire.controller.exception.AuthenticationForLoggedInUserFailed;
 import kth.iv1201.gohire.controller.util.ErrorType;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.exception.ApplicationHandledException;
@@ -113,7 +113,7 @@ public class ErrorHandlerTest {
 
     @Test
     void testIfAuthenticationFailedExceptionReturnsRightStatusCode() throws LoggerException{
-        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new AuthenticationFailedException("error message"));
+        ResponseEntity<ErrorDTO> error = errorHandler.handleException(new AuthenticationForLoggedInUserFailed("error message"));
         assertEquals(HttpStatus.UNAUTHORIZED, error.getStatusCode(), "Method didn't return correct Status Code");
     }
 }

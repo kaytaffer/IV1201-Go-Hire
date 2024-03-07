@@ -1,7 +1,7 @@
 package kth.iv1201.gohire.controller;
 
 import kth.iv1201.gohire.DTO.ErrorDTO;
-import kth.iv1201.gohire.controller.exception.AuthenticationFailedException;
+import kth.iv1201.gohire.controller.exception.AuthenticationForLoggedInUserFailed;
 import kth.iv1201.gohire.controller.util.Logger;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.exception.ApplicationHandledException;
@@ -48,8 +48,8 @@ public class ErrorHandler implements ErrorController {
             return handleInsufficientAuthenticationException((InsufficientAuthenticationException) exception);
         } else if (exception instanceof ApplicationHandledException) {
             return handleApplicationHandledException((ApplicationHandledException) exception);
-        } else if (exception instanceof AuthenticationFailedException) {
-            return handleAuthenticationFailedException((AuthenticationFailedException) exception);
+        } else if (exception instanceof AuthenticationForLoggedInUserFailed) {
+            return handleAuthenticationFailedException((AuthenticationForLoggedInUserFailed) exception);
         }
         return handleOtherExceptions(exception);
     }
@@ -79,7 +79,7 @@ public class ErrorHandler implements ErrorController {
         return new ResponseEntity<> (new ErrorDTO(ErrorType.APPLICATION_ALREADY_HANDLED, exception.getMessage()), HttpStatus.FORBIDDEN);
     }
 
-    private ResponseEntity<ErrorDTO> handleAuthenticationFailedException(AuthenticationFailedException exception) {
+    private ResponseEntity<ErrorDTO> handleAuthenticationFailedException(AuthenticationForLoggedInUserFailed exception) {
         return new ResponseEntity<> (new ErrorDTO(ErrorType.AUTHENTICATION_FAIL, exception.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 

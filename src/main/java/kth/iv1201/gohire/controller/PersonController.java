@@ -3,7 +3,7 @@ package kth.iv1201.gohire.controller;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kth.iv1201.gohire.DTO.*;
-import kth.iv1201.gohire.controller.exception.AuthenticationFailedException;
+import kth.iv1201.gohire.controller.exception.AuthenticationForLoggedInUserFailed;
 import kth.iv1201.gohire.controller.util.Logger;
 import kth.iv1201.gohire.controller.util.LoggerException;
 import kth.iv1201.gohire.service.PersonService;
@@ -114,21 +114,24 @@ public class PersonController {
     @PreAuthorize("hasRole('recruiter')")
     @PostMapping("/changeApplicationStatus")
     public ApplicantDTO changeApplicationStatus(@RequestBody @Valid ChangeApplicationStatusRequestDTO request)
-            throws LoggerException, ApplicationHandledException, AuthenticationFailedException {
+            throws LoggerException, ApplicationHandledException, AuthenticationForLoggedInUserFailed {
         Authentication requestCredentialAuth;
         try {
             requestCredentialAuth = authenticateRequest(request.getUsername(), request.getPassword());
         } catch (Exception e) {
-            throw new AuthenticationFailedException("Incorrect username or password.");
+            throw new AuthenticationForLoggedInUserFailed("Logged in user provided username or password that did not " +
+                    "match logged in account.");
         }
         Authentication currentLoggedInRecruiterAuth = SecurityContextHolder.getContext().getAuthentication();
         if (currentLoggedInRecruiterAuth.equals(requestCredentialAuth)) {
             ApplicantDTO changedApplicant = personService.changeApplicantStatus(request);
-            Logger.logEvent("Recruiter " + request.getUsername() + " changed status of applicant " + changedApplicant.getFirstName() + " " +
-                    changedApplicant.getLastName() + " to " + changedApplicant.getStatus() + ".");
+            Logger.logEvent("Recruiter " + request.getUsername() + " changed status of applicant " +
+                    changedApplicant.getFirstName() + " " + changedApplicant.getLastName() + " to " +
+                    changedApplicant.getStatus() + ".");
             return changedApplicant;
         } else {
-            throw new AuthenticationFailedException("Incorrect username or password.");
+            throw new AuthenticationForLoggedInUserFailed("Logged in user provided username or password that did not " +
+                    "match logged in account.");
         }
     }
 
