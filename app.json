@@ -1,0 +1,18 @@
+{
+  "name": "GoHire",
+  "description": "A recruitment application architecture design for the KTH course IV1201.",
+  "website": "https://go-hire-58f7a99129cd.herokuapp.com/",
+  "repository": "https://github.com/kaytaffer/Go-Hire/",
+  "logo": "https://go-hire-58f7a99129cd.herokuapp.com/login/favicon.ico",
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-google-chrome"
+    },
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-chromedriver.git"
+    },
+    {
+      "url": "heroku/java"
+    }
+  ]
+}
