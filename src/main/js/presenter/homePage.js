@@ -7,7 +7,7 @@ import {
     INSUFFICIENT_CREDENTIALS, LOGIN_FAIL,
     PAGE_DOES_NOT_EXIST,
     SERVER_INTERNAL, AUTHENTICATION_FAIL,
-    SERVER_INTERNAL, USER_INPUT_ERROR,
+    USER_INPUT_ERROR,
 } from "./api/errorMessages";
 import {UserNoticeView} from "../view/userNoticeView";
 import {PopupView} from "../view/popupView";
