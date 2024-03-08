@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  */
 public class WebdriverConfigurer {
 
-    public static final int IMPLICIT_WAIT_SECONDS = 5;
+    public static final int IMPLICIT_WAIT_SECONDS = 2;
 
     //This method contains a list of all classes of WebDrivers considered possible and relevant to run.
     private static LinkedList<Class<? extends WebDriver>> possibleBrowsersToUseForTest() {

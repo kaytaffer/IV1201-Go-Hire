@@ -40,7 +40,7 @@ public class ShowApplicationTest {
     private static LinkedList<Class<? extends WebDriver>> availableBrowserWebDrivers;
     private String startingPointURL;
     private static final int IMPLICIT_WAIT_SECONDS = WebdriverConfigurer.IMPLICIT_WAIT_SECONDS;
-    private static final int THREAD_SLEEP_MILLISECONDS = 500;
+    private static final int THREAD_SLEEP_MILLISECONDS = 400;
 
     @BeforeAll
     static void setUpAll() {
